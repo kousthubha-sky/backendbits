@@ -2,6 +2,7 @@
 
 import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
+import TemplatesShowcase from '../components/TemplatesShowcase';
 import StickyScroll from '../components/StickyScroll';
 import MobileScroll from '../components/MobileScroll';
 import Newsletter from '../components/Newsletter';
@@ -17,6 +18,7 @@ const App: React.FC = () => {
       <Navbar />
       <main>
         <Hero />
+        <TemplatesShowcase sectionId="templates" />
         <StickyScroll />
         <MobileScroll />
         <Newsletter />

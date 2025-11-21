@@ -45,14 +45,17 @@ const Hero: React.FC = () => {
         transition={{ duration: 0.6, delay: 0.3 }}
         className="flex flex-wrap justify-center gap-4"
       >
+        <a
+          href="#templates"
+          className="bg-black text-white px-8 py-3 rounded-full font-medium hover:bg-gray-800 transition-transform hover:scale-105 active:scale-95"
+        >
+          View Templates
+        </a>
         <Link href="/templates">
-          <button className="bg-black text-white px-8 py-3 rounded-full font-medium hover:bg-gray-800 transition-transform hover:scale-105 active:scale-95">
-            View Templates
+          <button className="bg-gray-100 text-gray-600 px-8 py-3 rounded-full font-medium hover:bg-gray-200 transition-transform hover:scale-105 active:scale-95">
+            Browse details
           </button>
         </Link>
-        <button className="bg-gray-100 text-gray-600 px-8 py-3 rounded-full font-medium hover:bg-gray-200 transition-transform hover:scale-105 active:scale-95">
-          How it works
-        </button>
       </motion.div>
     </section>
   );
