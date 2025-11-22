@@ -46,7 +46,7 @@ const Hero: React.FC = () => {
         className="flex flex-wrap justify-center gap-4"
       >
         <a
-          href="#templates"
+          href="/templates"
           className="bg-black text-white px-8 py-3 rounded-full font-medium hover:bg-gray-800 transition-transform hover:scale-105 active:scale-95"
         >
           View Templates

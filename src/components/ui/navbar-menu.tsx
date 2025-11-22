@@ -33,7 +33,7 @@ const MenuItem = ({
     <div onMouseEnter={() => setActive(item)} className="relative">
       <motion.p
         transition={{ duration: 0.3 }}
-        className="cursor-pointer text-black hover:opacity-[0.9]"
+        className="cursor-pointer text-black hover:opacity-[0.9] dark:text-white"
       >
         {item}
       </motion.p>
@@ -44,11 +44,11 @@ const MenuItem = ({
           transition={transition}
         >
           {active === item && (
-            <div className="absolute top-[calc(100%_+_1.2rem)] left-1/2 transform -translate-x-1/2 pt-4">
+            <div className="absolute top-calc(100%_+_1.2rem) left-1/2 transform -translate-x-1/2 pt-4">
               <motion.div
                 transition={transition}
                 layoutId="active"
-                className="bg-white backdrop-blur-sm rounded-2xl overflow-hidden border border-black/[0.2] shadow-2xl"
+                className="bg-white dark:bg-black backdrop-blur-sm rounded-2xl overflow-hidden border border-black/0.2 dark:border-white/0.2 shadow-xl"
               >
                 <motion.div layout className="w-max h-full p-4">
                   {children}
@@ -72,7 +72,7 @@ const Menu = ({
   return (
     <nav
       onMouseLeave={() => setActive(null)}
-      className="relative rounded-full border border-transparent bg-white shadow-input flex justify-center space-x-4 px-8 py-6"
+      className="relative rounded-full border border-transparent dark:bg-black dark:border-white/0.2 bg-white shadow-input flex justify-center space-x-4 px-8 py-6"
     >
       {children}
     </nav>
@@ -83,7 +83,7 @@ const HoveredLink = ({ children, ...rest }: React.ComponentProps<typeof Link>) =
   return (
     <Link
       {...rest}
-      className="text-neutral-700 hover:text-black"
+      className="text-neutral-700 dark:text-neutral-200 hover:text-black"
     >
       {children}
     </Link>
@@ -98,7 +98,6 @@ const TemplatePreviewCard = ({
   status,
   techStack,
   href,
-  key,
 }: {
   name: string;
   summary: string;
@@ -106,20 +105,19 @@ const TemplatePreviewCard = ({
   status: string;
   techStack: string[];
   href: string;
-  key?: string;
 }) => {
   return (
     <Link href={href} className="block">
-      <div className="group bg-gray-50 border border-gray-200 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 p-4 w-72 shadow-md">
+      <div className="group bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden hover:shadow-md transition-all duration-300 p-4 w-72">
         <div className="mb-2">
-          <h4 className="text-sm font-bold text-black group-hover:text-gray-800 transition-colors mb-1">
+          <h4 className="text-sm font-bold text-black dark:text-white group-hover:text-gray-800 dark:group-hover:text-gray-200 transition-colors mb-1">
             {name}
           </h4>
           <div className="flex items-center gap-2 mb-2">
             <span className="inline-block px-2 py-0.5 bg-black text-white text-xs font-medium rounded-full">
               {status}
             </span>
-            <span className="text-xs text-gray-500 capitalize">
+            <span className="text-xs text-gray-500 dark:text-gray-400 capitalize">
               {category}
             </span>
           </div>
@@ -130,20 +128,20 @@ const TemplatePreviewCard = ({
             {techStack.slice(0, 3).map((tech) => (
               <span
                 key={tech}
-                className="px-2 py-0.5 bg-gray-200 text-gray-700 text-xs rounded-md font-medium"
+                className="px-2 py-0.5 bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs rounded-md font-medium"
               >
                 {tech}
               </span>
             ))}
             {techStack.length > 3 && (
-              <span className="px-2 py-0.5 bg-gray-200 text-gray-500 text-xs rounded-md">
+              <span className="px-2 py-0.5 bg-gray-200 dark:bg-gray-800 text-gray-500 dark:text-gray-400 text-xs rounded-md">
                 +{techStack.length - 3}
               </span>
             )}
           </div>
         </div>
 
-        <p className="text-gray-600 text-xs leading-relaxed line-clamp-2">
+        <p className="text-gray-600 dark:text-gray-400 text-xs leading-relaxed line-clamp-2">
           {summary}
         </p>
       </div>
@@ -206,7 +204,7 @@ const Navbar: React.FC = () => {
                 href={template.href}
               />
             ))}
-            <div className="col-span-2 pt-2 border-t border-gray-200">
+            <div className="col-span-2 pt-2 border-t border-gray-200 dark:border-gray-700">
               <HoveredLink href="/templates" className="text-sm font-medium">
                 View All Templates →
               </HoveredLink>
