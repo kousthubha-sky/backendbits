@@ -2,7 +2,9 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X, AlignJustify } from "lucide-react";
+import {  Skiper58 } from "@/components/ui/downbar";
 
 // Utility function for className merging
 const cn = (...classes: (string | undefined | null | false)[]) => {
@@ -44,11 +46,11 @@ const MenuItem = ({
           transition={transition}
         >
           {active === item && (
-            <div className="absolute top-[calc(100%_+_1.2rem)] left-1/2 transform -translate-x-1/2 pt-4">
+            <div className="absolute top-[calc(100%_+_0.5rem)] left-1/2 transform -translate-x-1/2">
               <motion.div
                 transition={transition}
                 layoutId="active"
-                className="bg-white backdrop-blur-sm rounded-2xl overflow-hidden border border-black/[0.2] shadow-2xl"
+                className="bg-white backdrop-blur-sm rounded-2xl overflow-hidden border border-black/[0.2] shadow-2xl z-50"
               >
                 <motion.div layout className="w-max h-full p-4">
                   {children}
@@ -62,7 +64,7 @@ const MenuItem = ({
   );
 };
 
-const Menu = ({
+const NavMenu = ({
   setActive,
   children,
 }: {
@@ -98,7 +100,6 @@ const TemplatePreviewCard = ({
   status,
   techStack,
   href,
-  key,
 }: {
   name: string;
   summary: string;
@@ -106,7 +107,6 @@ const TemplatePreviewCard = ({
   status: string;
   techStack: string[];
   href: string;
-  key?: string;
 }) => {
   return (
     <Link href={href} className="block">
@@ -152,7 +152,9 @@ const TemplatePreviewCard = ({
 };
 
 const Navbar: React.FC = () => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [active, setActive] = useState<string | null>(null);
+  const [showDownbar, setShowDownbar] = useState<boolean>(false);
 
   // Sample templates - one from each category
   const featuredTemplates = [
@@ -191,47 +193,128 @@ const Navbar: React.FC = () => {
   ];
 
   return (
-    <div className={cn("fixed top-10 inset-x-0 max-w-2xl mx-auto z-50")}>
-      <Menu setActive={setActive}>
-        <MenuItem setActive={setActive} active={active} item="Templates">
-          <div className="grid grid-cols-2 gap-4 max-w-4xl">
-            {featuredTemplates.map((template) => (
-              <TemplatePreviewCard
-                key={template.name}
-                name={template.name}
-                summary={template.summary}
-                category={template.category}
-                status={template.status}
-                techStack={template.techStack}
-                href={template.href}
-              />
-            ))}
-            <div className="col-span-2 pt-2 border-t border-gray-200">
-              <HoveredLink href="/templates" className="text-sm font-medium">
-                View All Templates →
-              </HoveredLink>
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
+      <div className="max-w-7xl mx-auto h-16 px-6 grid grid-cols-3 items-center">
+        {/* Left: Logo */}
+        <div className="flex items-center gap-2 font-bold text-xl tracking-tight">
+          <div className="flex items-center -space-x-1">
+            <div className="w-3 h-3 bg-black rounded-sm" />
+            <div className="w-3 h-3 bg-gray-400 rounded-full" />
+          </div>
+          <span>Stacks®</span>
+        </div>
+
+        {/* Center: Hamburger */}
+        <div className="flex justify-center">
+          <button onClick={() => setShowDownbar(!showDownbar)} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+            <AlignJustify size={20} />
+          </button>
+        </div>
+
+        {/* Desktop Nav */}
+        <div className="flex justify-end items-center">
+          <NavMenu setActive={setActive}>
+            <MenuItem setActive={setActive} active={active} item="Templates">
+              <div className="grid grid-cols-2 gap-4 max-w-4xl">
+                {featuredTemplates.map((template) => (
+                  <TemplatePreviewCard
+                    key={template.name}
+                    name={template.name}
+                    summary={template.summary}
+                    category={template.category}
+                    status={template.status}
+                    techStack={template.techStack}
+                    href={template.href}
+                  />
+                ))}
+                <div className="col-span-2 pt-2 border-t border-gray-200">
+                  <HoveredLink href="/templates" className="text-sm font-medium">
+                    View All Templates →
+                  </HoveredLink>
+                </div>
+              </div>
+            </MenuItem>
+
+            <MenuItem setActive={setActive} active={active} item="Pricing">
+              <div className="flex flex-col space-y-4 text-sm">
+                <HoveredLink href="#pricing">View Plans</HoveredLink>
+                <HoveredLink href="#pricing">Free Tier</HoveredLink>
+                <HoveredLink href="#pricing">Pro</HoveredLink>
+                <HoveredLink href="#pricing">Enterprise</HoveredLink>
+              </div>
+            </MenuItem>
+
+            <MenuItem setActive={setActive} active={active} item="Contribute">
+              <div className="flex flex-col space-y-4 text-sm">
+                <HoveredLink href="#contribute">Submit Template</HoveredLink>
+                <HoveredLink href="#contribute">Guidelines</HoveredLink>
+                <HoveredLink href="#contribute">Community</HoveredLink>
+              </div>
+            </MenuItem>
+          </NavMenu>
+        </div>
+
+        {/* Mobile Menu Toggle */}
+        <div className="md:hidden">
+          <button onClick={() => setIsOpen(!isOpen)} className="p-2">
+            {isOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Nav */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden bg-white border-b border-gray-100 overflow-hidden"
+          >
+            <div className="flex flex-col p-4 space-y-2">
+              <Link href="/templates">
+                <button className="text-left px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-lg w-full">
+                  Templates
+                </button>
+              </Link>
+              <Link href="#pricing">
+                <button className="text-left px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-lg w-full">
+                  Pricing
+                </button>
+              </Link>
+              <Link href="#contribute">
+                <button className="text-left px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-lg w-full">
+                  Contribute
+                </button>
+              </Link>
             </div>
-          </div>
-        </MenuItem>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-        <MenuItem setActive={setActive} active={active} item="Pricing">
-          <div className="flex flex-col space-y-4 text-sm">
-            <HoveredLink href="#pricing">View Plans</HoveredLink>
-            <HoveredLink href="#pricing">Free Tier</HoveredLink>
-            <HoveredLink href="#pricing">Pro</HoveredLink>
-            <HoveredLink href="#pricing">Enterprise</HoveredLink>
-          </div>
-        </MenuItem>
-
-        <MenuItem setActive={setActive} active={active} item="Contribute">
-          <div className="flex flex-col space-y-4 text-sm">
-            <HoveredLink href="#contribute">Submit Template</HoveredLink>
-            <HoveredLink href="#contribute">Guidelines</HoveredLink>
-            <HoveredLink href="#contribute">Community</HoveredLink>
-          </div>
-        </MenuItem>
-      </Menu>
-    </div>
+      {/* Downbar Overlay */}
+      <AnimatePresence>
+        {showDownbar && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed top-100 left-0 right-0 bottom-0 bg-white/50 backdrop-blur-3xl z-60 flex items-center justify-center"
+            onClick={() => setShowDownbar(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              className="rounded-2xl shadow-2xl w-[800px] h-[500px] bg-white/70 backdrop-blur-3xl border border-white/30 "
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Skiper58 />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </nav>
   );
 };
 
