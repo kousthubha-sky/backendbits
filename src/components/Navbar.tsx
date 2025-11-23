@@ -4,9 +4,11 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, AlignJustify } from "lucide-react";
-import {  Skiper58 } from "@/components/ui/downbar";
+import { Skiper58 } from "@/components/ui/downbar";
+import { UserProfile } from "@/components/auth/user-profile";
+import { useSession } from "@/lib/auth-client";
+import { Button } from "@/components/ui/button";
 
-// Utility function for className merging
 const cn = (...classes: (string | undefined | null | false)[]) => {
   return classes.filter(Boolean).join(" ");
 };
@@ -92,7 +94,6 @@ const HoveredLink = ({ children, ...rest }: React.ComponentProps<typeof Link>) =
   );
 };
 
-// Template Card Component for hover preview
 const TemplatePreviewCard = ({
   name,
   summary,
@@ -155,8 +156,8 @@ const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [active, setActive] = useState<string | null>(null);
   const [showDownbar, setShowDownbar] = useState<boolean>(false);
+  const { data: session, isPending } = useSession();
 
-  // Sample templates - one from each category
   const featuredTemplates = [
     {
       name: "Better Auth + MongoDB",
@@ -196,13 +197,13 @@ const Navbar: React.FC = () => {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
       <div className="max-w-7xl mx-auto h-16 px-6 grid grid-cols-3 items-center">
         {/* Left: Logo */}
-        <div className="flex items-center gap-2 font-bold text-xl tracking-tight">
+        <Link href="/" className="flex items-center gap-2 font-bold text-xl tracking-tight">
           <div className="flex items-center -space-x-1">
             <div className="w-3 h-3 bg-black rounded-sm" />
             <div className="w-3 h-3 bg-gray-400 rounded-full" />
           </div>
           <span>Stacks®</span>
-        </div>
+        </Link>
 
         {/* Center: Hamburger */}
         <div className="flex justify-center">
@@ -211,47 +212,67 @@ const Navbar: React.FC = () => {
           </button>
         </div>
 
-        {/* Desktop Nav */}
-        <div className="flex justify-end items-center">
-          <NavMenu setActive={setActive}>
-            <MenuItem setActive={setActive} active={active} item="Templates">
-              <div className="grid grid-cols-2 gap-4 max-w-4xl">
-                {featuredTemplates.map((template) => (
-                  <TemplatePreviewCard
-                    key={template.name}
-                    name={template.name}
-                    summary={template.summary}
-                    category={template.category}
-                    status={template.status}
-                    techStack={template.techStack}
-                    href={template.href}
-                  />
-                ))}
-                <div className="col-span-2 pt-2 border-t border-gray-200">
-                  <HoveredLink href="/templates" className="text-sm font-medium">
-                    View All Templates →
-                  </HoveredLink>
+        {/* Right: Desktop Nav with Auth */}
+        <div className="flex justify-end items-center gap-4">
+          <div className="hidden md:block">
+            <NavMenu setActive={setActive}>
+              <MenuItem setActive={setActive} active={active} item="Templates">
+                <div className="grid grid-cols-2 gap-4 max-w-4xl">
+                  {featuredTemplates.map((template) => (
+                    <TemplatePreviewCard
+                      key={template.name}
+                      name={template.name}
+                      summary={template.summary}
+                      category={template.category}
+                      status={template.status}
+                      techStack={template.techStack}
+                      href={template.href}
+                    />
+                  ))}
+                  <div className="col-span-2 pt-2 border-t border-gray-200">
+                    <HoveredLink href="/templates" className="text-sm font-medium">
+                      View All Templates →
+                    </HoveredLink>
+                  </div>
                 </div>
-              </div>
-            </MenuItem>
+              </MenuItem>
 
-            <MenuItem setActive={setActive} active={active} item="Pricing">
-              <div className="flex flex-col space-y-4 text-sm">
-                <HoveredLink href="#pricing">View Plans</HoveredLink>
-                <HoveredLink href="#pricing">Free Tier</HoveredLink>
-                <HoveredLink href="#pricing">Pro</HoveredLink>
-                <HoveredLink href="#pricing">Enterprise</HoveredLink>
-              </div>
-            </MenuItem>
+              <MenuItem setActive={setActive} active={active} item="Pricing">
+                <div className="flex flex-col space-y-4 text-sm">
+                  <HoveredLink href="#pricing">View Plans</HoveredLink>
+                  <HoveredLink href="#pricing">Free Tier</HoveredLink>
+                  <HoveredLink href="#pricing">Pro</HoveredLink>
+                  <HoveredLink href="#pricing">Enterprise</HoveredLink>
+                </div>
+              </MenuItem>
 
-            <MenuItem setActive={setActive} active={active} item="Contribute">
-              <div className="flex flex-col space-y-4 text-sm">
-                <HoveredLink href="#contribute">Submit Template</HoveredLink>
-                <HoveredLink href="#contribute">Guidelines</HoveredLink>
-                <HoveredLink href="#contribute">Community</HoveredLink>
-              </div>
-            </MenuItem>
-          </NavMenu>
+              <MenuItem setActive={setActive} active={active} item="Contribute">
+                <div className="flex flex-col space-y-4 text-sm">
+                  <HoveredLink href="#contribute">Submit Template</HoveredLink>
+                  <HoveredLink href="#contribute">Guidelines</HoveredLink>
+                  <HoveredLink href="#contribute">Community</HoveredLink>
+                </div>
+              </MenuItem>
+            </NavMenu>
+          </div>
+
+          {/* Auth Section */}
+          {!isPending && (
+            <div className="flex items-center gap-2">
+              {session ? (
+                <UserProfile />
+              ) : (
+                <>
+                  <Link href="/auth/login">
+                    <Button variant="ghost" size="sm">Sign In</Button>
+                  </Link>
+                  <Link href="/auth/signup">
+                    <Button size="sm">Sign Up</Button>
+                  </Link>
+                </>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Mobile Menu Toggle */}
@@ -287,6 +308,21 @@ const Navbar: React.FC = () => {
                   Contribute
                 </button>
               </Link>
+              {!session && (
+                <>
+                  <div className="border-t my-2" />
+                  <Link href="/auth/login">
+                    <button className="text-left px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-lg w-full">
+                      Sign In
+                    </button>
+                  </Link>
+                  <Link href="/auth/signup">
+                    <button className="text-left px-4 py-3 text-sm font-medium bg-black text-white hover:bg-gray-800 rounded-lg w-full">
+                      Sign Up
+                    </button>
+                  </Link>
+                </>
+              )}
             </div>
           </motion.div>
         )}

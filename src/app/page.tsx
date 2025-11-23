@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from "next/link";
+import dynamic from 'next/dynamic';
 import Hero from '../components/Hero';
 import StickyScroll from '../components/StickyScroll';
 import MobileScroll from '../components/MobileScroll';
@@ -10,7 +11,8 @@ import Newsletter from '../components/Newsletter';
 import Pricing from '../components/Pricing';
 import FAQ from '../components/FAQ';
 import Footer from '../components/Footer';
-import Navbar from '../components/Navbar';
+
+const Navbar = dynamic(() => import('../components/Navbar'), { ssr: false });
 
 
 
