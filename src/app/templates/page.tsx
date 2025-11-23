@@ -18,6 +18,7 @@ const Templates: React.FC = () => {
   ];
 
   const filteredTemplates = templates.filter(template => template.category === selectedCategory);
+  const showFilters = !['personal', 'Portfolio'].includes(selectedCategory);
 
   return (
     <div className="min-h-screen bg-white text-black font-sans">
@@ -65,7 +66,7 @@ const Templates: React.FC = () => {
            </motion.div>
          </section>
 
-         <TemplatesShowcase data={filteredTemplates} showDetails={true} className="pb-32" />
+          <TemplatesShowcase data={filteredTemplates} showDetails={true} showFilters={showFilters} className="pb-32" />
       </main>
 
       <Footer />

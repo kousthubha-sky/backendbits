@@ -51,7 +51,7 @@ const StickyScroll: React.FC = () => {
   });
 
   return (
-    <div ref={ref} className="relative h-[300vh] bg-white hidden md:block">
+    <div ref={ref} className="relative h-[300vh] bg-transparent">
       <div className="sticky top-0 h-screen flex items-center max-w-6xl mx-auto px-6">
         {/* Left Content - Text */}
         <div className="w-1/2 pr-20">

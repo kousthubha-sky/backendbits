@@ -5,7 +5,7 @@ import { Square, Triangle } from 'lucide-react';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="py-20 px-6 border-t border-gray-100">
+    <footer className="py-20 px-6 border-t border-gray-100 bg-white/80 backdrop-blur-sm">
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
         <div className="col-span-1">
           <div className="flex items-center gap-2 font-bold text-xl tracking-tight mb-6">
