@@ -17,7 +17,7 @@ const navigationItems = [
     description: "[1]",
   },
   {
-    name: "Pricing",
+    name: "Docs",
     href: "/pricing",
     description: "[2]",
   },

@@ -10,11 +10,11 @@ const Hero: React.FC = () => {
   return (
     <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 px-6 text-center max-w-8xl mx-auto overflow-hidden">
       {/* CPU Architecture Background */}
-      <div className="absolute top-34 -left-185 inset-0 flex items-center justify-center opacity-90 pointer-events-none">
-        <div className="w-full h-full max-w-3xl">
-          <CpuArchitecture />
-        </div>
-      </div>
+<div className="absolute top-30 -left-70 md:top-34 md:-left-185 inset-0 flex items-center justify-center opacity-90 pointer-events-none">
+  <div className="w-full h-full max-w-sm md:max-w-3xl">
+    <CpuArchitecture />
+  </div>
+</div>
 
       {/* Content (on top of CPU) */}
       <div className="relative z-10">
