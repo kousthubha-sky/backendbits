@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, AlignJustify } from "lucide-react";
+import { Menu, X, User as UserIcon } from "lucide-react";
 import { Skiper58 } from "@/components/ui/downbar";
 import { UserProfile } from "@/components/auth/user-profile";
+import { MenuToggleIcon } from "@/components/ui/menu-toggle-icon";
 import { useSession } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 
@@ -76,7 +77,7 @@ const NavMenu = ({
   return (
     <nav
       onMouseLeave={() => setActive(null)}
-      className="relative rounded-full border border-transparent bg-white shadow-input flex justify-center space-x-4 px-8 py-6"
+      className="relative rounded-full border border-transparent shadow-input flex justify-center space-x-4 px-8 py-6"
     >
       {children}
     </nav>
@@ -156,7 +157,18 @@ const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [active, setActive] = useState<string | null>(null);
   const [showDownbar, setShowDownbar] = useState<boolean>(false);
+  const [showAccount, setShowAccount] = useState<boolean>(false);
   const { data: session, isPending } = useSession();
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (showAccount && !(event.target as Element).closest('.account-dropdown')) {
+        setShowAccount(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showAccount]);
 
   const featuredTemplates = [
     {
@@ -195,7 +207,7 @@ const Navbar: React.FC = () => {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
-      <div className="max-w-7xl mx-auto h-16 px-6 grid grid-cols-3 items-center">
+      <div className="max-w-7xl mx-auto h-16 px-4 sm:px-6 grid grid-cols-3 items-center">
         {/* Left: Logo */}
         <Link href="/" className="flex items-center gap-2 font-bold text-xl tracking-tight">
           <div className="flex items-center -space-x-1">
@@ -205,62 +217,85 @@ const Navbar: React.FC = () => {
           <span>Stacks®</span>
         </Link>
 
-        {/* Center: Hamburger */}
-        <div className="flex justify-center">
-          <button onClick={() => setShowDownbar(!showDownbar)} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-            <AlignJustify size={20} />
+        {/* Center: Desktop Navigation */}
+        <div className="hidden lg:flex justify-center">
+          <button
+            onClick={() => setShowDownbar(!showDownbar)}
+            className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            <MenuToggleIcon open={showDownbar} className="size-10" duration={500} />
           </button>
         </div>
 
-        {/* Right: Desktop Nav with Auth */}
-        <div className="flex justify-end items-center gap-4">
-          <div className="hidden md:block">
-            <NavMenu setActive={setActive}>
-              <MenuItem setActive={setActive} active={active} item="Templates">
-                <div className="grid grid-cols-2 gap-4 max-w-4xl">
-                  {featuredTemplates.map((template) => (
-                    <TemplatePreviewCard
-                      key={template.name}
-                      name={template.name}
-                      summary={template.summary}
-                      category={template.category}
-                      status={template.status}
-                      techStack={template.techStack}
-                      href={template.href}
-                    />
-                  ))}
-                  <div className="col-span-2 pt-2 border-t border-gray-200">
-                    <HoveredLink href="/templates" className="text-sm font-medium">
-                      View All Templates →
-                    </HoveredLink>
-                  </div>
+        {/* Right: Desktop Navigation with Auth */}
+        <div className="hidden lg:flex justify-end items-center gap-4">
+          <NavMenu setActive={setActive}>
+            <MenuItem setActive={setActive} active={active} item="Templates">
+              <div className="grid grid-cols-2 gap-4 max-w-4xl">
+                {featuredTemplates.map((template) => (
+                  <TemplatePreviewCard
+                    key={template.name}
+                    name={template.name}
+                    summary={template.summary}
+                    category={template.category}
+                    status={template.status}
+                    techStack={template.techStack}
+                    href={template.href}
+                  />
+                ))}
+                <div className="col-span-2 pt-2 border-t border-gray-200">
+                  <HoveredLink href="/templates" className="text-sm font-medium">
+                    View All Templates →
+                  </HoveredLink>
                 </div>
-              </MenuItem>
+              </div>
+            </MenuItem>
 
-              <MenuItem setActive={setActive} active={active} item="Pricing">
-                <div className="flex flex-col space-y-4 text-sm">
-                  <HoveredLink href="#pricing">View Plans</HoveredLink>
-                  <HoveredLink href="#pricing">Free Tier</HoveredLink>
-                  <HoveredLink href="#pricing">Pro</HoveredLink>
-                  <HoveredLink href="#pricing">Enterprise</HoveredLink>
-                </div>
-              </MenuItem>
+            <MenuItem setActive={setActive} active={active} item="Pricing">
+              <div className="flex flex-col space-y-4 text-sm">
+                <HoveredLink href="#pricing">View Plans</HoveredLink>
+                <HoveredLink href="#pricing">Free Tier</HoveredLink>
+                <HoveredLink href="#pricing">Pro</HoveredLink>
+                <HoveredLink href="#pricing">Enterprise</HoveredLink>
+              </div>
+            </MenuItem>
 
-              <MenuItem setActive={setActive} active={active} item="Contribute">
-                <div className="flex flex-col space-y-4 text-sm">
-                  <HoveredLink href="#contribute">Submit Template</HoveredLink>
-                  <HoveredLink href="#contribute">Guidelines</HoveredLink>
-                  <HoveredLink href="#contribute">Community</HoveredLink>
-                </div>
-              </MenuItem>
-            </NavMenu>
-          </div>
+            <MenuItem setActive={setActive} active={active} item="Contribute">
+              <div className="flex flex-col space-y-4 text-sm">
+                <HoveredLink href="#contribute">Submit Template</HoveredLink>
+                <HoveredLink href="#contribute">Guidelines</HoveredLink>
+                <HoveredLink href="#contribute">Community</HoveredLink>
+              </div>
+            </MenuItem>
+          </NavMenu>
 
           {/* Auth Section */}
           {!isPending && (
             <div className="flex items-center gap-2">
               {session ? (
-                <UserProfile />
+                <div className="relative account-dropdown">
+                  <button
+                    onClick={() => setShowAccount(!showAccount)}
+                    className="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                  >
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-black text-white">
+                      <UserIcon className="h-4 w-4" />
+                    </div>
+                    <span className="text-sm font-medium">{session.user.name || "Account"}</span>
+                  </button>
+                  <AnimatePresence>
+                    {showAccount && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                        className="absolute top-full right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg p-4 w-64 z-50"
+                      >
+                        <UserProfile />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               ) : (
                 <>
                   <Link href="/auth/login">
@@ -275,52 +310,85 @@ const Navbar: React.FC = () => {
           )}
         </div>
 
-        {/* Mobile Menu Toggle */}
-        <div className="md:hidden">
+        {/* Mobile: Hamburger Menu and Downbar Button */}
+        <div className="flex lg:hidden items-center gap-2">
+          {/* Downbar Button - Visible on mobile */}
+          <button
+            onClick={() => setShowDownbar(!showDownbar)}
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            <MenuToggleIcon open={showDownbar} className="size-5" duration={500} />
+          </button>
+
+          {/* Mobile Menu Toggle */}
           <button onClick={() => setIsOpen(!isOpen)} className="p-2">
             {isOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Nav */}
+      {/* Mobile Navigation Menu */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white border-b border-gray-100 overflow-hidden"
+            className="lg:hidden bg-white border-b border-gray-100 overflow-hidden"
           >
-            <div className="flex flex-col p-4 space-y-2">
-              <Link href="/templates">
-                <button className="text-left px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-lg w-full">
+            <div className="flex flex-col p-4 space-y-0">
+              {/* Main Navigation Links - Full Width */}
+              <Link href="/templates" onClick={() => setIsOpen(false)}>
+                <div className="w-full px-4 py-4 text-left text-base font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors border-b border-gray-100 last:border-b-0">
                   Templates
-                </button>
+                </div>
               </Link>
-              <Link href="#pricing">
-                <button className="text-left px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-lg w-full">
+              
+              <Link href="#pricing" onClick={() => setIsOpen(false)}>
+                <div className="w-full px-4 py-4 text-left text-base font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors border-b border-gray-100 last:border-b-0">
                   Pricing
-                </button>
+                </div>
               </Link>
-              <Link href="#contribute">
-                <button className="text-left px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-lg w-full">
+              
+              <Link href="#contribute" onClick={() => setIsOpen(false)}>
+                <div className="w-full px-4 py-4 text-left text-base font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors border-b border-gray-100 last:border-b-0">
                   Contribute
-                </button>
-              </Link>
-              {!session && (
+                </div>
+               </Link>
+
+               {/* Auth Section */}
+              {!session ? (
                 <>
-                  <div className="border-t my-2" />
-                  <Link href="/auth/login">
-                    <button className="text-left px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-lg w-full">
-                      Sign In
-                    </button>
-                  </Link>
-                  <Link href="/auth/signup">
-                    <button className="text-left px-4 py-3 text-sm font-medium bg-black text-white hover:bg-gray-800 rounded-lg w-full">
-                      Sign Up
-                    </button>
-                  </Link>
+                  <div className="border-t border-gray-200 my-2 pt-2">
+                    <Link href="/auth/login" onClick={() => setIsOpen(false)}>
+                      <div className="w-full px-4 py-4 text-left text-base font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors border-b border-gray-100 last:border-b-0">
+                        Sign In
+                      </div>
+                    </Link>
+                    
+                    <Link href="/auth/signup" onClick={() => setIsOpen(false)}>
+                      <div className="w-full px-4 py-4 text-left text-base font-medium bg-black text-white hover:bg-gray-800 rounded-lg transition-colors">
+                        Sign Up
+                      </div>
+                    </Link>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="border-t border-gray-200 my-2 pt-2">
+                    <div className="w-full px-4 py-4">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-black text-white">
+                          <UserIcon className="h-5 w-5" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-gray-900">{session.user.name}</p>
+                          <p className="text-sm text-gray-500">{session.user.email}</p>
+                        </div>
+                      </div>
+                      <UserProfile />
+                    </div>
+                  </div>
                 </>
               )}
             </div>
@@ -342,7 +410,7 @@ const Navbar: React.FC = () => {
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
-              className="rounded-2xl shadow-2xl w-[800px] h-[500px] bg-white/70 backdrop-blur-3xl border border-white/30 "
+              className="rounded-2xl shadow-2xl w-full max-w-4xl h-[500px] mx-4 bg-white/70 backdrop-blur-3xl border border-white/30"
               onClick={(e) => e.stopPropagation()}
             >
               <Skiper58 />

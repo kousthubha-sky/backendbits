@@ -6,10 +6,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { toast } from "sonner";
-import { Button } from "../ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
-import { Input } from "../ui/input";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
 import { Github } from "lucide-react";
 
@@ -56,11 +56,11 @@ export function SignupForm() {
       });
 
       if (result.error) {
-        console.error("Signup error:", result.error);
         toast.error(result.error.message || "Failed to create account");
       } else {
         toast.success("Account created successfully!");
-        router.push("/dashboard");
+        // Redirect to home page instead of /todos
+        router.push("/");
         router.refresh();
       }
     } catch {
@@ -75,6 +75,7 @@ export function SignupForm() {
     try {
       await authClient.signIn.social({
         provider: "github",
+        callbackURL: "/", // Redirect to home after OAuth
       });
     } catch {
       toast.error("Failed to sign in with GitHub");
@@ -170,31 +171,27 @@ export function SignupForm() {
           </form>
         </Form>
         
-        {process.env.NEXT_PUBLIC_GITHUB_OAUTH_ENABLED !== 'false' && (
-          <>
-            <div className="relative my-4">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">
-                  Or continue with
-                </span>
-              </div>
-            </div>
+        <div className="relative my-4">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-background px-2 text-muted-foreground">
+              Or continue with
+            </span>
+          </div>
+        </div>
 
-            <Button
-              variant="outline"
-              type="button"
-              className="w-full"
-              onClick={handleGitHubSignIn}
-              disabled={isLoading}
-            >
-              <Github className="mr-2 h-4 w-4" />
-              GitHub
-            </Button>
-          </>
-        )}
+        <Button
+          variant="outline"
+          type="button"
+          className="w-full"
+          onClick={handleGitHubSignIn}
+          disabled={isLoading}
+        >
+          <Github className="mr-2 h-4 w-4" />
+          GitHub
+        </Button>
       </CardContent>
     </Card>
   );

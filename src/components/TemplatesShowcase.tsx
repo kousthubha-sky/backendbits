@@ -90,7 +90,7 @@ const TemplatesShowcase = ({
   };
 
   return (
-    <section id={sectionId} className={`px-6 py-20 md:py-32 ${className}`}>
+    <section id={sectionId} className={`px-6 ${className}`}>
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

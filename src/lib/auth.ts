@@ -8,7 +8,7 @@ if (!process.env.BETTER_AUTH_SECRET) {
 }
 
 export const auth = betterAuth({
-    database: mongodbAdapter((await clientPromise).db(process.env.MONGODB_DB || "backend-bits-auth")),
+    database: mongodbAdapter(async () => (await clientPromise).db(process.env.MONGODB_DB || "backend-bits-auth")),
   emailAndPassword: {
     enabled: true,
   },

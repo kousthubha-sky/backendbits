@@ -1,13 +1,15 @@
+
+
 import Link from "next/link";
 import { SignupForm } from "@/components/auth/signup-form";
 import { getOptionalServerSession } from "@/lib/auth-server";
 import { redirect } from "next/navigation";
 
 export default async function SignupPage() {
-  // If user is already authenticated, redirect to dashboard
+  // If user is already authenticated, redirect to home
   const session = await getOptionalServerSession();
   if (session) {
-    redirect("/dashboard");
+    redirect("/");
   }
 
   return (
@@ -31,7 +33,7 @@ export default async function SignupPage() {
           Already have an account?{" "}
           <Link
             href="/auth/login"
-            className="hover:text-brand underline underline-offset-4"
+            className="hover:text-brand underline underline-offset-4 font-medium"
           >
             Sign in
           </Link>
