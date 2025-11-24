@@ -51,15 +51,7 @@ const TemplatesShowcase = ({
   ];
   const extraY = useTransform(scrollYProgress, [0, 1], [0, -40]);
 
-  useEffect(() => {
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css';
-    document.head.appendChild(link);
-    return () => {
-      document.head.removeChild(link);
-    };
-  }, []);
+
 
   const getDeviconClass = (tech: string) => {
     const techMap: { [key: string]: string } = {
@@ -184,10 +176,26 @@ const TemplatesShowcase = ({
 
 
   const handleGitHubSearch = useCallback(async () => {
-    if (!githubSearchQuery.trim()) {
+    const query = githubSearchQuery.trim();
+
+    if (!query) {
       setGithubRepos([]);
       setSearchError(null);
       return;
+    }
+
+    // Basic validation for GitHub usernames/organization names
+    if (searchType === 'user' || searchType === 'org') {
+      if (query.length < 1 || query.length > 39) {
+        setSearchError('Username/organization name must be between 1 and 39 characters');
+        setGithubRepos([]);
+        return;
+      }
+      if (!/^[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}$/.test(query)) {
+        setSearchError('Invalid format. Use only letters, numbers, and hyphens (cannot start or end with hyphen)');
+        setGithubRepos([]);
+        return;
+      }
     }
 
     setIsSearching(true);
@@ -197,11 +205,11 @@ const TemplatesShowcase = ({
       let repos: TemplateDefinition[] = [];
 
       if (searchType === 'user') {
-        repos = await githubService.getUserReposAsTemplates(githubSearchQuery.trim());
+        repos = await githubService.getUserReposAsTemplates(query);
       } else if (searchType === 'org') {
-        repos = await githubService.getOrgReposAsTemplates(githubSearchQuery.trim());
+        repos = await githubService.getOrgReposAsTemplates(query);
       } else {
-        repos = await githubService.searchReposAsTemplates(githubSearchQuery.trim());
+        repos = await githubService.searchReposAsTemplates(query);
       }
 
       setGithubRepos(repos);
@@ -270,64 +278,68 @@ const TemplatesShowcase = ({
            </h2>
            <p className="text-xl text-gray-500 max-w-2xl mx-auto mb-8">{description}</p>
 
-           {/* GitHub Search */}
-           {enableGitHubSearch && (
-             <div className="max-w-3xl mx-auto mb-8">
-               <div className="flex gap-2 mb-4">
-                 <div className="flex gap-2">
-                   <button
-                     onClick={() => setSearchType('user')}
-                     className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                       searchType === 'user'
-                         ? 'bg-black text-white'
-                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                     }`}
-                   >
-                     User
-                   </button>
-                   <button
-                     onClick={() => setSearchType('org')}
-                     className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                       searchType === 'org'
-                         ? 'bg-black text-white'
-                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                     }`}
-                   >
-                     Organization
-                   </button>
-                   <button
-                     onClick={() => setSearchType('search')}
-                     className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                       searchType === 'search'
-                         ? 'bg-black text-white'
-                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                     }`}
-                   >
-                     Repo Search
-                   </button>
-                 </div>
-                 <div className="flex-1 relative">
-                   <input
-                     type="text"
-                     value={githubSearchQuery}
-                     onChange={(e) => setGithubSearchQuery(e.target.value)}
-                     placeholder={
-                       searchType === 'user'
-                         ? 'Enter GitHub username...'
-                         : searchType === 'org'
-                         ? 'Enter organization name...'
-                         : 'Search repositories...'
-                     }
-                     className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-                   />
-                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                   {isSearching && (
-                     <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                       <div className="w-4 h-4 border-2 border-gray-300 border-t-black rounded-full animate-spin"></div>
-                     </div>
-                   )}
-                 </div>
-               </div>
+            {/* GitHub Search */}
+            {enableGitHubSearch && (
+              <div className="max-w-3xl mx-auto mb-8 px-4 sm:px-0">
+                {/* Mobile: Stack vertically, Desktop: Horizontal layout */}
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-2 mb-4">
+                  {/* Search type buttons - responsive grid on mobile */}
+                  <div className="flex gap-2 sm:gap-2 w-full sm:w-auto">
+                    <button
+                      onClick={() => setSearchType('user')}
+                      className={`flex-1 sm:flex-none px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                        searchType === 'user'
+                          ? 'bg-black text-white'
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      User
+                    </button>
+                    <button
+                      onClick={() => setSearchType('org')}
+                      className={`flex-1 sm:flex-none px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                        searchType === 'org'
+                          ? 'bg-black text-white'
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      Organization
+                    </button>
+                    <button
+                      onClick={() => setSearchType('search')}
+                      className={`flex-1 sm:flex-none px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                        searchType === 'search'
+                          ? 'bg-black text-white'
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      Repo Search
+                    </button>
+                  </div>
+
+                  {/* Search input - full width on mobile */}
+                  <div className="flex-1 relative w-full sm:w-auto">
+                    <input
+                      type="text"
+                      value={githubSearchQuery}
+                      onChange={(e) => setGithubSearchQuery(e.target.value)}
+                      placeholder={
+                        searchType === 'user'
+                          ? 'Enter GitHub username...'
+                          : searchType === 'org'
+                          ? 'Enter organization name...'
+                          : 'Search repositories...'
+                      }
+                      className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-base sm:text-sm"
+                    />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    {isSearching && (
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                        <div className="w-4 h-4 border-2 border-gray-300 border-t-black rounded-full animate-spin"></div>
+                      </div>
+                    )}
+                  </div>
+                </div>
                {searchError && (
                  <div className="text-sm text-red-600 text-center mb-4">
                    {searchError}

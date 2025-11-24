@@ -157,8 +157,8 @@ export const templates: TemplateDefinition[] = [
        "Responsive design for all devices",
        "Analysis history and data persistence"
      ],
-     demoUrl: null,
-     codeUrl: "https://github.com/kousthubha-sky/gitrepo-analyzer",
+      demoUrl: "https://gitrepo-analyzer-bhatiyani.vercel.app",
+      codeUrl: "https://github.com/kousthubha-sky/gitrepo-analyzer",
       deployment: {
         headline: "Deploy frontend on Vercel, backend on Render",
         providers: ["Vercel", "Render", "Supabase"],
@@ -589,8 +589,8 @@ export const templates: TemplateDefinition[] = [
            "Social login providers",
            "Organization management"
          ],
-         demoUrl: null,
-         codeUrl: "https://github.com/clerk/nextjs-auth-starter-template",
+          demoUrl: "https://nextjs-auth-starter-template-kit.vercel.app",
+          codeUrl: "https://github.com/clerk/nextjs-auth-starter-template",
          deployment: {
            headline: "Deploy to Vercel, Netlify, or any Node.js host",
            providers: ["Vercel", "Netlify", "Railway"],

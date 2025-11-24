@@ -4,6 +4,7 @@ import React, { useState, useRef } from 'react';
 import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
 import { Square, Circle, Triangle } from 'lucide-react';
 
+
 interface ContentItem {
   title: string;
   description: string;
@@ -91,6 +92,7 @@ const StickyScroll: React.FC = () => {
               transition={{ duration: 0.5, ease: "easeInOut" }}
             >
                {item.icon}
+               
             </motion.div>
           ))}
         </div>

@@ -59,7 +59,15 @@ export class GitHubService {
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch user: ${response.statusText}`);
+      if (response.status === 404) {
+        throw new Error(`GitHub user "${username}" not found`);
+      } else if (response.status === 403) {
+        throw new Error('GitHub API rate limit exceeded. Please try again later or authenticate with a GitHub token');
+      } else if (response.status === 422) {
+        throw new Error('Invalid username format');
+      } else {
+        throw new Error(`Failed to fetch user: ${response.status} ${response.statusText || 'Unknown error'}`);
+      }
     }
 
     return response.json();
@@ -74,7 +82,15 @@ export class GitHubService {
     );
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch repos: ${response.statusText}`);
+      if (response.status === 404) {
+        throw new Error(`GitHub user "${username}" not found or has no public repositories`);
+      } else if (response.status === 403) {
+        throw new Error('GitHub API rate limit exceeded. Please try again later or authenticate with a GitHub token');
+      } else if (response.status === 422) {
+        throw new Error('Invalid username format');
+      } else {
+        throw new Error(`Failed to fetch repos: ${response.status} ${response.statusText || 'Unknown error'}`);
+      }
     }
 
     return response.json();
@@ -89,7 +105,15 @@ export class GitHubService {
     );
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch org repos: ${response.statusText}`);
+      if (response.status === 404) {
+        throw new Error(`GitHub organization "${orgName}" not found or has no public repositories`);
+      } else if (response.status === 403) {
+        throw new Error('GitHub API rate limit exceeded. Please try again later or authenticate with a GitHub token');
+      } else if (response.status === 422) {
+        throw new Error('Invalid organization name format');
+      } else {
+        throw new Error(`Failed to fetch org repos: ${response.status} ${response.statusText || 'Unknown error'}`);
+      }
     }
 
     return response.json();
@@ -101,7 +125,10 @@ export class GitHubService {
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch languages: ${response.statusText}`);
+      // Don't throw error for languages, just return empty object
+      // This is not critical information
+      console.warn(`Failed to fetch languages: ${response.status} ${response.statusText || 'Unknown error'}`);
+      return {};
     }
 
     return response.json();
@@ -116,7 +143,15 @@ export class GitHubService {
     );
 
     if (!response.ok) {
-      throw new Error(`Failed to search repositories: ${response.statusText}`);
+      if (response.status === 422) {
+        throw new Error('Invalid search query. Please try a different search term');
+      } else if (response.status === 403) {
+        throw new Error('GitHub API rate limit exceeded. Please try again later or authenticate with a GitHub token');
+      } else if (response.status === 503) {
+        throw new Error('GitHub API is temporarily unavailable. Please try again later');
+      } else {
+        throw new Error(`Failed to search repositories: ${response.status} ${response.statusText || 'Unknown error'}`);
+      }
     }
 
     return response.json();
@@ -142,7 +177,7 @@ export class GitHubService {
     return {
       slug: repo.full_name.replace('/', '-'),
       name: repo.name.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
-      status: 'Production-ready',
+      status: 'GitHub',
       category: 'github',
       summary: repo.description || 'No description available',
       description: repo.description || 'No description available',

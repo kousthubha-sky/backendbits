@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import React from "react";
+import Link from "next/link";
 
 import { cn } from "@/lib/utils";
 
@@ -12,41 +13,42 @@ const navigationItems = [
     description: "[0]",
   },
   {
-    name: "Components",
-    href: "/components",
+    name: "Templates",
+    href: "/",
     description: "[1]",
   },
-  {
+    {
     name: "Docs",
-    href: "/pricing",
-    description: "[2]",
+    href: "/",
+    description: "[7]",
   },
   {
-    name: "How to use",
-    href: "/docs/quick-start",
+    name: "HOW TO use",
+    href: "/",
     description: "[3]",
   },
   {
     name: "Account",
-    href: "/user",
+    href: "/profile",
     description: "[4]",
   },
-  {
-    name: "Login",
-    href: "/login",
-    description: "[7]",
+
+   {
+    name: "Guidelines",
+    href: "/guidelines",
+    description: "[2]",
   },
 ];
 
 export const Skiper58 = () => {
   return (
-    <ul className="bg-white/10 flex min-h-full w-full flex-1 flex-col items-stretch justify-center gap-0 rounded-2xl p-4 border border-white/20 shadow-2xl backdrop-blur-3xl">
+    <ul className="bg-white/10 flex min-h-full w-full flex-1 flex-col items-stretch justify-start gap-0 rounded-2xl p-4 border border-white/20 shadow-2xl backdrop-blur-3xl">
       {navigationItems.map((item, index) => (
         <li
           className="relative flex cursor-pointer flex-col items-center justify-center flex-1"
           key={index}
         >
-          <div className="relative flex items-center justify-center w-full h-full bg-white backdrop-blur-md">
+          <Link href={item.href} className="relative flex items-center justify-center w-full h-full bg-white backdrop-blur-md">
             <TextRoll
               center
               className="text-[8vw] font-extrabold uppercase leading-none tracking-[-0.03em] transition-colors"
@@ -54,7 +56,7 @@ export const Skiper58 = () => {
             >
               {item.name}
             </TextRoll>
-          </div>
+          </Link>
         </li>
       ))}
     </ul>
@@ -75,7 +77,7 @@ const TextRoll: React.FC<{
       whileHover="hovered"
       className={cn("relative block overflow-hidden", className)}
       style={{
-        lineHeight: 0.75,
+        lineHeight: 0.85,
         ...style,
       }}
     >

@@ -1,10 +1,11 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { useSession, authClient } from "@/lib/auth-client";
-import { LogOut } from "lucide-react";
+import { LogOut, User, Settings } from "lucide-react";
 
 export function UserProfile() {
   const { data: session, isPending } = useSession();
@@ -34,16 +35,25 @@ export function UserProfile() {
   }
 
   return (
-    <div className="flex flex-col gap-3">
-      <div>
+    <div className="flex flex-col gap-2">
+      <div className="px-2 py-1">
         <p className="text-sm font-medium">{session.user.name || "User"}</p>
-        <p className="text-xs text-muted-foreground">{session.user.email}</p>
+        <p className="text-xs text-gray-500">{session.user.email}</p>
       </div>
       <Button
         variant="ghost"
         size="sm"
+        onClick={() => router.push("/profile")}
+        className="gap-2 justify-start w-full"
+      >
+        <User className="h-4 w-4" />
+        View Profile
+      </Button>
+      <Button
+        variant="ghost"
+        size="sm"
         onClick={handleSignOut}
-        className="gap-2 justify-start"
+        className="gap-2 justify-start w-full"
       >
         <LogOut className="h-4 w-4" />
         Sign Out

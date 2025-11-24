@@ -158,6 +158,7 @@ const Navbar: React.FC = () => {
   const [active, setActive] = useState<string | null>(null);
   const [showDownbar, setShowDownbar] = useState<boolean>(false);
   const [showAccount, setShowAccount] = useState<boolean>(false);
+  const [userRole, setUserRole] = useState<string>('user');
   const { data: session, isPending } = useSession();
 
   useEffect(() => {
@@ -169,6 +170,24 @@ const Navbar: React.FC = () => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [showAccount]);
+
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      if (session) {
+        try {
+          const response = await fetch('/api/users/profile');
+          if (response.ok) {
+            const userData = await response.json();
+            setUserRole(userData.role || 'user');
+          }
+        } catch (error) {
+          console.error('Error fetching user role:', error);
+        }
+      }
+    };
+
+    fetchUserRole();
+  }, [session]);
 
   const featuredTemplates = [
     {
@@ -260,13 +279,23 @@ const Navbar: React.FC = () => {
               </div>
             </MenuItem>
 
-            <MenuItem setActive={setActive} active={active} item="Contribute">
-              <div className="flex flex-col space-y-4 text-sm">
-                <HoveredLink href="#contribute">Submit Template</HoveredLink>
-                <HoveredLink href="#contribute">Guidelines</HoveredLink>
-                <HoveredLink href="#contribute">Community</HoveredLink>
-              </div>
-            </MenuItem>
+             <MenuItem setActive={setActive} active={active} item="Contribute">
+               <div className="flex flex-col space-y-4 text-sm">
+                 <HoveredLink href="/contribute">Submit Template</HoveredLink>
+                 <HoveredLink href="/contribute">My Submissions</HoveredLink>
+                 <HoveredLink href="/guidelines">Guidelines</HoveredLink>
+               </div>
+             </MenuItem>
+
+             {/* Admin Menu - Only show for admins */}
+             {userRole === 'admin' && (
+               <MenuItem setActive={setActive} active={active} item="Admin">
+                 <div className="flex flex-col space-y-4 text-sm">
+                   <HoveredLink href="/admin">Dashboard</HoveredLink>
+                   <HoveredLink href="/admin">User Management</HoveredLink>
+                 </div>
+               </MenuItem>
+             )}
           </NavMenu>
 
           {/* Auth Section */}
@@ -291,7 +320,7 @@ const Navbar: React.FC = () => {
                         exit={{ opacity: 0, scale: 0.95, y: 10 }}
                         className="absolute top-full right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg p-4 w-64 z-50"
                       >
-                        <UserProfile />
+                     <UserProfile />
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -315,9 +344,9 @@ const Navbar: React.FC = () => {
           {/* Downbar Button - Visible on mobile */}
           <button
             onClick={() => setShowDownbar(!showDownbar)}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className=" hover:bg-gray-100 rounded-lg transition-colors"
           >
-            <MenuToggleIcon open={showDownbar} className="size-5" duration={500} />
+            <MenuToggleIcon open={showDownbar} className="size-6" duration={500} />
           </button>
 
           {/* Mobile Menu Toggle */}
@@ -350,11 +379,26 @@ const Navbar: React.FC = () => {
                 </div>
               </Link>
               
-              <Link href="#contribute" onClick={() => setIsOpen(false)}>
-                <div className="w-full px-4 py-4 text-left text-base font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors border-b border-gray-100 last:border-b-0">
-                  Contribute
-                </div>
+               <Link href="/contribute" onClick={() => setIsOpen(false)}>
+                 <div className="w-full px-4 py-4 text-left text-base font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors border-b border-gray-100 last:border-b-0">
+                   Contribute
+                 </div>
                </Link>
+
+                <Link href="/guidelines" onClick={() => setIsOpen(false)}>
+                  <div className="w-full px-4 py-4 text-left text-base font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors border-b border-gray-100 last:border-b-0">
+                    Guidelines
+                  </div>
+                </Link>
+
+                {/* Admin Menu - Mobile */}
+               {userRole === 'admin' && (
+                 <Link href="/admin" onClick={() => setIsOpen(false)}>
+                   <div className="w-full px-4 py-4 text-left text-base font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors border-b border-gray-100 last:border-b-0">
+                     Admin Dashboard
+                   </div>
+                 </Link>
+               )}
 
                {/* Auth Section */}
               {!session ? (
@@ -386,7 +430,7 @@ const Navbar: React.FC = () => {
                           <p className="text-sm text-gray-500">{session.user.email}</p>
                         </div>
                       </div>
-                      <UserProfile />
+                       <UserProfile />
                     </div>
                   </div>
                 </>

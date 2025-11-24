@@ -1,33 +1,14 @@
 import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
-import { MongoClient, Db } from "mongodb";
+import { getAuthDatabaseSync } from "./mongodb";
 
 // Validate required environment variables
 if (!process.env.BETTER_AUTH_SECRET) {
   throw new Error('Missing required environment variable: BETTER_AUTH_SECRET');
 }
 
-if (!process.env.MONGODB_URI) {
-  throw new Error('Missing required environment variable: MONGODB_URI');
-}
-
-let cachedDb: Db | null = null;
-
-function getDatabase(): Db {
-  if (cachedDb) {
-    return cachedDb;
-  }
-
-  const client = new MongoClient(process.env.MONGODB_URI!, {
-    appName: "backend-bits-auth",
-  });
-
-  cachedDb = client.db(process.env.MONGODB_DB || "backend-bits-auth");
-  return cachedDb;
-}
-
 export const auth = betterAuth({
-  database: mongodbAdapter(getDatabase()),
+  database: mongodbAdapter(getAuthDatabaseSync()),
   emailAndPassword: {
     enabled: true,
   },
@@ -38,4 +19,61 @@ export const auth = betterAuth({
     },
   } : undefined,
   secret: process.env.BETTER_AUTH_SECRET,
+  user: {
+    additionalFields: {
+      role: {
+        type: "string",
+        defaultValue: "user",
+        required: false,
+      },
+      reputationScore: {
+        type: "number",
+        defaultValue: 0,
+        required: false,
+      },
+      githubUsername: {
+        type: "string",
+        required: false,
+      },
+      avatarUrl: {
+        type: "string",
+        required: false,
+      },
+      bio: {
+        type: "string",
+        required: false,
+      },
+      website: {
+        type: "string",
+        required: false,
+      },
+      location: {
+        type: "string",
+        required: false,
+      },
+      skills: {
+        type: "string[]",
+        required: false,
+      },
+      isVerified: {
+        type: "boolean",
+        defaultValue: false,
+        required: false,
+      },
+      verificationBadge: {
+        type: "string",
+        required: false,
+      },
+      joinedDate: {
+        type: "date",
+        defaultValue: () => new Date(),
+        required: false,
+      },
+      lastActive: {
+        type: "date",
+        defaultValue: () => new Date(),
+        required: false,
+      },
+    },
+  },
 });
