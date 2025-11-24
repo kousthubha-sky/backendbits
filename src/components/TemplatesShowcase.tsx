@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
-import { ExternalLink, Github, Copy, Check, X } from 'lucide-react';
+import { ExternalLink, Github, Copy, Check, X, Search } from 'lucide-react';
 import { templates as defaultTemplates, TemplateDefinition } from '../data/templates';
+import { githubService } from '../lib/github';
 
 interface TemplatesShowcaseProps {
   data?: TemplateDefinition[];
@@ -12,6 +13,7 @@ interface TemplatesShowcaseProps {
   title?: string;
   description?: string;
   showFilters?: boolean;
+  enableGitHubSearch?: boolean;
 }
 
 const TemplatesShowcase = ({
@@ -21,6 +23,7 @@ const TemplatesShowcase = ({
   title = "Production-ready templates",
   description = "Clone, customize, and ship secure stacks in minutes—not days.",
   showFilters = true,
+  enableGitHubSearch = false,
 }) => {
   const { scrollYProgress } = useScroll();
   const [copiedSlug, setCopiedSlug] = useState<string | null>(null);
@@ -31,6 +34,11 @@ const TemplatesShowcase = ({
   const [showAuth, setShowAuth] = useState(false);
   const [showFrontend, setShowFrontend] = useState(false);
   const [showDatabase, setShowDatabase] = useState(false);
+  const [githubSearchQuery, setGithubSearchQuery] = useState('');
+  const [githubRepos, setGithubRepos] = useState<TemplateDefinition[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchError, setSearchError] = useState<string | null>(null);
+  const [searchType, setSearchType] = useState<'user' | 'org' | 'search'>('user');
 
   const authOptions = ['Better Auth', 'Auth0'];
   const frontendOptions = ['Next.js', 'React', 'Vue.js'];
@@ -86,6 +94,50 @@ const TemplatesShowcase = ({
 
 
 
+  const handleGitHubSearch = useCallback(async () => {
+    if (!githubSearchQuery.trim()) {
+      setGithubRepos([]);
+      setSearchError(null);
+      return;
+    }
+
+    setIsSearching(true);
+    setSearchError(null);
+
+    try {
+      let repos: TemplateDefinition[] = [];
+
+      if (searchType === 'user') {
+        repos = await githubService.getUserReposAsTemplates(githubSearchQuery.trim());
+      } else if (searchType === 'org') {
+        repos = await githubService.getOrgReposAsTemplates(githubSearchQuery.trim());
+      } else {
+        repos = await githubService.searchReposAsTemplates(githubSearchQuery.trim());
+      }
+
+      setGithubRepos(repos);
+    } catch (error) {
+      console.error('GitHub search error:', error);
+      setSearchError(error instanceof Error ? error.message : 'Failed to fetch GitHub repositories');
+      setGithubRepos([]);
+    } finally {
+      setIsSearching(false);
+    }
+  }, [githubSearchQuery, searchType]);
+
+  useEffect(() => {
+    if (enableGitHubSearch && githubSearchQuery.trim()) {
+      const debounceTimer = setTimeout(() => {
+        handleGitHubSearch();
+      }, 500);
+
+      return () => clearTimeout(debounceTimer);
+    } else if (!githubSearchQuery.trim()) {
+      setGithubRepos([]);
+      setSearchError(null);
+    }
+  }, [githubSearchQuery, searchType, enableGitHubSearch, handleGitHubSearch]);
+
   const handleCopy = (slug: string) => {
     const command = `npx @kousthubha/stack-end ${slug}`;
     navigator.clipboard.writeText(command);
@@ -108,6 +160,8 @@ const TemplatesShowcase = ({
     return true;
   });
 
+  const displayData = enableGitHubSearch && githubRepos.length > 0 ? githubRepos : filteredData;
+
   return (
     <section id={sectionId} className={`px-6 ${className}`}>
       <div className="max-w-7xl mx-auto">
@@ -122,6 +176,77 @@ const TemplatesShowcase = ({
              {title}
            </h2>
            <p className="text-xl text-gray-500 max-w-2xl mx-auto mb-8">{description}</p>
+
+           {/* GitHub Search */}
+           {enableGitHubSearch && (
+             <div className="max-w-3xl mx-auto mb-8">
+               <div className="flex gap-2 mb-4">
+                 <div className="flex gap-2">
+                   <button
+                     onClick={() => setSearchType('user')}
+                     className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                       searchType === 'user'
+                         ? 'bg-black text-white'
+                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                     }`}
+                   >
+                     User
+                   </button>
+                   <button
+                     onClick={() => setSearchType('org')}
+                     className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                       searchType === 'org'
+                         ? 'bg-black text-white'
+                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                     }`}
+                   >
+                     Organization
+                   </button>
+                   <button
+                     onClick={() => setSearchType('search')}
+                     className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                       searchType === 'search'
+                         ? 'bg-black text-white'
+                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                     }`}
+                   >
+                     Search
+                   </button>
+                 </div>
+                 <div className="flex-1 relative">
+                   <input
+                     type="text"
+                     value={githubSearchQuery}
+                     onChange={(e) => setGithubSearchQuery(e.target.value)}
+                     placeholder={
+                       searchType === 'user'
+                         ? 'Enter GitHub username...'
+                         : searchType === 'org'
+                         ? 'Enter organization name...'
+                         : 'Search repositories...'
+                     }
+                     className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+                   />
+                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                   {isSearching && (
+                     <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                       <div className="w-4 h-4 border-2 border-gray-300 border-t-black rounded-full animate-spin"></div>
+                     </div>
+                   )}
+                 </div>
+               </div>
+               {searchError && (
+                 <div className="text-sm text-red-600 text-center mb-4">
+                   {searchError}
+                 </div>
+               )}
+               {githubRepos.length > 0 && (
+                 <div className="text-sm text-gray-600 text-center">
+                   Found {githubRepos.length} repositories
+                 </div>
+               )}
+             </div>
+           )}
 
            {/* Filters */}
            {showFilters && (
@@ -231,10 +356,10 @@ const TemplatesShowcase = ({
            )}
          </motion.div>
 
-     
+
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {filteredData.map((template, index) => (
+          {displayData.map((template, index) => (
             <motion.div
               key={template.slug}
               initial={{ opacity: 0, y: 20 }}

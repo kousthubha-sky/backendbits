@@ -15,10 +15,12 @@ const Templates: React.FC = () => {
     { key: 'payment', label: 'Payment' },
     { key: 'personal', label: 'Personal Projects' },
     { key: 'Portfolio', label: 'Portfolio' },
+    { key: 'github', label: 'GitHub Projects' },
   ];
 
   const filteredTemplates = templates.filter(template => template.category === selectedCategory);
-  const showFilters = !['personal', 'Portfolio'].includes(selectedCategory);
+  const showFilters = !['personal', 'Portfolio', 'github'].includes(selectedCategory);
+  const enableGitHubSearch = selectedCategory === 'github';
 
   return (
     <div className="min-h-screen bg-white text-black font-sans">
@@ -66,8 +68,18 @@ const Templates: React.FC = () => {
            </motion.div>
          </section>
 
-          <TemplatesShowcase data={filteredTemplates} showDetails={true} showFilters={showFilters} className="pb-32" />
-      </main>
+          <TemplatesShowcase
+            data={filteredTemplates}
+            showFilters={showFilters}
+            enableGitHubSearch={enableGitHubSearch}
+            title={selectedCategory === 'github' ? 'GitHub Projects Search' : 'Production-ready templates'}
+            description={selectedCategory === 'github'
+              ? 'Search for GitHub repositories by user, organization, or keyword to discover personal projects and portfolio items.'
+              : 'Discover backend starters that let you ship faster with pre-configured auth, databases, and deployment scripts.'
+            }
+            className="pb-32"
+          />
+         </main>
 
       <Footer />
     </div>
