@@ -1,9 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { ExternalLink, Github, Copy, Check, X } from 'lucide-react';
-import { templates as defaultTemplates, TemplateDefinition } from '../data/templates';
+import { Input } from '@/components/ui/input';
+import { TemplateStackCard } from '@/components/TemplateStackCard';
+import { templates as defaultTemplates, TemplateDefinition } from '@/data/templates';
+import { getDeviconClass } from '@/lib/devicons';
 
 interface TemplatesShowcaseProps {
   data?: TemplateDefinition[];
@@ -12,6 +15,13 @@ interface TemplatesShowcaseProps {
   title?: string;
   description?: string;
   showFilters?: boolean;
+  showDetails?: boolean;
+  showSearch?: boolean;
+  searchPlaceholder?: string;
+  cardVariant?: 'grid' | 'stack';
+  loading?: boolean;
+  errorMessage?: string | null;
+  emptyStateMessage?: string;
 }
 
 const TemplatesShowcase = ({
@@ -21,7 +31,14 @@ const TemplatesShowcase = ({
   title = "Production-ready templates",
   description = "Clone, customize, and ship secure stacks in minutes—not days.",
   showFilters = true,
-}) => {
+  showDetails = false,
+  showSearch = false,
+  searchPlaceholder = 'Search templates by name, language, or topic...',
+  cardVariant = 'grid',
+  loading = false,
+  errorMessage = null,
+  emptyStateMessage = 'No templates match your filters yet.',
+}: TemplatesShowcaseProps) => {
   const { scrollYProgress } = useScroll();
   const [copiedSlug, setCopiedSlug] = useState<string | null>(null);
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateDefinition | null>(null);
@@ -31,6 +48,7 @@ const TemplatesShowcase = ({
   const [showAuth, setShowAuth] = useState(false);
   const [showFrontend, setShowFrontend] = useState(false);
   const [showDatabase, setShowDatabase] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const authOptions = ['Better Auth', 'Auth0'];
   const frontendOptions = ['Next.js', 'React', 'Vue.js'];
@@ -53,37 +71,6 @@ const TemplatesShowcase = ({
     };
   }, []);
 
-  const getDeviconClass = (tech: string) => {
-    const techMap: { [key: string]: string } = {
-      'Next.js': 'devicon-nextjs-original',
-      'TypeScript': 'devicon-typescript-original',
-      'Tailwind CSS': 'devicon-tailwindcss-plain',
-      'React Router': 'devicon-react-original',
-      'Auth0': 'devicon-auth0-plain',
-      'TanStack Query': 'devicon-react-original',
-      'Vite': 'devicon-vitejs-plain',
-      'Better Auth': 'devicon-nodejs-plain',
-      'MongoDB Atlas': 'devicon-mongodb-plain',
-      'MongoDB': 'devicon-mongodb-plain',
-      'MySQL': 'devicon-mysql-plain',
-      'Vue.js': 'devicon-vuejs-plain',
-      'Vue': 'devicon-vuejs-plain',
-      'Zod': 'devicon-nodejs-plain',
-      'Resend': 'devicon-nodejs-plain',
-      'Google Gemini API': 'devicon-google-plain',
-      'Lucide React': 'devicon-react-original',
-      'shadcn/ui': 'devicon-react-original',
-      'Framer Motion': 'devicon-react-original',
-      'Geist': 'devicon-fontawesome-plain',
-      'FastAPI': 'devicon-python-plain',
-      'React': 'devicon-react-original',
-      'Supabase': 'devicon-postgresql-plain',
-      'Redis': 'devicon-redis-plain',
-      'Razorpay': 'devicon-nodejs-plain',
-    };
-    return techMap[tech] || 'devicon-code-plain';
-  };
-
 
 
   const handleCopy = (slug: string) => {
@@ -101,12 +88,133 @@ const TemplatesShowcase = ({
     setSelectedTemplate(null);
   };
 
+  const normalizedQuery = showSearch ? searchQuery.trim().toLowerCase() : "";
+
   const filteredData = data.filter(template => {
     if (selectedAuth.length > 0 && !selectedAuth.some(auth => template.techStack.includes(auth))) return false;
     if (selectedFrontend.length > 0 && !selectedFrontend.some(front => template.techStack.includes(front))) return false;
     if (selectedDatabase.length > 0 && !selectedDatabase.some(db => template.techStack.includes(db))) return false;
+
+    if (normalizedQuery) {
+      const nameMatch = template.name.toLowerCase().includes(normalizedQuery);
+      const summaryMatch = template.summary.toLowerCase().includes(normalizedQuery);
+      const techMatch = template.techStack.some(tech => tech.toLowerCase().includes(normalizedQuery));
+      const topicMatch = template.features.some(feature => feature.toLowerCase().includes(normalizedQuery));
+      return nameMatch || summaryMatch || techMatch || topicMatch;
+    }
+
     return true;
   });
+
+  const gridClassName = cardVariant === 'stack'
+    ? 'grid grid-cols-1 md:grid-cols-2 gap-6'
+    : 'grid grid-cols-2 md:grid-cols-3 gap-4';
+
+  const loadingMessage = showSearch ? 'Fetching repositories...' : 'Loading templates...';
+
+  const content = (() => {
+    if (loading) {
+      return (
+        <div className="py-16 px-6 text-center border border-dashed border-gray-200 rounded-3xl bg-gray-50 text-gray-500">
+          {loadingMessage}
+        </div>
+      );
+    }
+
+    if (errorMessage) {
+      return (
+        <div className="py-16 px-6 text-center border border-dashed border-red-200 rounded-3xl bg-red-50 text-red-600">
+          {errorMessage}
+        </div>
+      );
+    }
+
+    if (filteredData.length === 0) {
+      return (
+        <div className="py-16 px-6 text-center border border-dashed border-gray-200 rounded-3xl bg-gray-50 text-gray-500">
+          {emptyStateMessage}
+        </div>
+      );
+    }
+
+    return (
+      <div className={gridClassName}>
+        {filteredData.map((template, index) => (
+          <motion.div
+            key={template.slug}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: index * 0.1 }}
+            className={cardVariant === 'stack'
+              ? 'relative flex h-full min-h-[360px] overflow-visible'
+              : 'group bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer'}
+            onClick={cardVariant === 'stack' ? undefined : () => openModal(template)}
+          >
+            {cardVariant === 'stack' ? (
+              <div className="w-full pt-12">
+                <TemplateStackCard template={template} onClick={() => openModal(template)} />
+              </div>
+            ) : (
+              <div className="p-3 md:p-6">
+                <div className="mb-2 md:mb-4">
+                  {template.category === 'personal' || template.category === 'Portfolio' ? (
+                    <div className="w-full h-20 md:h-32 bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg flex items-center justify-center">
+                      <div className="text-2xl md:text-4xl">📸</div>
+                    </div>
+                  ) : (
+                    <div className="flex flex-wrap gap-1 md:gap-2 justify-center">
+                      {template.techStack.slice(0, 3).map((tech) => (
+                        <i
+                          key={tech}
+                          className={`${getDeviconClass(tech)} colored text-lg md:text-2xl`}
+                          title={tech}
+                        />
+                      ))}
+                      {template.techStack.length > 3 && (
+                        <span className="text-xs text-gray-500">+{template.techStack.length - 3}</span>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                <div className="mb-2 md:mb-3">
+                  <h3 className="text-base md:text-lg font-bold text-black group-hover:text-gray-800 transition-colors mb-1">
+                    {template.name}
+                  </h3>
+                  <span className="inline-block px-2 py-1 bg-black text-white text-xs font-medium rounded-full">
+                    {template.status}
+                  </span>
+                </div>
+
+                <div className="mb-2 md:mb-3">
+                  <div className="flex flex-wrap gap-1">
+                    {template.techStack.slice(0, 3).map((tech) => (
+                      <span
+                        key={tech}
+                        className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-md font-medium inline-block truncate max-w-[120px]"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                    {template.techStack.length > 3 && (
+                      <span className="px-2 py-1 bg-gray-100 text-gray-500 text-xs rounded-md inline-block">
+                        +{template.techStack.length - 3}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                <p className={`${showDetails ? '' : 'hidden md:block'} text-gray-600 text-sm leading-relaxed`}>
+                  {template.summary.length > 60 ? `${template.summary.substring(0, 60)}...` : template.summary}
+                </p>
+              </div>
+            )}
+          </motion.div>
+        ))}
+      </div>
+    );
+  })();
 
   return (
     <section id={sectionId} className={`px-6 ${className}`}>
@@ -123,9 +231,25 @@ const TemplatesShowcase = ({
            </h2>
            <p className="text-xl text-gray-500 max-w-2xl mx-auto mb-8">{description}</p>
 
-           {/* Filters */}
-           {showFilters && (
-             <div className="flex flex-wrap justify-center gap-4 mb-8">
+            {showSearch && (
+              <div className="max-w-2xl mx-auto mb-8">
+                <Input
+                  type="search"
+                  value={searchQuery}
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                  placeholder={searchPlaceholder}
+                  className="bg-white border-gray-200 focus-visible:ring-black"
+                />
+                <p className="text-sm text-gray-500 mt-2">
+                  Filter by project name, languages, or topics in real time.
+                </p>
+              </div>
+            )}
+
+            {/* Filters */}
+            {showFilters && (
+              <div className="flex flex-wrap justify-center gap-4 mb-8">
+
              {/* Auth System Filter */}
              <div className="relative">
                <button
@@ -133,8 +257,9 @@ const TemplatesShowcase = ({
                  className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 flex items-center gap-2"
                >
                  Auth System {selectedAuth.length > 0 && `(${selectedAuth.length})`}
-                 <svg className={`w-4 h-4 transition-transform ${showAuth ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+
+                  <svg className={`w-4 h-4 transition-transform ${showAuth ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
                  </svg>
                </button>
                {showAuth && (
@@ -233,80 +358,7 @@ const TemplatesShowcase = ({
 
      
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {filteredData.map((template, index) => (
-            <motion.div
-              key={template.slug}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="group bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer"
-              onClick={() => openModal(template)}
-            >
-              <div className="p-3 md:p-6">
-                {/* Image/Icon Section */}
-                <div className="mb-2 md:mb-4">
-                  {template.category === 'personal' || template.category === 'Portfolio' ? (
-                    <div className="w-full h-20 md:h-32 bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg flex items-center justify-center">
-                      <div className="text-2xl md:text-4xl">📸</div>
-                    </div>
-                  ) : (
-                    <div className="flex flex-wrap gap-1 md:gap-2 justify-center">
-                      {template.techStack.slice(0, 3).map((tech) => (
-                        <i
-                          key={tech}
-                          className={`${getDeviconClass(tech)} colored text-lg md:text-2xl`}
-                          title={tech}
-                        />
-                      ))}
-                      {template.techStack.length > 3 && (
-                        <span className="text-xs text-gray-500">+{template.techStack.length - 3}</span>
-                      )}
-                    </div>
-                  )}
-                </div>
-
-                {/* Name and Status */}
-                <div className="mb-2 md:mb-3">
-                  <h3 className="text-base md:text-lg font-bold text-black group-hover:text-gray-800 transition-colors mb-1">
-                    {template.name}
-                  </h3>
-                  <span className="inline-block px-2 py-1 bg-black text-white text-xs font-medium rounded-full">
-                    {template.status}
-                  </span>
-                </div>
-
-               
-                {/* Tech Stack */}
-                <div className="mb-2 md:mb-3">
-                  <div className="flex flex-wrap gap-1">
-                     {template.techStack.slice(0, 3).map((tech, idx) => (
-                       <span
-                         key={tech}
-                         className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-md font-medium inline-block truncate max-w-[120px]"
-                       >
-                         {tech}
-                       </span>
-                     ))}
-                     {template.techStack.length > 3 && (
-                       <span
-                         className="px-2 py-1 bg-gray-100 text-gray-500 text-xs rounded-md inline-block"
-                       >
-                         +{template.techStack.length - 3}
-                       </span>
-                     )}
-                  </div>
-                </div>
-
-                {/* Truncated Description */}
-                <p className="hidden md:block text-gray-600 text-sm leading-relaxed">
-                  {template.summary.length > 60 ? `${template.summary.substring(0, 60)}...` : template.summary}
-                </p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+        {content}
 
         {/* Modal */}
         <AnimatePresence>

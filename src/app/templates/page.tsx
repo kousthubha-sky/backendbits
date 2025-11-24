@@ -1,14 +1,17 @@
 "use client";
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import Navbar from '../../components/Navbar';
-import Footer from '../../components/Footer';
-import TemplatesShowcase from '../../components/TemplatesShowcase';
-import { templates } from '../../data/templates';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+import TemplatesShowcase from '@/components/TemplatesShowcase';
+import { templates } from '@/data/templates';
+import { useGithubRepositories } from '@/hooks/useGithubRepositories';
 
 const Templates: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('auth');
+  const { templates: githubTemplates, loading: githubLoading, error: githubError } = useGithubRepositories();
+  const isPersonalCategory = selectedCategory === 'personal';
 
   const categories = [
     { key: 'auth', label: 'Auth Templates' },
@@ -66,7 +69,24 @@ const Templates: React.FC = () => {
            </motion.div>
          </section>
 
-          <TemplatesShowcase data={filteredTemplates} showDetails={true} showFilters={showFilters} className="pb-32" />
+          {isPersonalCategory ? (
+            <TemplatesShowcase
+              data={githubTemplates}
+              showDetails={true}
+              showFilters={false}
+              showSearch={true}
+              searchPlaceholder="Filter repositories by name, languages, or topics..."
+              cardVariant="stack"
+              loading={githubLoading}
+              errorMessage={githubError}
+              emptyStateMessage="No GitHub repositories matched your filters."
+              className="pb-32"
+              title="Personal GitHub projects"
+              description="Search and browse your personal repositories pulled directly from GitHub."
+            />
+          ) : (
+            <TemplatesShowcase data={filteredTemplates} showDetails={true} showFilters={showFilters} className="pb-32" />
+          )}
       </main>
 
       <Footer />

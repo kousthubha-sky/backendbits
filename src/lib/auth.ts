@@ -1,14 +1,16 @@
 import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
-import clientPromise from "@/lib/mongodb";
+import { getAuthDatabaseSync } from "@/lib/mongodb";
 
 // Validate required environment variables
 if (!process.env.BETTER_AUTH_SECRET) {
   throw new Error('Missing required environment variable: BETTER_AUTH_SECRET');
 }
 
+const authDatabase = getAuthDatabaseSync();
+
 export const auth = betterAuth({
-    database: mongodbAdapter(async () => (await clientPromise).db(process.env.MONGODB_DB || "backend-bits-auth")),
+  database: mongodbAdapter(authDatabase),
   emailAndPassword: {
     enabled: true,
   },
