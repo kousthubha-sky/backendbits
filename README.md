@@ -7,6 +7,7 @@ A showcase of production-ready backend templates to help you ship faster with pr
 - **Auth Templates**: Ready-to-use authentication setups with popular providers
 - **Payment Integration**: Templates with payment processing capabilities
 - **Personal Projects**: Demo templates for showcasing your work
+- **GitHub API Integration**: Search and display GitHub repositories dynamically
 - **Production-Ready**: Battle-tested stacks with proper deployment configurations
 
 ## Getting Started
@@ -33,7 +34,13 @@ yarn install
 pnpm install
 ```
 
-3. Run the development server:
+3. Set up environment variables (optional):
+```bash
+cp .env.example .env.local
+# Edit .env.local with your configuration
+```
+
+4. Run the development server:
 ```bash
 npm run dev
 # or
@@ -44,16 +51,22 @@ pnpm dev
 bun dev
 ```
 
-4. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ## Available Templates
 
 ### Auth Templates
 - **Better Auth + MongoDB**: Next.js API routes with Better Auth and MongoDB Atlas
 - **Auth0 + React Router**: Vite + React Router with Auth0 SDK and TanStack Query
+- And many more...
 
-### Personal Projects
-- **Personal Project Demo**: Basic setup for showcasing personal projects
+### GitHub Projects (New!)
+- Search GitHub repositories by user, organization, or keyword
+- Real-time search with live results
+- Display project details including languages, topics, stars, and forks
+- View demos and source code directly from search results
+
+See [GitHub API Integration Documentation](docs/GITHUB_API_INTEGRATION.md) for detailed information.
 
 ## Using Templates
 
@@ -77,8 +90,13 @@ src/
 │   ├── templates/          # Templates showcase page
 │   └── ...
 ├── components/             # Reusable UI components
+│   ├── TemplatesShowcase.tsx  # Main showcase component with GitHub search
+│   └── ...
 ├── data/
 │   └── templates.ts        # Template definitions
+├── lib/
+│   ├── github.ts          # GitHub API integration
+│   └── ...
 └── ...
 ```
 
