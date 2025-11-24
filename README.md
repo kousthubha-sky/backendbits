@@ -46,6 +46,17 @@ bun dev
 
 4. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+### GitHub integration
+
+The **Personal Projects** category fetches live repositories from GitHub and powers the real-time search UI. Configure the following environment variables in `.env.local` (or your deployment environment):
+
+```
+GITHUB_OWNER=<github-username-or-organization>
+GITHUB_ACCESS_TOKEN=<personal-access-token>
+```
+
+> `GITHUB_ACCESS_TOKEN` can be any token with at least `repo:read` access. If you already expose a `GITHUB_TOKEN`, it will be used automatically.
+
 ## Available Templates
 
 ### Auth Templates

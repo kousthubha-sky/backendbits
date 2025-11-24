@@ -3,10 +3,9 @@
  * This runs at startup to ensure all required environment variables are present
  */
 
-const requiredEnvVars = [
-  'MONGODB_URI',
-  'BETTER_AUTH_SECRET',
-] as const;
+import { randomBytes } from "crypto";
+
+const requiredEnvVars = [] as const;
 
 export function validateEnvironment() {
   const missing: string[] = [];

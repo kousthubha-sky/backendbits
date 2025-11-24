@@ -2,11 +2,13 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 
+export type AuthSession = NonNullable<Awaited<ReturnType<typeof auth.api.getSession>>>;
+
 /**
  * Server-side utility to get authenticated user session
  * Redirects to login if no session exists
  */
-export async function getServerSession() {
+export async function getServerSession(): Promise<AuthSession> {
   try {
     const session = await auth.api.getSession({
       headers: await headers()
@@ -27,7 +29,7 @@ export async function getServerSession() {
  * Server-side utility to check if user is authenticated
  * Returns session or null (doesn't redirect)
  */
-export async function getOptionalServerSession() {
+export async function getOptionalServerSession(): Promise<AuthSession | null> {
   try {
     const session = await auth.api.getSession({
       headers: await headers()

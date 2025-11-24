@@ -1,11 +1,12 @@
-"use client"
+"use client";
 
 import type React from "react"
 
 import { useState } from "react"
 import { motion } from "framer-motion"
 import { ExternalLink, BookOpen } from "lucide-react"
-import { TemplateDefinition } from '../data/templates';
+import { TemplateDefinition } from "@/data/templates";
+import { getDeviconClass } from "@/lib/devicons";
 
 interface TemplateStackCardProps {
   template: TemplateDefinition;
@@ -49,36 +50,7 @@ function getItems(template: TemplateDefinition) {
   }));
 }
 
-function getDeviconClass(tech: string) {
-  const techMap: { [key: string]: string } = {
-    'Next.js': 'devicon-nextjs-original',
-    'TypeScript': 'devicon-typescript-original',
-    'Tailwind CSS': 'devicon-tailwindcss-plain',
-    'React Router': 'devicon-react-original',
-    'Auth0': 'devicon-auth0-plain',
-    'TanStack Query': 'devicon-react-original',
-    'Vite': 'devicon-vitejs-plain',
-    'Better Auth': 'devicon-nodejs-plain',
-    'MongoDB Atlas': 'devicon-mongodb-plain',
-    'MongoDB': 'devicon-mongodb-plain',
-    'MySQL': 'devicon-mysql-plain',
-    'Vue.js': 'devicon-vuejs-plain',
-    'Vue': 'devicon-vuejs-plain',
-    'Zod': 'devicon-nodejs-plain',
-    'Resend': 'devicon-nodejs-plain',
-    'Google Gemini API': 'devicon-google-plain',
-    'Lucide React': 'devicon-react-original',
-    'shadcn/ui': 'devicon-react-original',
-    'Framer Motion': 'devicon-react-original',
-    'Geist': 'devicon-fontawesome-plain',
-    'FastAPI': 'devicon-python-plain',
-    'React': 'devicon-react-original',
-    'Supabase': 'devicon-postgresql-plain',
-    'Redis': 'devicon-redis-plain',
-    'Razorpay': 'devicon-nodejs-plain',
-  };
-  return techMap[tech] || 'devicon-code-plain';
-}
+
 
 export function TemplateStackCard({ template, onClick }: TemplateStackCardProps) {
   const [isHovered, setIsHovered] = useState(false)
