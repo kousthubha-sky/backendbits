@@ -98,35 +98,7 @@ export const templates: TemplateDefinition[] = [
         url: "https://github.com/kousthubha-sky/AI-resume-analyzer"
       }
     ]
-  },
-  {
-    slug: "personal-project-demo",
-    name: "Personal Project Demo",
-    status: "Preview",
-    category: "personal",
-    summary: "A demo template for personal projects to showcase your work.",
-    description: "Basic setup for personal projects with demo functionality.",
-    techStack: ["Next.js", "React", "Tailwind CSS"],
-    features: [
-      "Basic project structure",
-      "Demo components",
-      "Responsive design"
-    ],
-    demoUrl: "https://example.com/demo",
-    codeUrl: "https://github.com/example/personal-project-demo",
-    deployment: {
-      headline: "Deploy easily on Vercel or Netlify",
-      providers: ["Vercel", "Netlify"],
-      env: [],
-      notes: []
-    },
-     useCases: [
-       {
-         name: "Portfolio Showcase",
-         description: "Display your personal projects with this demo template."
-       }
-     ]
-   },
+  }, 
    {
      slug: "ai-resume-analyzer",
      name: "AI Resume Analyzer",
@@ -148,15 +120,16 @@ export const templates: TemplateDefinition[] = [
      ],
      demoUrl: "https://www.youtube.com/watch?v=iYOz165wGkQ",
      codeUrl: "https://github.com/kousthubha-sky/AI-resume-analyzer",
-     deployment: {
-       headline: "Deploy easily on Vercel or Netlify",
-       providers: ["Vercel", "Netlify"],
-       env: [],
-       notes: [
-         "Uses Puter.js for serverless functionality",
-         "No backend setup required"
-       ]
-     },
+      deployment: {
+        headline: "Deploy easily on Vercel or Netlify",
+        providers: ["Vercel", "Netlify"],
+        env: [],
+        notes: [
+          "Clone the repository: git clone https://github.com/kousthubha-sky/AI-resume-analyzer",
+          "Uses Puter.js for serverless functionality",
+          "No backend setup required"
+        ]
+      },
      useCases: [
        {
          name: "Resume Optimization Tool",
@@ -186,15 +159,16 @@ export const templates: TemplateDefinition[] = [
      ],
      demoUrl: null,
      codeUrl: "https://github.com/kousthubha-sky/gitrepo-analyzer",
-     deployment: {
-       headline: "Deploy frontend on Vercel, backend on Render",
-       providers: ["Vercel", "Render", "Supabase"],
-       env: ["DATABASE_URL", "SUPABASE_URL", "SUPABASE_KEY", "GITHUB_TOKEN"],
-       notes: [
-         "Requires Supabase setup for database",
-         "GitHub API token needed for analysis"
-       ]
-     },
+      deployment: {
+        headline: "Deploy frontend on Vercel, backend on Render",
+        providers: ["Vercel", "Render", "Supabase"],
+        env: ["DATABASE_URL", "SUPABASE_URL", "SUPABASE_KEY", "GITHUB_TOKEN"],
+        notes: [
+          "Clone the repository: git clone https://github.com/kousthubha-sky/gitrepo-analyzer",
+          "Requires Supabase setup for database",
+          "GitHub API token needed for analysis"
+        ]
+      },
      useCases: [
        {
          name: "Repository Insights Dashboard",
@@ -452,6 +426,419 @@ export const templates: TemplateDefinition[] = [
           name: "SAAS Subscription Platform",
           description: "Build subscription-based applications with secure payments and user management."
         }
-      ]
-    }
-  ];
+       ]
+     },
+     {
+       slug: "next-supabase-shadcn-auth",
+       name: "Next.js Supabase Shadcn Auth",
+       status: "Production-ready",
+       category: "auth",
+       summary: "Modern authentication starter with Next.js 15, Supabase, and Shadcn UI for secure apps.",
+       description: "Built with Next.js 15 App Router, Supabase for authentication, Shadcn UI for beautiful components, session management via middleware, responsive design, and ready-to-use auth components including login, signup, reset password, and update password.",
+       techStack: ["Next.js 15", "Supabase", "Shadcn UI", "Tailwind CSS", "TypeScript"],
+       features: [
+         "Supabase Authentication with email, password & OAuth providers",
+         "Next.js 15 App Router + Turbopack",
+         "Beautiful UI with Shadcn components (Radix + Tailwind)",
+         "Session management via Supabase middleware",
+         "Responsive design out of the box",
+         "Ready-to-use auth components: Login, Signup, Reset, Update Password"
+       ],
+       demoUrl: null,
+       codeUrl: "https://github.com/guillaumeduhan/next-supabase-shadcn-auth",
+       deployment: {
+         headline: "Deploy easily to Vercel, Netlify, or any Node.js host",
+         providers: ["Vercel", "Netlify", "Render"],
+         env: ["NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_ANON_KEY"],
+         notes: [
+           "Requires Supabase project setup",
+           "Includes environment configuration guide"
+         ]
+       },
+       useCases: [
+         {
+           name: "Secure Web Application",
+           description: "Build any web app with production-ready authentication using Supabase and modern UI components."
+         }
+       ]
+     },
+     {
+       slug: "clerk-supabase",
+       name: "Clerk + Supabase Todo App",
+       status: "Production-ready",
+       category: "auth",
+       summary: "Demo todo app with Next.js, Supabase database, and Clerk for multifactor authentication.",
+       description: "Full-stack todo application demonstrating Clerk's multifactor authentication integrated with Supabase database. Features secure user authentication, todo management, and real-time data synchronization.",
+       techStack: ["Next.js", "Supabase", "Clerk", "Tailwind CSS", "TypeScript"],
+       features: [
+         "Clerk multifactor authentication",
+         "Supabase database integration",
+         "Todo CRUD operations",
+         "Real-time data synchronization",
+         "Secure user sessions",
+         "Responsive UI with Tailwind CSS"
+       ],
+       demoUrl: "https://supabase.clerk.app",
+       codeUrl: "https://github.com/clerk/clerk-supabase",
+       deployment: {
+         headline: "Deploy to Vercel, Netlify, or any Node.js platform",
+         providers: ["Vercel", "Netlify", "Railway"],
+         env: ["NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY", "CLERK_SECRET_KEY", "SUPABASE_URL", "SUPABASE_ANON_KEY"],
+         notes: [
+           "Requires Clerk and Supabase accounts",
+           "Includes setup guide for both services"
+         ]
+       },
+       useCases: [
+         {
+           name: "Task Management App",
+           description: "Build secure task management applications with multifactor authentication and real-time collaboration."
+         }
+       ]
+     },
+     {
+       slug: "clerk-nextjs-pages-router",
+       name: "Clerk Next.js Pages Router Demo",
+       status: "Production-ready",
+       category: "auth",
+       summary: "Official Next.js demo with Clerk authentication using the pages directory.",
+       description: "Comprehensive demonstration of Clerk's authentication features in Next.js Pages Router. Includes sign-in/sign-up flows, protected pages, customized components, user data hooks, and organization management for multi-tenant applications.",
+       techStack: ["Next.js", "Clerk", "Tailwind CSS", "TypeScript"],
+       features: [
+         "Fully functional auth flow with sign-in, sign-up, and protected pages",
+         "Customized Clerk components with Tailwind CSS",
+         "Hooks for accessing user data and authentication state",
+         "Organizations for multi-tenant applications",
+         "Responsive design and modern UI",
+         "Easy integration into existing Next.js apps"
+       ],
+       demoUrl: "https://clerk-nextjs-demo-pages-router.clerkpreview.com",
+       codeUrl: "https://github.com/clerk/clerk-nextjs-demo-pages-router",
+       deployment: {
+         headline: "Deploy to Vercel with one click",
+         providers: ["Vercel", "Netlify", "Railway"],
+         env: ["NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY", "CLERK_SECRET_KEY"],
+         notes: [
+           "Requires Clerk account setup",
+           "One-click Vercel deployment available"
+         ]
+       },
+        useCases: [
+          {
+            name: "Authentication Starter",
+            description: "Quickly add secure authentication to any Next.js application with pre-built components and flows."
+          }
+        ]
+      },
+      {
+        slug: "react-resume-template",
+        name: "React Resume Template",
+        status: "Production-ready",
+        category: "Portfolio",
+        summary: "A personal resume website template built with React.js, Typescript, Next.js, and styled with Tailwind css",
+        description: "React based template for software developer-focused resume websites. Features full typescript support, Next.js for SSR and optimization, Tailwind CSS styling, customizable data file, and modern site sections.",
+        techStack: ["React.js", "TypeScript", "Next.js", "Tailwind CSS"],
+        features: [
+          "Completely rebuilt with React and full typescript support",
+          "Built on Next.js for SSR, image optimization, API routes, and deployment",
+          "Styled with TailwindCss",
+          "Re-organized data population file for customizing site",
+          "Significant improvement/modernization of all site sections",
+          "Mobile-optimized and server-side rendered"
+        ],
+        demoUrl: "https://reactresume.com",
+        codeUrl: "https://github.com/tbakerx/react-resume-template",
+        deployment: {
+          headline: "Deploy to Vercel for easy hosting",
+          providers: ["Vercel"],
+          env: [],
+          notes: ["Contact form requires email provider setup like Sendgrid"]
+        },
+        useCases: [
+          {
+            name: "Developer Resume Site",
+            description: "Create a professional online resume to showcase skills and experience."
+          }
+        ]
+      },
+      {
+        slug: "soumyajit-portfolio",
+        name: "Soumyajit Portfolio",
+        status: "Production-ready",
+        category: "Portfolio",
+        summary: "Self-coded personal website built with React.js, featuring modern design and easy customization.",
+        description: "A personal portfolio website showcasing React.js development skills with a clean, modern interface. Includes sections for projects, skills, and contact information, built with create-react-app for simplicity.",
+        techStack: ["React.js", "JavaScript", "CSS", "HTML"],
+        features: [
+          "Modern React.js architecture",
+          "Responsive design for all devices",
+          "Easy-to-customize components",
+          "Project showcase sections",
+          "Contact and social media integration"
+        ],
+        demoUrl: null,
+        codeUrl: "https://github.com/soumyajit4419/Portfolio",
+        deployment: {
+          headline: "Deploy easily on Vercel, Netlify, or GitHub Pages",
+          providers: ["Vercel", "Netlify", "GitHub Pages"],
+          env: [],
+          notes: [
+            "Clone the repository: git clone https://github.com/soumyajit4419/Portfolio",
+            "Built with Create React App",
+            "Static deployment ready"
+          ]
+        },
+        useCases: [
+          {
+            name: "Developer Portfolio",
+            description: "Perfect for developers to showcase their projects and skills with a clean, professional layout."
+          }
+        ]
+      },
+      {
+        slug: "simplefolio",
+        name: "Simplefolio",
+        status: "Production-ready",
+        category: "Portfolio",
+        summary: "Minimal portfolio template for developers, built with HTML, CSS, and JavaScript.",
+        description: "A lightweight, minimal portfolio template designed specifically for developers. Features a clean design, responsive layout, and easy customization for showcasing projects and skills.",
+        techStack: ["HTML", "CSS", "SCSS", "JavaScript"],
+        features: [
+          "Minimal and clean design",
+          "Fully responsive layout",
+          "Easy customization",
+          "Project showcase grid",
+          "Contact form integration",
+          "Social media links"
+        ],
+        demoUrl: null,
+        codeUrl: "https://github.com/cobiwave/simplefolio",
+        deployment: {
+          headline: "Deploy on any static hosting service",
+          providers: ["GitHub Pages", "Netlify", "Vercel"],
+          env: [],
+          notes: [
+            "Clone the repository: git clone https://github.com/cobiwave/simplefolio",
+            "No build process required",
+            "Pure HTML/CSS/JS template"
+          ]
+        },
+        useCases: [
+          {
+            name: "Minimal Developer Portfolio",
+            description: "Ideal for developers seeking a simple, fast-loading portfolio without complex frameworks."
+          }
+        ]
+      },
+      {
+        slug: "adrianhajdin-portfolio",
+        name: "Adrian Hajdin Portfolio",
+        status: "Production-ready",
+        category: "Portfolio",
+        summary: "Modern and minimal portfolio built with Next.js, featuring Aceternity UI components.",
+        description: "A sophisticated portfolio website showcasing modern web development with Next.js and Aceternity UI. Includes smooth animations, responsive design, and professional project presentations.",
+        techStack: ["Next.js", "TypeScript", "Aceternity UI"],
+        features: [
+          "Next.js framework for performance",
+          "Modern UI with Aceternity components",
+          "Responsive design",
+          "Smooth animations and transitions",
+          "Professional project showcase",
+          "TypeScript for type safety"
+        ],
+        demoUrl: null,
+        codeUrl: "https://github.com/adrianhajdin/portfolio",
+        deployment: {
+          headline: "Deploy on Vercel or Netlify",
+          providers: ["Vercel", "Netlify"],
+          env: [],
+          notes: [
+            "Clone the repository: git clone https://github.com/adrianhajdin/portfolio",
+            "Next.js optimized deployment",
+            "Static generation possible"
+          ]
+        },
+        useCases: [
+          {
+            name: "Modern Developer Portfolio",
+            description: "Advanced portfolio template for developers wanting cutting-edge design and performance."
+          }
+        ]
+      },
+      {
+        slug: "vcard-personal-portfolio",
+        name: "vCard Personal Portfolio",
+        status: "Production-ready",
+        category: "Portfolio",
+        summary: "Fully responsive personal portfolio website template, optimized for all devices.",
+        description: "A comprehensive portfolio template with multiple sections including about, services, portfolio showcase, testimonials, and contact. Built with modern web standards for optimal performance across all devices.",
+        techStack: ["HTML", "CSS", "JavaScript"],
+        features: [
+          "Fully responsive design",
+          "Multiple portfolio sections",
+          "Service offerings display",
+          "Client testimonials",
+          "Contact form",
+          "Social media integration",
+          "Modern animations"
+        ],
+        demoUrl: null,
+        codeUrl: "https://github.com/codewithsadee/vcard-personal-portfolio",
+        deployment: {
+          headline: "Deploy on any web hosting service",
+          providers: ["GitHub Pages", "Netlify", "Vercel", "Hostinger"],
+          env: [],
+          notes: [
+            "Clone the repository: git clone https://github.com/codewithsadee/vcard-personal-portfolio",
+            "No framework dependencies",
+            "Ready-to-use HTML template"
+          ]
+        },
+        useCases: [
+          {
+            name: "Comprehensive Personal Portfolio",
+            description: "Complete portfolio solution for professionals needing multiple sections to showcase their work and services."
+          }
+         ]
+       },
+      {
+        slug: "chess-game-app",
+        name: "Chess Game App",
+        status: "Production-ready",
+        category: "personal",
+        summary: "A two-player chess game application built with JavaScript for practicing game logic and UI development.",
+        description: "An interactive chess game that allows two players to compete on the same device. Features move validation, check/checkmate detection, and a clean game board interface. Perfect for learning game algorithms and DOM manipulation.",
+        techStack: ["JavaScript", "HTML", "CSS"],
+        features: [
+          "Two-player local gameplay",
+          "Move validation and game rules",
+          "Check and checkmate detection",
+          "Clean, responsive game board",
+          "Game state management",
+          "Move history tracking"
+        ],
+        demoUrl: null,
+        codeUrl: "https://github.com/the-cool-coders/project-ideas-and-resources",
+        deployment: {
+          headline: "Deploy as static website",
+          providers: ["GitHub Pages", "Netlify", "Vercel"],
+          env: [],
+          notes: [
+            "Clone the repository: git clone https://github.com/the-cool-coders/project-ideas-and-resources",
+            "No backend required",
+            "Pure client-side implementation"
+          ]
+        },
+        useCases: [
+          {
+            name: "Game Development Practice",
+            description: "Build algorithmic thinking and UI skills through game development."
+          }
+        ]
+      },
+      {
+        slug: "pdf-to-audio-book",
+        name: "PDF to Audio Book Converter",
+        status: "Production-ready",
+        category: "personal",
+        summary: "Convert PDF documents to audio books using Python text-to-speech technology.",
+        description: "A Python application that extracts text from PDF files and converts it to audio using text-to-speech engines. Features PDF parsing, audio generation, and playback controls for an accessible reading experience.",
+        techStack: ["Python", "PyPDF2", "pyttsx3", "tkinter"],
+        features: [
+          "PDF text extraction",
+          "Text-to-speech conversion",
+          "Audio playback controls",
+          "Progress tracking",
+          "Multiple voice options",
+          "Save audio files"
+        ],
+        demoUrl: null,
+        codeUrl: "https://github.com/the-cool-coders/project-ideas-and-resources",
+        deployment: {
+          headline: "Run locally or package as executable",
+          providers: ["Local Python environment"],
+          env: [],
+          notes: [
+            "Clone the repository: git clone https://github.com/the-cool-coders/project-ideas-and-resources",
+            "Requires Python environment",
+            "Can be packaged with PyInstaller"
+          ]
+        },
+        useCases: [
+          {
+            name: "Accessibility Tool",
+            description: "Help visually impaired users access written content through audio."
+          }
+        ]
+      },
+      {
+        slug: "tmdb-movie-app",
+        name: "TMDB Movie Database App",
+        status: "Production-ready",
+        category: "personal",
+        summary: "An interactive movie database application using React and The Movie Database API.",
+        description: "A React application that fetches and displays movie information from TMDB API. Features search functionality, movie details, ratings, and responsive design for browsing movies and TV shows.",
+        techStack: ["React", "JavaScript", "TMDB API", "CSS"],
+        features: [
+          "Movie search and discovery",
+          "Detailed movie information",
+          "Popular and trending movies",
+          "Responsive grid layout",
+          "Movie ratings and reviews",
+          "Genre filtering"
+        ],
+        demoUrl: null,
+        codeUrl: "https://github.com/the-cool-coders/project-ideas-and-resources",
+        deployment: {
+          headline: "Deploy to static hosting",
+          providers: ["Vercel", "Netlify", "GitHub Pages"],
+          env: ["TMDB_API_KEY"],
+          notes: [
+            "Clone the repository: git clone https://github.com/the-cool-coders/project-ideas-and-resources",
+            "Requires TMDB API key",
+            "Static React build"
+          ]
+        },
+        useCases: [
+          {
+            name: "Entertainment App",
+            description: "Create a personalized movie discovery and tracking platform."
+          }
+        ]
+      },
+      {
+        slug: "weather-app-react",
+        name: "Weather App with React",
+        status: "Production-ready",
+        category: "personal",
+        summary: "A weather application built with React that displays current weather and forecasts using OpenWeatherMap API.",
+        description: "A React-based weather app that provides current weather conditions, 5-day forecasts, and location-based weather data. Features geolocation support, weather icons, and responsive design for mobile and desktop.",
+        techStack: ["React", "JavaScript", "OpenWeatherMap API", "CSS"],
+        features: [
+          "Current weather display",
+          "5-day weather forecast",
+          "Geolocation support",
+          "Weather icons and animations",
+          "Temperature unit conversion",
+          "Responsive design"
+        ],
+        demoUrl: null,
+        codeUrl: "https://github.com/the-cool-coders/project-ideas-and-resources",
+        deployment: {
+          headline: "Deploy to static hosting platforms",
+          providers: ["Vercel", "Netlify"],
+          env: ["OPENWEATHER_API_KEY"],
+          notes: [
+            "Clone the repository: git clone https://github.com/the-cool-coders/project-ideas-and-resources",
+            "Requires OpenWeatherMap API key",
+            "Geolocation permissions needed"
+          ]
+        },
+        useCases: [
+          {
+            name: "Weather Information Service",
+            description: "Provide users with accurate weather information and forecasts."
+          }
+        ]
+      }
+     ];

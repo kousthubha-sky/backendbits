@@ -87,7 +87,7 @@ const TemplatesShowcase = ({
 
 
   const handleCopy = (slug: string) => {
-    const command = `npx create-backend-template ${slug}`;
+    const command = `npx @kousthubha/stack-end ${slug}`;
     navigator.clipboard.writeText(command);
     setCopiedSlug(slug);
     setTimeout(() => setCopiedSlug(null), 2000);
@@ -277,25 +277,24 @@ const TemplatesShowcase = ({
                   </span>
                 </div>
 
+               
                 {/* Tech Stack */}
                 <div className="mb-2 md:mb-3">
                   <div className="flex flex-wrap gap-1">
                      {template.techStack.slice(0, 3).map((tech, idx) => (
-                       <motion.span
+                       <span
                          key={tech}
-                         className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-md font-medium inline-block"
-                         style={{ y: techYTransforms[idx] }}
+                         className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-md font-medium inline-block truncate max-w-[120px]"
                        >
                          {tech}
-                       </motion.span>
+                       </span>
                      ))}
                      {template.techStack.length > 3 && (
-                       <motion.span
+                       <span
                          className="px-2 py-1 bg-gray-100 text-gray-500 text-xs rounded-md inline-block"
-                         style={{ y: extraY }}
                        >
                          +{template.techStack.length - 3}
-                       </motion.span>
+                       </span>
                      )}
                   </div>
                 </div>
@@ -385,7 +384,7 @@ const TemplatesShowcase = ({
                       className="w-full flex items-center justify-between bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-xl px-4 py-3 transition-colors"
                     >
                       <code className="text-sm text-gray-700 font-mono">
-                        npx create-backend-template {selectedTemplate.slug}
+                        npx @kousthubha/stack-end {selectedTemplate.slug}
                       </code>
                       <div className="flex shrink-0 ml-2">
                         {copiedSlug === selectedTemplate.slug ? (
