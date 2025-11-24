@@ -88,6 +88,95 @@ const TemplatesShowcase = ({
       'Supabase': 'devicon-postgresql-plain',
       'Redis': 'devicon-redis-plain',
       'Razorpay': 'devicon-nodejs-plain',
+      // AI and Agent Framework mappings
+      'Python': 'devicon-python-plain',
+      'JavaScript': 'devicon-javascript-plain',
+      'Node.js': 'devicon-nodejs-plain',
+      'Docker': 'devicon-docker-plain',
+      'Jupyter': 'devicon-jupyter-plain',
+      'GitHub': 'devicon-github-original',
+      'LLMs': 'devicon-python-plain',
+      'Vector Databases': 'devicon-mongodb-plain',
+      'Agent Orchestration': 'devicon-nodejs-plain',
+      'Multi-Agent Systems': 'devicon-nodejs-plain',
+      'Memory Systems': 'devicon-redis-plain',
+      'Tool Integration': 'devicon-nodejs-plain',
+      'Function Calling': 'devicon-nodejs-plain',
+      'RAG': 'devicon-elasticsearch-plain',
+      'MCP': 'devicon-nodejs-plain',
+      'Code Execution': 'devicon-terminal-plain',
+      'Sandboxed Environments': 'devicon-docker-plain',
+      'Web Search': 'devicon-chrome-plain',
+      'Research Tools': 'devicon-jupyter-plain',
+      'LLM Control': 'devicon-nodejs-plain',
+      'Agent Alignment': 'devicon-nodejs-plain',
+      'Safety Measures': 'devicon-nodejs-plain',
+      'Google AI': 'devicon-google-plain',
+      'Agent Framework': 'devicon-nodejs-plain',
+      'Production Patterns': 'devicon-nodejs-plain',
+      'MLOps': 'devicon-python-plain',
+      'Industry Applications': 'devicon-nodejs-plain',
+      'Open Source': 'devicon-github-original',
+      'Use Cases': 'devicon-nodejs-plain',
+      'LangChain': 'devicon-nodejs-plain',
+      'Hugging Face': 'devicon-python-plain',
+      'Lightweight Framework': 'devicon-nodejs-plain',
+      'Communication Protocols': 'devicon-nodejs-plain',
+      'Agent Coordination': 'devicon-nodejs-plain',
+      'Role-Based Agents': 'devicon-nodejs-plain',
+      'Software Development': 'devicon-git-plain',
+      'Web Scraping': 'devicon-chrome-plain',
+      'Data Extraction': 'devicon-nodejs-plain',
+      'AI Training': 'devicon-python-plain',
+      'Agent Management': 'devicon-nodejs-plain',
+      'Deployment Tools': 'devicon-docker-plain',
+      'Workflow Automation': 'devicon-nodejs-plain',
+      'CrewAI': 'devicon-python-plain',
+      'AutoGen': 'devicon-python-plain',
+      'Playwright': 'devicon-nodejs-plain',
+      'State Management': 'devicon-redux-plain',
+      'API Integrations': 'devicon-nodejs-plain',
+      'Composio': 'devicon-nodejs-plain',
+      'AnythingLLM': 'devicon-nodejs-plain',
+      'Daytona': 'devicon-docker-plain',
+      'Deer Flow': 'devicon-python-plain',
+      'Parlant': 'devicon-python-plain',
+      'ADK Python': 'devicon-python-plain',
+      'Agents Towards Production': 'devicon-jupyter-plain',
+      '500 AI Agents Projects': 'devicon-github-original',
+      'LangGraph': 'devicon-nodejs-plain',
+      'SmolAgents': 'devicon-python-plain',
+      'AgentVerse': 'devicon-python-plain',
+      'MetaGPT': 'devicon-python-plain',
+      'Firecrawl': 'devicon-nodejs-plain',
+      'AI Agents for Beginners': 'devicon-jupyter-plain',
+      'Suna': 'devicon-nodejs-plain',
+      'ActivePieces': 'devicon-nodejs-plain',
+      // New Auth and API mappings
+      'Passport.js': 'devicon-nodejs-plain',
+      'OAuth': 'devicon-nodejs-plain',
+      'Social Login': 'devicon-nodejs-plain',
+      'bcrypt': 'devicon-nodejs-plain',
+      'EJS': 'devicon-nodejs-plain',
+      'REST API': 'devicon-nodejs-plain',
+      'Validation': 'devicon-nodejs-plain',
+      'ES6': 'devicon-nodejs-plain',
+      'Testing': 'devicon-nodejs-plain',
+      // Chat App mappings
+      'Socket.io': 'devicon-nodejs-plain',
+      'Real-time': 'devicon-nodejs-plain',
+      'WebSocket': 'devicon-nodejs-plain',
+      'Styled Components': 'devicon-react-original',
+      'Chat Rooms': 'devicon-nodejs-plain',
+      'Private Messaging': 'devicon-nodejs-plain',
+      // Blogging Platform mappings
+      'PostgreSQL': 'devicon-postgresql-plain',
+      'Role-based Access': 'devicon-nodejs-plain',
+      'Caching': 'devicon-redis-plain',
+      'Content Management': 'devicon-nodejs-plain',
+      'SSR': 'devicon-nextjs-original',
+      'Multi-user': 'devicon-nodejs-plain',
+      'SEO': 'devicon-nodejs-plain',
     };
     return techMap[tech] || 'devicon-code-plain';
   };
@@ -138,10 +227,14 @@ const TemplatesShowcase = ({
     }
   }, [githubSearchQuery, searchType, enableGitHubSearch, handleGitHubSearch]);
 
-  const handleCopy = (slug: string) => {
-    const command = `npx @kousthubha/stack-end ${slug}`;
+  const getCommand = (template: TemplateDefinition) => {
+    return template.codeUrl.includes('backend-bits') ? `npx @kousthubha/stack-end ${template.slug}` : `git clone ${template.codeUrl}`;
+  };
+
+  const handleCopy = (template: TemplateDefinition) => {
+    const command = getCommand(template);
     navigator.clipboard.writeText(command);
-    setCopiedSlug(slug);
+    setCopiedSlug(template.slug);
     setTimeout(() => setCopiedSlug(null), 2000);
   };
 
@@ -210,7 +303,7 @@ const TemplatesShowcase = ({
                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                      }`}
                    >
-                     Search
+                     Repo Search
                    </button>
                  </div>
                  <div className="flex-1 relative">
@@ -350,10 +443,10 @@ const TemplatesShowcase = ({
                      </label>
                    ))}
                  </div>
-               )}
-             </div>
-           </div>
-           )}
+                )}
+              </div>
+            </div>
+            )}
          </motion.div>
 
 
@@ -377,18 +470,18 @@ const TemplatesShowcase = ({
                       <div className="text-2xl md:text-4xl">📸</div>
                     </div>
                   ) : (
-                    <div className="flex flex-wrap gap-1 md:gap-2 justify-center">
-                      {template.techStack.slice(0, 3).map((tech) => (
-                        <i
-                          key={tech}
-                          className={`${getDeviconClass(tech)} colored text-lg md:text-2xl`}
-                          title={tech}
-                        />
-                      ))}
-                      {template.techStack.length > 3 && (
-                        <span className="text-xs text-gray-500">+{template.techStack.length - 3}</span>
-                      )}
-                    </div>
+                     <div className="flex flex-wrap gap-1 md:gap-2 justify-center">
+                       {Array.from(new Set(template.techStack)).slice(0, 3).map((tech) => (
+                         <i
+                           key={tech}
+                           className={`${getDeviconClass(tech)} colored text-lg md:text-2xl`}
+                           title={tech}
+                         />
+                       ))}
+                       {Array.from(new Set(template.techStack)).length > 3 && (
+                         <span className="text-xs text-gray-500">+{Array.from(new Set(template.techStack)).length - 3}</span>
+                       )}
+                     </div>
                   )}
                 </div>
 
@@ -403,26 +496,26 @@ const TemplatesShowcase = ({
                 </div>
 
                
-                {/* Tech Stack */}
-                <div className="mb-2 md:mb-3">
-                  <div className="flex flex-wrap gap-1">
-                     {template.techStack.slice(0, 3).map((tech, idx) => (
-                       <span
-                         key={tech}
-                         className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-md font-medium inline-block truncate max-w-[120px]"
-                       >
-                         {tech}
-                       </span>
-                     ))}
-                     {template.techStack.length > 3 && (
-                       <span
-                         className="px-2 py-1 bg-gray-100 text-gray-500 text-xs rounded-md inline-block"
-                       >
-                         +{template.techStack.length - 3}
-                       </span>
-                     )}
-                  </div>
-                </div>
+                 {/* Tech Stack */}
+                 <div className="mb-2 md:mb-3">
+                   <div className="flex flex-wrap gap-1">
+                      {Array.from(new Set(template.techStack)).slice(0, 3).map((tech, idx) => (
+                        <span
+                          key={tech}
+                          className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-md font-medium inline-block truncate max-w-[120px]"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                      {Array.from(new Set(template.techStack)).length > 3 && (
+                        <span
+                          className="px-2 py-1 bg-gray-100 text-gray-500 text-xs rounded-md inline-block"
+                        >
+                          +{Array.from(new Set(template.techStack)).length - 3}
+                        </span>
+                      )}
+                   </div>
+                 </div>
 
                 {/* Truncated Description */}
                 <p className="hidden md:block text-gray-600 text-sm leading-relaxed">
@@ -503,23 +596,23 @@ const TemplatesShowcase = ({
                     </ul>
                   </div>
 
-                  <div className="mb-6">
-                    <button
-                      onClick={() => handleCopy(selectedTemplate.slug)}
-                      className="w-full flex items-center justify-between bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-xl px-4 py-3 transition-colors"
-                    >
-                      <code className="text-sm text-gray-700 font-mono">
-                        npx @kousthubha/stack-end {selectedTemplate.slug}
-                      </code>
-                      <div className="flex shrink-0 ml-2">
-                        {copiedSlug === selectedTemplate.slug ? (
-                          <Check size={18} className="text-emerald-600" />
-                        ) : (
-                          <Copy size={18} className="text-gray-400 hover:text-gray-600 transition-colors" />
-                        )}
-                      </div>
-                    </button>
-                  </div>
+                   <div className="mb-6">
+                     <button
+                       onClick={() => handleCopy(selectedTemplate)}
+                       className="w-full flex items-center justify-between bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-xl px-4 py-3 transition-colors"
+                     >
+                       <code className="text-sm text-gray-700 font-mono">
+                         {getCommand(selectedTemplate)}
+                       </code>
+                       <div className="flex shrink-0 ml-2">
+                         {copiedSlug === selectedTemplate.slug ? (
+                           <Check size={18} className="text-emerald-600" />
+                         ) : (
+                           <Copy size={18} className="text-gray-400 hover:text-gray-600 transition-colors" />
+                         )}
+                       </div>
+                     </button>
+                   </div>
 
                   <div className="flex gap-3 mb-6">
                     {selectedTemplate.demoUrl && selectedTemplate.demoUrl !== "TODO" ? (

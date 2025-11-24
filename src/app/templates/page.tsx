@@ -13,13 +13,14 @@ const Templates: React.FC = () => {
   const categories = [
     { key: 'auth', label: 'Auth Templates' },
     { key: 'payment', label: 'Payment' },
+    { key: 'AI projects', label: 'AI Projects' },
     { key: 'personal', label: 'Personal Projects' },
     { key: 'Portfolio', label: 'Portfolio' },
     { key: 'github', label: 'GitHub Projects' },
   ];
 
   const filteredTemplates = templates.filter(template => template.category === selectedCategory);
-  const showFilters = !['personal', 'Portfolio', 'github'].includes(selectedCategory);
+  const showFilters = !['personal', 'Portfolio', 'github', 'AI projects'].includes(selectedCategory);
   const enableGitHubSearch = selectedCategory === 'github';
 
   return (
@@ -72,11 +73,13 @@ const Templates: React.FC = () => {
             data={filteredTemplates}
             showFilters={showFilters}
             enableGitHubSearch={enableGitHubSearch}
-            title={selectedCategory === 'github' ? 'GitHub Projects Search' : 'Production-ready templates'}
-            description={selectedCategory === 'github'
-              ? 'Search for GitHub repositories by user, organization, or keyword to discover personal projects and portfolio items.'
-              : 'Discover backend starters that let you ship faster with pre-configured auth, databases, and deployment scripts.'
-            }
+             title={selectedCategory === 'github' ? 'GitHub Projects Search' : selectedCategory === 'AI projects' ? 'AI Agent Frameworks' : 'Production-ready templates'}
+             description={selectedCategory === 'github'
+               ? 'Search for GitHub repositories by user, organization, or keyword to discover personal projects and portfolio items.'
+               : selectedCategory === 'AI projects'
+               ? 'Discover powerful AI agent frameworks and platforms for building intelligent, autonomous systems.'
+               : 'Discover backend starters that let you ship faster with pre-configured auth, databases, and deployment scripts.'
+             }
             className="pb-32"
           />
          </main>
