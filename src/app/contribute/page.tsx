@@ -71,12 +71,27 @@ export default function ContributePage() {
     }
   }, [session, isPending, router]);
 
+  // Refresh user role periodically to catch role updates
   useEffect(() => {
-    // Update role when it changes
-    if (userRole) {
-      // Role updated, can refresh UI if needed
+    if (session) {
+      const interval = setInterval(fetchUserRole, 5000); // Check every 5 seconds
+      return () => clearInterval(interval);
     }
-  }, [userRole]);
+  }, [session]);
+
+  useEffect(() => {
+    // Update UI when role changes
+    if (userRole && (userRole === 'admin' || userRole === 'reviewer') && activeTab === "review") {
+      fetchPendingReviews();
+    }
+  }, [userRole, activeTab]);
+
+  useEffect(() => {
+    // Fetch pending reviews when review tab is activated and user can review
+    if (activeTab === "review" && (userRole === 'admin' || userRole === 'reviewer')) {
+      fetchPendingReviews();
+    }
+  }, [activeTab, userRole]);
 
   const fetchUserRole = async () => {
     try {
@@ -99,6 +114,22 @@ export default function ContributePage() {
       }
     } catch (error) {
       console.error("Error fetching submissions:", error);
+      toast.error("Failed to load submissions");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchPendingReviews = async () => {
+    try {
+      const response = await fetch('/api/contributions/submit?status=submitted&status=under_review');
+      if (response.ok) {
+        const data = await response.json();
+        setSubmissions(data.submissions || []);
+      }
+    } catch (error) {
+      console.error('Error fetching pending reviews:', error);
+      toast.error('Failed to load pending reviews');
     } finally {
       setLoading(false);
     }
@@ -223,7 +254,7 @@ export default function ContributePage() {
   }
 
   const canSubmit = true; // All authenticated users can submit
-  const canReview = userRole === 'admin'; // Only admins can review
+  const canReview = userRole === 'admin' || userRole === 'reviewer'; // Admins and reviewers can review
 
   return (
     <div className="min-h-screen bg-white">
@@ -238,40 +269,52 @@ export default function ContributePage() {
 
           <div className="space-y-6">
             {/* Tab Navigation */}
-            <div className="flex border-b border-gray-200">
-              <button
-                onClick={() => setActiveTab("submit")}
-                className={`px-4 py-2 border-b-2 font-medium text-sm flex items-center gap-2 ${
-                  activeTab === "submit"
-                    ? "border-black text-black"
-                    : "border-transparent text-gray-500 hover:text-gray-700"
-                }`}
-              >
-                <Plus className="h-4 w-4" />
-                Submit Template
-              </button>
-              <button
-                onClick={() => setActiveTab("my-submissions")}
-                className={`px-4 py-2 border-b-2 font-medium text-sm ${
-                  activeTab === "my-submissions"
-                    ? "border-black text-black"
-                    : "border-transparent text-gray-500 hover:text-gray-700"
-                }`}
-              >
-                My Submissions
-              </button>
-              {canReview && (
+            <div className="flex border-b border-gray-200 justify-between items-center">
+              <div className="flex">
                 <button
-                  onClick={() => setActiveTab("review")}
-                  className={`px-4 py-2 border-b-2 font-medium text-sm ${
-                    activeTab === "review"
+                  onClick={() => setActiveTab("submit")}
+                  className={`px-4 py-2 border-b-2 font-medium text-sm flex items-center gap-2 ${
+                    activeTab === "submit"
                       ? "border-black text-black"
                       : "border-transparent text-gray-500 hover:text-gray-700"
                   }`}
                 >
-                  Review Queue
+                  <Plus className="h-4 w-4" />
+                  Submit Template
                 </button>
-              )}
+                <button
+                  onClick={() => setActiveTab("my-submissions")}
+                  className={`px-4 py-2 border-b-2 font-medium text-sm ${
+                    activeTab === "my-submissions"
+                      ? "border-black text-black"
+                      : "border-transparent text-gray-500 hover:text-gray-700"
+                  }`}
+                >
+                  My Submissions
+                </button>
+                {canReview && (
+                  <button
+                    onClick={() => setActiveTab("review")}
+                    className={`px-4 py-2 border-b-2 font-medium text-sm ${
+                      activeTab === "review"
+                        ? "border-black text-black"
+                        : "border-transparent text-gray-500 hover:text-gray-700"
+                    }`}
+                  >
+                    Review Queue ({submissions.length})
+                  </button>
+                )}
+              </div>
+              <div className="flex items-center text-sm text-gray-500">
+                Role: <span className="font-medium text-gray-700">{userRole}</span>
+                <button
+                  onClick={fetchUserRole}
+                  className="ml-2 text-blue-600 hover:text-blue-800"
+                  title="Refresh role"
+                >
+                  ↻
+                </button>
+              </div>
             </div>
 
             {/* Submit Tab */}
@@ -434,10 +477,6 @@ function ReviewQueue() {
   const [reviewNotes, setReviewNotes] = useState('');
   const [submittingReview, setSubmittingReview] = useState(false);
 
-  useEffect(() => {
-    fetchPendingReviews();
-  }, []);
-
   const fetchPendingReviews = async () => {
     try {
       const response = await fetch('/api/contributions/submit?status=submitted&status=under_review');
@@ -452,6 +491,10 @@ function ReviewQueue() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchPendingReviews();
+  }, []);
 
   const handleReview = async () => {
     if (!selectedSubmission) return;

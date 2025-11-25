@@ -9,16 +9,27 @@ export async function POST(request: NextRequest) {
     const session = await auth.api.getSession({
       headers: request.headers,
     });
+    console.log("Session:", session);
 
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const db = await getAuthDatabase();
-    const user = await db.collection("user").findOne({ id: session.user.id });
+
+    // Try multiple ways to find the user
+    let user = await db.collection("user").findOne({ id: session.user.id });
+
+    if (!user && session.user.email) {
+      // Fallback: try to find by email
+      user = await db.collection("user").findOne({ email: session.user.email });
+    }
 
     if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      return NextResponse.json({
+        error: "User not found. Please try logging out and logging back in.",
+        details: "Your user account may not be properly created in the database."
+      }, { status: 404 });
     }
 
     const body = await request.json();
@@ -117,7 +128,7 @@ export async function GET(request: NextRequest) {
 
     // Build query based on user role and status
     const user = await db.collection("user").findOne({ id: session.user.id });
-    let query: any = {};
+    const query: any = {};
 
     if (user?.role === 'admin') {
       // Admins can see all submissions

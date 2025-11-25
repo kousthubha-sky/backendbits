@@ -177,7 +177,7 @@ export class GitHubService {
     return {
       slug: repo.full_name.replace('/', '-'),
       name: repo.name.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
-      status: 'GitHub',
+      status: 'Preview',
       category: 'github',
       summary: repo.description || 'No description available',
       description: repo.description || 'No description available',
