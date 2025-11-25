@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+
+# Block access to admin areas
+Disallow: /admin/
+Disallow: /api/admin/
+
+# Block access to auth pages (they're public but not useful for crawling)
+Disallow: /auth/
+
+# Allow crawling of all templates and docs
+Allow: /templates
+Allow: /docs
+
+# Sitemap
+Sitemap: https://yourdomain.com/sitemap.xml

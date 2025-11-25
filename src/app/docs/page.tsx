@@ -1,5 +1,30 @@
+import type { Metadata } from 'next'
 import Link from 'next/link';
 import { ArrowRight, Code, Github, Users, Star, Zap, Shield, BookOpen } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: "Documentation - Getting Started",
+  description: "Welcome to Backend Templates documentation. Learn how to use our platform, browse templates, and get started with development.",
+  keywords: [
+    "documentation",
+    "getting started",
+    "backend templates",
+    "tutorials",
+    "guide",
+    "help"
+  ],
+  openGraph: {
+    title: "Documentation - Getting Started",
+    description: "Welcome to Backend Templates documentation.",
+    url: "/docs",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Documentation - Getting Started",
+    description: "Welcome to Backend Templates documentation.",
+  },
+}
 
 export default function DocsPage() {
   return (
