@@ -1036,45 +1036,7 @@ export const templates: TemplateDefinition[] = [
           }
         ]
       },
-      {
-        slug: "launch-mvp-stripe-nextjs-supabase",
-        name: "Launch MVP - Stripe + Next.js + Supabase",
-        status: "Production-ready",
-        category: "payment",
-        summary:
-          "Production-ready Next.js template with Stripe payments, Supabase authentication, dark mode, and modern UI components.",
-        description:
-          "A comprehensive full-stack template featuring Next.js 14, Stripe payment integration, Supabase authentication with Google OAuth, dark mode support, Framer Motion animations, and TypeScript. Includes MCP integration for AI-powered development assistance.",
-        techStack: ["Next.js 14", "Stripe", "Supabase", "TypeScript", "Tailwind CSS", "Framer Motion"],
-        features: [
-          "Stripe payment integration with subscriptions and webhooks",
-          "Supabase authentication with email/password and Google OAuth",
-          "Dark mode support with system preference detection",
-          "Responsive design with modern UI components",
-          "Framer Motion animations and transitions",
-          "TypeScript for type safety",
-          "MCP integration for AI-powered development",
-          "SEO optimized with Next.js"
-        ],
-        demoUrl: "https://mvp.seanchen.io",
-        codeUrl: "https://github.com/ShenSeanChen/launch-mvp-stripe-nextjs-supabase",
-        deployment: {
-          headline: "Deploy easily on Vercel with one-click deployment",
-          providers: ["Vercel", "Netlify"],
-          env: ["NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY", "STRIPE_SECRET_KEY", "NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_ANON_KEY"],
-          notes: [
-            "Requires Stripe and Supabase accounts",
-            "Includes detailed setup guide with YouTube tutorial",
-            "MCP integration available for enhanced AI assistance"
-          ]
-        },
-        useCases: [
-          {
-            name: "SaaS MVP Development",
-            description: "Quickly launch subscription-based SaaS applications with payments and authentication."
-          }
-        ]
-      },
+
       {
         slug: "relivator-nextjs-template",
         name: "Relivator - Next.js Ecommerce Template",
@@ -3132,6 +3094,338 @@ export const templates: TemplateDefinition[] = [
           {
             name: "Content Management",
             description: "Create advanced content management systems."
+          }
+        ]
+      },
+      // Real Svelte Templates from GitHub
+      {
+        slug: "svelte-stripe",
+        name: "Svelte Stripe Elements",
+        status: "Production-ready",
+        category: "payment",
+        summary: "Everything you need to add Stripe Elements to your Svelte project",
+        description: "A comprehensive Stripe Elements integration for Svelte applications. Includes support for Apple Pay, Google Pay, SEPA, iDEAL, and all major credit cards. Features TypeScript support, SvelteKit integration, and modern payment processing.",
+        techStack: ["Svelte", "Stripe", "TypeScript", "SvelteKit"],
+        features: [
+          "Stripe Elements integration",
+          "Apple Pay support",
+          "Google Pay support",
+          "SEPA payments",
+          "iDEAL payments",
+          "Credit card processing",
+          "TypeScript support",
+          "SvelteKit compatible",
+          "Modern payment UI"
+        ],
+        demoUrl: "https://sveltestripe.com",
+        codeUrl: "https://github.com/joshnuss/svelte-stripe",
+        deployment: {
+          headline: "Deploy with Stripe configuration",
+          providers: ["Vercel", "Netlify", "Railway"],
+          env: ["STRIPE_PUBLISHABLE_KEY", "STRIPE_SECRET_KEY"],
+          notes: [
+            "Configure Stripe account",
+            "Set up webhook endpoints",
+            "Test with Stripe test keys"
+          ]
+        },
+        useCases: [
+          {
+            name: "E-commerce Applications",
+            description: "Build modern e-commerce platforms with Stripe payments."
+          },
+          {
+            name: "SaaS Subscriptions",
+            description: "Create subscription-based services with recurring payments."
+          },
+          {
+            name: "Marketplaces",
+            description: "Develop multi-vendor marketplaces with payment processing."
+          }
+        ]
+      },
+      {
+        slug: "launch-mvp-stripe-nextjs-supabase",
+        name: "Launch MVP - Stripe + Next.js + Supabase",
+        status: "Production-ready",
+        category: "payment",
+        summary: "Production-Ready NextJS+Stripe+Supabase App Boilerplate Template",
+        description: "Welcome to Sean's Open Source MVP Boilerplate Template for Production-Ready NextJS+Stripe+Supabase App. Features complete authentication, subscription management, user dashboards, and modern UI components.",
+        techStack: ["Next.js", "Stripe", "Supabase", "TypeScript", "Tailwind CSS"],
+        features: [
+          "Stripe subscription payments",
+          "Supabase authentication",
+          "User dashboard",
+          "Subscription management",
+          "Modern UI components",
+          "TypeScript support",
+          "Responsive design",
+          "Production-ready",
+          "Complete authentication flow"
+        ],
+        demoUrl: null,
+        codeUrl: "https://github.com/ShenSeanChen/launch-mvp-stripe-nextjs-supabase",
+        deployment: {
+          headline: "Deploy to Vercel with full configuration",
+          providers: ["Vercel", "Railway"],
+          env: ["STRIPE_SECRET_KEY", "SUPABASE_URL", "SUPABASE_ANON_KEY"],
+          notes: [
+            "Configure Stripe webhooks",
+            "Set up Supabase project",
+            "Deploy to Vercel",
+            "Configure environment variables"
+          ]
+        },
+        useCases: [
+          {
+            name: "SaaS Applications",
+            description: "Launch subscription-based SaaS products quickly."
+          },
+          {
+            name: "Membership Platforms",
+            description: "Build exclusive member-only platforms."
+          },
+          {
+            name: "Digital Products",
+            description: "Sell digital products and services online."
+          }
+        ]
+      },
+      {
+        slug: "react-firebase-auth",
+        name: "React Firebase Auth v9",
+        status: "Production-ready",
+        category: "auth",
+        summary: "Firebase authentication v9 (new API) with React and ChakraUI template",
+        description: "Complete Firebase authentication implementation using the latest v9 API with React and ChakraUI. Features dark mode, modern UI components, and comprehensive authentication flows including email/password, social login, and user management.",
+        techStack: ["React", "Firebase", "Chakra UI", "JavaScript"],
+        features: [
+          "Firebase Auth v9 API",
+          "Email/password authentication",
+          "Social login integration",
+          "Dark mode support",
+          "Modern ChakraUI components",
+          "User profile management",
+          "Password reset functionality",
+          "Authentication state management",
+          "Responsive design"
+        ],
+        demoUrl: null,
+        codeUrl: "https://github.com/trulymittal/react-firebase-auth",
+        deployment: {
+          headline: "Deploy with Firebase configuration",
+          providers: ["Vercel", "Netlify", "Firebase Hosting"],
+          env: ["FIREBASE_API_KEY", "FIREBASE_AUTH_DOMAIN", "FIREBASE_PROJECT_ID"],
+          notes: [
+            "Set up Firebase project",
+            "Configure authentication providers",
+            "Deploy to preferred platform",
+            "Configure Firebase security rules"
+          ]
+        },
+        useCases: [
+          {
+            name: "Web Applications",
+            description: "Add authentication to React web applications."
+          },
+          {
+            name: "User Management Systems",
+            description: "Build comprehensive user management platforms."
+          },
+          {
+            name: "Social Platforms",
+            description: "Create platforms requiring user authentication."
+          }
+        ]
+      },
+      {
+        slug: "react-vite-tailwind-typescript-firebase-auth-template",
+        name: "React + Vite + Firebase Auth Template",
+        status: "Production-ready",
+        category: "auth",
+        summary: "Good starting point for your next application with React, TypeScript, TailwindCSS, Firebase Auth and Vite",
+        description: "A modern React application template with Vite, TypeScript, TailwindCSS, and Firebase authentication. Features fast development setup, type safety, modern styling, and complete authentication system with user management.",
+        techStack: ["React", "Vite", "TypeScript", "Tailwind CSS", "Firebase"],
+        features: [
+          "Vite for fast development",
+          "TypeScript for type safety",
+          "TailwindCSS for styling",
+          "Firebase authentication",
+          "User dashboard",
+          "Authentication guards",
+          "Modern React patterns",
+          "Responsive design",
+          "Production-ready setup"
+        ],
+        demoUrl: null,
+        codeUrl: "https://github.com/IgorBayerl/react-vite-tailwind-typescript-firebase-auth-template",
+        deployment: {
+          headline: "Deploy with Firebase hosting",
+          providers: ["Vercel", "Netlify", "Firebase Hosting"],
+          env: ["FIREBASE_API_KEY", "FIREBASE_AUTH_DOMAIN"],
+          notes: [
+            "Set up Firebase project",
+            "Configure authentication",
+            "Deploy to Firebase hosting",
+            "Configure security rules"
+          ]
+        },
+        useCases: [
+          {
+            name: "Modern Web Apps",
+            description: "Build fast, modern web applications with authentication."
+          },
+          {
+            name: "Dashboard Applications",
+            description: "Create user dashboard applications with auth."
+          },
+          {
+            name: "Product MVPs",
+            description: "Quickly prototype and launch authenticated web apps."
+          }
+        ]
+      },
+      {
+        slug: "deep-chat",
+        name: "Deep Chat - AI Chatbot Component",
+        status: "Production-ready",
+        category: "AI projects",
+        summary: "Fully customizable AI chatbot component for web applications",
+        description: "A highly customizable AI chatbot component that supports multiple AI providers including OpenAI, Claude, Gemini, HuggingFace, and more. Features real-time streaming, file uploads, speech recognition, and extensive customization options.",
+        techStack: ["TypeScript", "AI APIs", "Web Components"],
+        features: [
+          "Multi-provider AI support",
+          "Real-time streaming",
+          "File upload capabilities",
+          "Speech recognition",
+          "Voice synthesis",
+          "Customizable UI",
+          "Multiple AI models",
+          "Streaming responses",
+          "Cross-framework support",
+          "Extensive API"
+        ],
+        demoUrl: "https://deepchat.dev",
+        codeUrl: "https://github.com/OvidijusParsiunas/deep-chat",
+        deployment: {
+          headline: "Deploy with AI API configuration",
+          providers: ["Vercel", "Netlify", "Railway"],
+          env: ["OPENAI_API_KEY", "ANTHROPIC_API_KEY", "GOOGLE_API_KEY"],
+          notes: [
+            "Configure AI provider APIs",
+            "Set up API keys",
+            "Customize chatbot appearance",
+            "Test with different AI models"
+          ]
+        },
+        useCases: [
+          {
+            name: "Customer Support",
+            description: "Build AI-powered customer support chatbots."
+          },
+          {
+            name: "Virtual Assistants",
+            description: "Create intelligent virtual assistants."
+          },
+          {
+            name: "Educational Tools",
+            description: "Develop AI-powered learning companions."
+          }
+        ]
+      },
+      {
+        slug: "sveltekit-ai-chatbot",
+        name: "SvelteKit AI Chatbot",
+        status: "Production-ready",
+        category: "AI projects",
+        summary: "Full-featured AI chatbot built with SvelteKit and OpenAI",
+        description: "A comprehensive AI chatbot application built with SvelteKit, featuring conversation history, customizable prompts, streaming responses, and modern UI. Includes user authentication, chat management, and deployment-ready architecture.",
+        techStack: ["Svelte", "SvelteKit", "OpenAI", "TypeScript", "Tailwind CSS"],
+        features: [
+          "OpenAI GPT integration",
+          "Conversation history",
+          "Streaming responses",
+          "Customizable prompts",
+          "User authentication",
+          "Chat management",
+          "Modern UI design",
+          "Responsive layout",
+          "TypeScript support",
+          "Production-ready"
+        ],
+        demoUrl: "https://sveltekit-ai-chatbot.vercel.app",
+        codeUrl: "https://github.com/jianyuan/sveltekit-ai-chatbot",
+        deployment: {
+          headline: "Deploy to Vercel with OpenAI",
+          providers: ["Vercel", "Netlify"],
+          env: ["OPENAI_API_KEY", "AUTH_SECRET"],
+          notes: [
+            "Configure OpenAI API key",
+            "Set up authentication",
+            "Deploy to Vercel",
+            "Configure custom prompts"
+          ]
+        },
+        useCases: [
+          {
+            name: "AI Assistants",
+            description: "Build intelligent AI assistant applications."
+          },
+          {
+            name: "Chat Applications",
+            description: "Create modern chat applications with AI capabilities."
+          },
+          {
+            name: "Productivity Tools",
+            description: "Develop AI-powered productivity and workflow tools."
+          }
+        ]
+      },
+      {
+        slug: "ai-fusion-kit",
+        name: "AI Fusion Kit - Next.js AI Template",
+        status: "Production-ready",
+        category: "AI projects",
+        summary: "A feature-rich, highly customizable AI Web App Template, empowered by Next.js",
+        description: "A comprehensive AI web application template built with Next.js, featuring multiple AI integrations, modern UI components, and production-ready architecture. Supports various AI providers and includes advanced features like conversation management and customizable interfaces.",
+        techStack: ["Next.js", "OpenAI", "Vercel AI SDK", "Tailwind CSS", "TypeScript"],
+        features: [
+          "Multiple AI provider support",
+          "Vercel AI SDK integration",
+          "Conversation management",
+          "Customizable UI components",
+          "Streaming responses",
+          "Modern design system",
+          "TypeScript support",
+          "Responsive layout",
+          "Production-ready",
+          "Advanced AI features"
+        ],
+        demoUrl: "https://ai-fusion-kit.vercel.app",
+        codeUrl: "https://github.com/nphivu414/ai-fusion-kit",
+        deployment: {
+          headline: "Deploy to Vercel with AI configuration",
+          providers: ["Vercel", "Railway"],
+          env: ["OPENAI_API_KEY", "ANTHROPIC_API_KEY"],
+          notes: [
+            "Configure AI provider APIs",
+            "Set up Vercel AI SDK",
+            "Deploy to Vercel",
+            "Configure conversation settings"
+          ]
+        },
+        useCases: [
+          {
+            name: "AI Applications",
+            description: "Build comprehensive AI-powered web applications."
+          },
+          {
+            name: "Conversational AI",
+            description: "Create advanced conversational AI interfaces."
+          },
+          {
+            name: "AI Toolkits",
+            description: "Develop AI toolkits and platforms."
           }
         ]
       }

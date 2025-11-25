@@ -28,21 +28,44 @@ const TemplatesShowcase = ({
   const { scrollYProgress } = useScroll();
   const [copiedSlug, setCopiedSlug] = useState<string | null>(null);
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateDefinition | null>(null);
-  const [selectedAuth, setSelectedAuth] = useState<string[]>([]);
-  const [selectedFrontend, setSelectedFrontend] = useState<string[]>([]);
-  const [selectedDatabase, setSelectedDatabase] = useState<string[]>([]);
-  const [showAuth, setShowAuth] = useState(false);
-  const [showFrontend, setShowFrontend] = useState(false);
-  const [showDatabase, setShowDatabase] = useState(false);
+  const [selectedFilters, setSelectedFilters] = useState<{
+    auth: string[];
+    frontend: string[];
+    database: string[];
+  }>({
+    auth: [],
+    frontend: [],
+    database: []
+  });
+  const [filterDropdowns, setFilterDropdowns] = useState<{
+    auth: boolean;
+    frontend: boolean;
+    database: boolean;
+  }>({
+    auth: false,
+    frontend: false,
+    database: false
+  });
+  const [searchQuery, setSearchQuery] = useState('');
   const [githubSearchQuery, setGithubSearchQuery] = useState('');
   const [githubRepos, setGithubRepos] = useState<TemplateDefinition[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [searchError, setSearchError] = useState<string | null>(null);
   const [searchType, setSearchType] = useState<'user' | 'org' | 'search'>('user');
 
-  const authOptions = ['Better Auth', 'Auth0'];
-  const frontendOptions = ['Next.js', 'React', 'Vue.js'];
-  const databaseOptions = ['MongoDB', 'MySQL', 'Supabase'];
+  // Dynamic filter options based on available data
+  const getFilterOptions = () => {
+    const allTech = data.flatMap(template => template.techStack);
+    const uniqueTech = Array.from(new Set(allTech));
+
+    return {
+      auth: uniqueTech.filter(tech => ['Better Auth', 'Auth0', 'Supabase', 'Firebase', 'Passport.js', 'OAuth', 'Social Login', 'bcrypt'].includes(tech)),
+      frontend: uniqueTech.filter(tech => ['Next.js', 'React', 'Vue.js', 'Vue', 'Svelte', 'SvelteKit', 'Angular'].includes(tech)),
+      database: uniqueTech.filter(tech => ['MongoDB', 'MySQL', 'Supabase', 'PostgreSQL', 'Redis', 'SQLite'].includes(tech))
+    };
+  };
+
+  const filterOptions = getFilterOptions();
 
   const techYTransforms = [
     useTransform(scrollYProgress, [0, 1], [0, -10]),
@@ -255,11 +278,46 @@ const TemplatesShowcase = ({
   };
 
   const filteredData = data.filter(template => {
-    if (selectedAuth.length > 0 && !selectedAuth.some(auth => template.techStack.includes(auth))) return false;
-    if (selectedFrontend.length > 0 && !selectedFrontend.some(front => template.techStack.includes(front))) return false;
-    if (selectedDatabase.length > 0 && !selectedDatabase.some(db => template.techStack.includes(db))) return false;
+    // Text search
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      const matchesName = template.name.toLowerCase().includes(query);
+      const matchesDescription = template.description.toLowerCase().includes(query);
+      const matchesTechStack = template.techStack.some(tech => tech.toLowerCase().includes(query));
+      if (!matchesName && !matchesDescription && !matchesTechStack) return false;
+    }
+
+    // Filter by auth systems
+    if (selectedFilters.auth.length > 0 && !selectedFilters.auth.some(auth => template.techStack.includes(auth))) return false;
+
+    // Filter by frontend frameworks
+    if (selectedFilters.frontend.length > 0 && !selectedFilters.frontend.some(front => template.techStack.includes(front))) return false;
+
+    // Filter by databases
+    if (selectedFilters.database.length > 0 && !selectedFilters.database.some(db => template.techStack.includes(db))) return false;
+
     return true;
   });
+
+  const hasActiveFilters = Object.values(selectedFilters).some(arr => arr.length > 0) || searchQuery.trim();
+
+  const clearAllFilters = () => {
+    setSelectedFilters({
+      auth: [],
+      frontend: [],
+      database: []
+    });
+    setSearchQuery('');
+  };
+
+  const toggleFilter = (category: keyof typeof selectedFilters, value: string) => {
+    setSelectedFilters(prev => ({
+      ...prev,
+      [category]: prev[category].includes(value)
+        ? prev[category].filter(item => item !== value)
+        : [...prev[category], value]
+    }));
+  };
 
   const displayData = enableGitHubSearch && githubRepos.length > 0 ? githubRepos : filteredData;
 
@@ -353,111 +411,170 @@ const TemplatesShowcase = ({
              </div>
            )}
 
-           {/* Filters */}
-           {showFilters && (
-             <div className="flex flex-wrap justify-center gap-4 mb-8">
-             {/* Auth System Filter */}
-             <div className="relative">
-               <button
-                 onClick={() => setShowAuth(!showAuth)}
-                 className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 flex items-center gap-2"
-               >
-                 Auth System {selectedAuth.length > 0 && `(${selectedAuth.length})`}
-                 <svg className={`w-4 h-4 transition-transform ${showAuth ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                 </svg>
-               </button>
-               {showAuth && (
-                 <div className="absolute top-full mt-2 bg-white border border-gray-300 rounded-lg shadow-lg p-3 z-10 w-48">
-                   {authOptions.map(option => (
-                     <label key={option} className="flex items-center gap-2 py-1 cursor-pointer">
-                       <input
-                         type="checkbox"
-                         checked={selectedAuth.includes(option)}
-                         onChange={e => {
-                           if (e.target.checked) {
-                             setSelectedAuth([...selectedAuth, option]);
-                           } else {
-                             setSelectedAuth(selectedAuth.filter(a => a !== option));
-                           }
-                         }}
-                         className="rounded"
-                       />
-                       <span className="text-sm">{option}</span>
-                     </label>
-                   ))}
-                 </div>
-               )}
-             </div>
+            {/* Enhanced Filters */}
+            {showFilters && (
+              <div className="max-w-6xl mx-auto mb-8">
+                {/* Search Bar */}
+                <div className="mb-6">
+                  <div className="relative max-w-md mx-auto">
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search templates, technologies..."
+                      className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-base"
+                    />
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  </div>
+                </div>
 
-             {/* Frontend Filter */}
-             <div className="relative">
-               <button
-                 onClick={() => setShowFrontend(!showFrontend)}
-                 className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 flex items-center gap-2"
-               >
-                 Frontend {selectedFrontend.length > 0 && `(${selectedFrontend.length})`}
-                 <svg className={`w-4 h-4 transition-transform ${showFrontend ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                 </svg>
-               </button>
-               {showFrontend && (
-                 <div className="absolute top-full mt-2 bg-white border border-gray-300 rounded-lg shadow-lg p-3 z-10 w-48">
-                   {frontendOptions.map(option => (
-                     <label key={option} className="flex items-center gap-2 py-1 cursor-pointer">
-                       <input
-                         type="checkbox"
-                         checked={selectedFrontend.includes(option)}
-                         onChange={e => {
-                           if (e.target.checked) {
-                             setSelectedFrontend([...selectedFrontend, option]);
-                           } else {
-                             setSelectedFrontend(selectedFrontend.filter(f => f !== option));
-                           }
-                         }}
-                         className="rounded"
-                       />
-                       <span className="text-sm">{option}</span>
-                     </label>
-                   ))}
-                 </div>
-               )}
-             </div>
+                {/* Filter Buttons */}
+                <div className="flex flex-wrap justify-center gap-3 mb-4">
+                  {/* Clear All Filters */}
+                  {hasActiveFilters && (
+                    <button
+                      onClick={clearAllFilters}
+                      className="px-4 py-2 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors"
+                    >
+                      Clear All Filters
+                    </button>
+                  )}
 
-             {/* Database Filter */}
-             <div className="relative">
-               <button
-                 onClick={() => setShowDatabase(!showDatabase)}
-                 className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 flex items-center gap-2"
-               >
-                 Database {selectedDatabase.length > 0 && `(${selectedDatabase.length})`}
-                 <svg className={`w-4 h-4 transition-transform ${showDatabase ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                 </svg>
-               </button>
-               {showDatabase && (
-                 <div className="absolute top-full mt-2 bg-white border border-gray-300 rounded-lg shadow-lg p-3 z-10 w-48">
-                   {databaseOptions.map(option => (
-                     <label key={option} className="flex items-center gap-2 py-1 cursor-pointer">
-                       <input
-                         type="checkbox"
-                         checked={selectedDatabase.includes(option)}
-                         onChange={e => {
-                           if (e.target.checked) {
-                             setSelectedDatabase([...selectedDatabase, option]);
-                           } else {
-                             setSelectedDatabase(selectedDatabase.filter(d => d !== option));
-                           }
-                         }}
-                         className="rounded"
-                       />
-                       <span className="text-sm">{option}</span>
-                     </label>
-                   ))}
-                 </div>
+                  {/* Auth System Filter */}
+                  <div className="relative">
+                    <button
+                      onClick={() => setFilterDropdowns(prev => ({ ...prev, auth: !prev.auth }))}
+                      className={`px-4 py-2 bg-white border rounded-lg text-sm font-medium hover:bg-gray-50 flex items-center gap-2 transition-colors ${
+                        selectedFilters.auth.length > 0
+                          ? 'border-black text-black bg-black text-white hover:bg-gray-800'
+                          : 'border-gray-300 text-gray-700'
+                      }`}
+                    >
+                      Auth Systems {selectedFilters.auth.length > 0 && `(${selectedFilters.auth.length})`}
+                      <svg className={`w-4 h-4 transition-transform ${filterDropdowns.auth ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                    {filterDropdowns.auth && (
+                      <div className="absolute top-full mt-2 bg-white border border-gray-300 rounded-lg shadow-lg p-3 z-10 w-56 max-h-64 overflow-y-auto">
+                        {filterOptions.auth.map(option => (
+                          <label key={option} className="flex items-center gap-2 py-2 cursor-pointer hover:bg-gray-50 px-2 rounded">
+                            <input
+                              type="checkbox"
+                              checked={selectedFilters.auth.includes(option)}
+                              onChange={() => toggleFilter('auth', option)}
+                              className="rounded border-gray-300 text-black focus:ring-black"
+                            />
+                            <span className="text-sm">{option}</span>
+                          </label>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Frontend Filter */}
+                  <div className="relative">
+                    <button
+                      onClick={() => setFilterDropdowns(prev => ({ ...prev, frontend: !prev.frontend }))}
+                      className={`px-4 py-2 bg-white border rounded-lg text-sm font-medium hover:bg-gray-50 flex items-center gap-2 transition-colors ${
+                        selectedFilters.frontend.length > 0
+                          ? 'border-black text-black bg-black text-white hover:bg-gray-800'
+                          : 'border-gray-300 text-gray-700'
+                      }`}
+                    >
+                      Frontend {selectedFilters.frontend.length > 0 && `(${selectedFilters.frontend.length})`}
+                      <svg className={`w-4 h-4 transition-transform ${filterDropdowns.frontend ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                    {filterDropdowns.frontend && (
+                      <div className="absolute top-full mt-2 bg-white border border-gray-300 rounded-lg shadow-lg p-3 z-10 w-56 max-h-64 overflow-y-auto">
+                        {filterOptions.frontend.map(option => (
+                          <label key={option} className="flex items-center gap-2 py-2 cursor-pointer hover:bg-gray-50 px-2 rounded">
+                            <input
+                              type="checkbox"
+                              checked={selectedFilters.frontend.includes(option)}
+                              onChange={() => toggleFilter('frontend', option)}
+                              className="rounded border-gray-300 text-black focus:ring-black"
+                            />
+                            <span className="text-sm">{option}</span>
+                          </label>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Database Filter */}
+                  <div className="relative">
+                    <button
+                      onClick={() => setFilterDropdowns(prev => ({ ...prev, database: !prev.database }))}
+                      className={`px-4 py-2 bg-white border rounded-lg text-sm font-medium hover:bg-gray-50 flex items-center gap-2 transition-colors ${
+                        selectedFilters.database.length > 0
+                          ? 'border-black text-black bg-black text-white hover:bg-gray-800'
+                          : 'border-gray-300 text-gray-700'
+                      }`}
+                    >
+                      Database {selectedFilters.database.length > 0 && `(${selectedFilters.database.length})`}
+                      <svg className={`w-4 h-4 transition-transform ${filterDropdowns.database ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                    {filterDropdowns.database && (
+                      <div className="absolute top-full mt-2 bg-white border border-gray-300 rounded-lg shadow-lg p-3 z-10 w-56 max-h-64 overflow-y-auto">
+                        {filterOptions.database.map(option => (
+                          <label key={option} className="flex items-center gap-2 py-2 cursor-pointer hover:bg-gray-50 px-2 rounded">
+                            <input
+                              type="checkbox"
+                              checked={selectedFilters.database.includes(option)}
+                              onChange={() => toggleFilter('database', option)}
+                              className="rounded border-gray-300 text-black focus:ring-black"
+                            />
+                            <span className="text-sm">{option}</span>
+                          </label>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+
+                </div>
+
+                {/* Active Filters Display */}
+                {hasActiveFilters && (
+                  <div className="flex flex-wrap justify-center gap-2 mb-4">
+                    {selectedFilters.auth.map(filter => (
+                      <span key={`auth-${filter}`} className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                        Auth: {filter}
+                        <button onClick={() => toggleFilter('auth', filter)} className="hover:text-blue-600">
+                          <X size={12} />
+                        </button>
+                      </span>
+                    ))}
+                    {selectedFilters.frontend.map(filter => (
+                      <span key={`frontend-${filter}`} className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-800 text-xs rounded-full">
+                        Frontend: {filter}
+                        <button onClick={() => toggleFilter('frontend', filter)} className="hover:text-green-600">
+                          <X size={12} />
+                        </button>
+                      </span>
+                    ))}
+                    {selectedFilters.database.map(filter => (
+                      <span key={`database-${filter}`} className="inline-flex items-center gap-1 px-3 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">
+                        Database: {filter}
+                        <button onClick={() => toggleFilter('database', filter)} className="hover:text-purple-600">
+                          <X size={12} />
+                        </button>
+                      </span>
+                    ))}
+                  </div>
                 )}
+
+                {/* Results Count */}
+                <div className="text-center text-sm text-gray-600">
+                  Showing {displayData.length} of {enableGitHubSearch && githubRepos.length > 0 ? githubRepos.length : data.length} templates
+                  {hasActiveFilters && ' (filtered)'}
+                </div>
               </div>
-            </div>
             )}
          </motion.div>
 

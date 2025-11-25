@@ -226,7 +226,7 @@ const Navbar: React.FC = () => {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
-      <div className="max-w-7xl mx-auto h-16 px-4 sm:px-6 grid grid-cols-3 items-center">
+      <div className="max-w-7xl mx-auto h-16 px-4 sm:px-6 grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 items-center">
         {/* Left: Logo */}
         <Link href="/" className="flex items-center gap-2 font-bold text-xl tracking-tight">
           <div className="flex items-center -space-x-1">
@@ -340,7 +340,7 @@ const Navbar: React.FC = () => {
         </div>
 
         {/* Mobile: Hamburger Menu and Downbar Button */}
-        <div className="flex lg:hidden items-center gap-2">
+        <div className="flex lg:hidden items-center justify-end gap-2">
           {/* Downbar Button - Visible on mobile */}
           <button
             onClick={() => setShowDownbar(!showDownbar)}
