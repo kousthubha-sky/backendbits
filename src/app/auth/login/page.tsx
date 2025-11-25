@@ -3,6 +3,9 @@ import { LoginForm } from "@/components/auth/login-form";
 import { getOptionalServerSession } from "@/lib/auth-server";
 import { redirect } from "next/navigation";
 
+// Force dynamic rendering
+export const dynamic = "force-dynamic";
+
 export default async function LoginPage() {
   // If user is already authenticated, redirect to home
   const session = await getOptionalServerSession();

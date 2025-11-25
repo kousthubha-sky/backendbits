@@ -1,9 +1,10 @@
-
-
 import Link from "next/link";
 import { SignupForm } from "@/components/auth/signup-form";
 import { getOptionalServerSession } from "@/lib/auth-server";
 import { redirect } from "next/navigation";
+
+// Force dynamic rendering
+export const dynamic = "force-dynamic";
 
 export default async function SignupPage() {
   // If user is already authenticated, redirect to home
