@@ -19,12 +19,12 @@ const navigationItems = [
   },
     {
     name: "Docs",
-    href: "/",
+    href: "/docs",
     description: "[7]",
   },
   {
     name: "HOW TO use",
-    href: "/",
+    href: "/docs/quick-start",
     description: "[3]",
   },
   {
@@ -42,10 +42,10 @@ const navigationItems = [
 
 export const Skiper58 = () => {
   return (
-    <ul className="bg-white/10 flex min-h-full w-full flex-1 flex-col items-stretch justify-start gap-0 rounded-2xl p-4 border border-white/20 shadow-2xl backdrop-blur-3xl">
+    <ul className="bg-white/10 flex min-h-full w-screen lg:w-full flex-1 flex-col items-stretch justify-start gap-0 rounded-2xl p-4 border border-white/20 shadow-2xl backdrop-blur-3xl">
       {navigationItems.map((item, index) => (
         <li
-          className="relative flex cursor-pointer flex-col items-center justify-center flex-1"
+          className="relative flex cursor-pointer flex-col items-center justify-center flex-1 "
           key={index}
         >
           <Link href={item.href} className="relative flex items-center justify-center w-full h-full bg-white backdrop-blur-md">

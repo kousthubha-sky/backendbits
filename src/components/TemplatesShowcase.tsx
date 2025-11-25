@@ -614,15 +614,15 @@ const TemplatesShowcase = ({
                   )}
                 </div>
 
-                {/* Name and Status */}
-                <div className="mb-2 md:mb-3">
-                  <h3 className="text-base md:text-lg font-bold text-black group-hover:text-gray-800 transition-colors mb-1">
-                    {template.name}
-                  </h3>
-                  <span className="inline-block px-2 py-1 bg-black text-white text-xs font-medium rounded-full">
-                    {template.status}
-                  </span>
-                </div>
+                 {/* Name and Status */}
+                 <div className="mb-2 md:mb-3">
+                   <h3 className="text-base md:text-lg font-bold text-black group-hover:text-gray-800 transition-colors mb-1">
+                     {template.name}
+                   </h3>
+                   <span className="inline-block px-2 py-1 bg-black text-white text-xs font-medium rounded-full">
+                     {template.status}
+                   </span>
+                 </div>
 
                
                  {/* Tech Stack */}

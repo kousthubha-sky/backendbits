@@ -21,7 +21,7 @@ const App: React.FC = () => {
       {/* Navbar */}
       <Navbar />
 
-      <main>
+      <main className='w-md md:w-full lg:w-full lg:ml-0' >
         <Hero />
         <Skiper30 />
         <StickyScroll />

@@ -8,7 +8,7 @@ import { CpuArchitecture } from './ui/cpu-architecture';
 
 const Hero: React.FC = () => {
   return (
-    <section className="relative pt-52 pb-100 md:pt-48 md:pb-105 px-6 text-center max-w-8xl mx-auto overflow-hidden bg-white">
+    <section className="relative pt-52 pb-100 md:pt-48 md:pb-105 p-6 text-center w-full overflow-hidden bg-white">
       {/* CPU Architecture Background */}
 <div className="absolute top-80 left-0 md:top-44 md:left-0 inset-0 flex items-center justify-center opacity-90 pointer-events-none">
   <div className="w-full h-full max-w-sm md:max-w-3xl">

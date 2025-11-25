@@ -101,9 +101,9 @@ export const templates: TemplateDefinition[] = [
   }, 
    {
      slug: "ai-resume-analyzer",
-     name: "AI Resume Analyzer",
-     status: "Production-ready",
-     category: "personal",
+    name: "AI Resume Analyzer",
+    status: "Production-ready",
+    category: "personal",
      summary:
        "AI-powered resume analyzer built with React and Puter.js for seamless auth, resume storage, and intelligent ATS scoring with custom feedback.",
      description:
@@ -178,9 +178,9 @@ export const templates: TemplateDefinition[] = [
    },
    {
      slug: "portfolio-1",
-     name: "Portfolio with AI Chatbot",
-     status: "Production-ready",
-     category: "Portfolio",
+    name: "Portfolio with AI Chatbot",
+    status: "Production-ready",
+    category: "Portfolio",
      summary:
        "A modern, responsive portfolio website with integrated AI chatbot for visitor interactions, perfect for showcasing creative work.",
      description:

@@ -19,7 +19,7 @@ const contentData: ContentItem[] = [
     icon: (
       <div className="relative">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-400/20 to-purple-500/20 rounded-full blur-xl"></div>
-        <svg className="w-20 h-20 text-blue-500 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-80 h-80 text-blue-500 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
           <circle cx="12" cy="12" r="8" className="animate-ping" opacity="0.3" />
           <circle cx="12" cy="12" r="3" className="animate-pulse" />
@@ -34,7 +34,7 @@ const contentData: ContentItem[] = [
     icon: (
       <div className="relative">
         <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/20 to-orange-500/20 rounded-full blur-xl"></div>
-        <svg className="w-20 h-20 text-yellow-400 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-80 h-80 text-yellow-400 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
           <circle cx="12" cy="12" r="6" className="animate-spin" style={{ animationDuration: '3s' }} opacity="0.2" />
         </svg>
@@ -48,7 +48,7 @@ const contentData: ContentItem[] = [
     icon: (
       <div className="relative">
         <div className="absolute inset-0 bg-gradient-to-br from-green-400/20 to-teal-500/20 rounded-full blur-xl"></div>
-        <svg className="w-20 h-20 text-green-500 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-80 h-80 text-green-500 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
           <rect x="2" y="8" width="20" height="8" rx="2" className="animate-pulse" opacity="0.1" />
         </svg>

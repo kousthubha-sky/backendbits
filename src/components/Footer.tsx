@@ -20,18 +20,18 @@ const Footer: React.FC = () => {
         <div>
           <h4 className="font-semibold mb-4">Templates</h4>
           <ul className="space-y-3 text-gray-500 text-sm">
-            <li className="hover:text-black cursor-pointer">React</li>
-            <li className="hover:text-black cursor-pointer">Vue</li>
-            <li className="hover:text-black cursor-pointer">Svelte</li>
+            <li><a href="/templates" className='hover:text-black cursor-pointer'>React</a></li>
+            <li><a href="/templates" className='hover:text-black cursor-pointer'>Vue</a></li>  
+            <li><a href="/templates" className='hover:text-black cursor-pointer'>Svelte</a></li>
           </ul>
         </div>
 
         <div>
           <h4 className="font-semibold mb-4">Resources</h4>
           <ul className="space-y-3 text-gray-500 text-sm">
-            <li className="hover:text-black cursor-pointer">Pricing</li>
-            <li className="hover:text-black cursor-pointer">FAQ</li>
-            <li className="hover:text-black cursor-pointer">Docs</li>
+            <li><a href="/pricing" className='hover:text-black cursor-pointer'>Pricing</a></li>
+            <li><a href="/docs" className='hover:text-black cursor-pointer'>FAQ</a></li>
+            <li><a href="/docs" className='hover:text-black cursor-pointer'>Docs</a></li>
           </ul>
         </div>
 
@@ -40,7 +40,7 @@ const Footer: React.FC = () => {
           <ul className="space-y-3 text-gray-500 text-sm">
             <li className="hover:text-black cursor-pointer">GitHub</li>
             <li className="hover:text-black cursor-pointer">Discord</li>
-            <li className="hover:text-black cursor-pointer">Contribute</li>
+            <li><a href="/contribute" className='hover:text-black cursor-pointer'>Contribute</a></li>
           </ul>
         </div>
       </div>

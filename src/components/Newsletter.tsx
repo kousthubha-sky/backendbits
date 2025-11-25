@@ -2,13 +2,20 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 
 const Newsletter: React.FC = () => {
+  const router = useRouter();
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle subscription logic
   };
 
+  const handleclick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    router.push('/');
+  }
   return (
     <section className="py-24 px-6 bg-white">
       <div className="max-w-lg mx-auto text-center">
@@ -40,10 +47,10 @@ const Newsletter: React.FC = () => {
         >
           <input
             type="email"
-            placeholder="name@framer.com"
+            placeholder="name@Gmail.com"
             className="w-full px-6 py-4 bg-gray-50 border border-gray-200 rounded-xl text-center text-lg focus:outline-none focus:ring-2 focus:ring-black/5 transition-shadow"
           />
-          <button className="w-full py-4 bg-black text-white rounded-xl font-medium text-lg hover:bg-gray-800 transition-transform active:scale-95">
+          <button onClick={handleclick} className="w-full py-4 bg-black text-white rounded-xl font-medium text-lg hover:bg-gray-800 transition-transform active:scale-95">
             Email
           </button>
         </motion.form>

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Check } from 'lucide-react';
+import { Check, Clock } from 'lucide-react';
 
 interface PricingPlan {
   name: string;
@@ -42,7 +42,11 @@ const Pricing: React.FC = () => {
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold tracking-tight mb-2">Pricing</h2>
-          <p className="text-xl text-gray-500">Simple & clear.</p>
+          <p className="text-xl text-gray-500 mb-2">Simple & clear.</p>
+          <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-full text-sm font-medium">
+            <Clock size={16} />
+            Coming Soon - Free access for everyone right now!
+          </div>
         </div>
 
         <div className="grid md:grid-cols-3 gap-6">
@@ -53,8 +57,16 @@ const Pricing: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1 }}
-              className={`p-8 rounded-3xl flex flex-col h-full ${plan.highlight ? 'bg-white shadow-xl shadow-gray-200/50 border border-gray-100' : 'bg-transparent hover:bg-white hover:shadow-lg transition-all duration-300'}`}
+              className={`p-8 rounded-3xl flex flex-col h-full relative ${plan.highlight ? 'bg-white shadow-xl shadow-gray-200/50 border border-gray-100' : 'bg-transparent hover:bg-white hover:shadow-lg transition-all duration-300'}`}
             >
+              {/* Coming Soon Badge */}
+              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
+                <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-1 rounded-full text-xs font-semibold flex items-center gap-1 shadow-lg">
+                  <Clock size={12} />
+                  Coming Soon
+                </div>
+              </div>
+
               <div className="mb-8">
                 <h3 className="text-sm font-semibold text-gray-500 mb-2">{plan.name}</h3>
                 <div className="text-4xl font-bold">{plan.price}</div>
@@ -69,13 +81,21 @@ const Pricing: React.FC = () => {
                 ))}
               </ul>
 
-              <button className={`w-full py-3 rounded-xl font-medium transition-all ${
-                plan.highlight
-                  ? 'bg-black text-white hover:bg-gray-800'
-                  : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
-              }`}>
-                {plan.btnText}
-              </button>
+               <button
+                 disabled
+                 className={`w-full py-3 rounded-xl font-medium transition-all cursor-not-allowed opacity-60 ${
+                   plan.highlight
+                     ? 'bg-black text-white'
+                     : 'bg-gray-100 text-gray-900'
+                 }`}
+               >
+                 {plan.btnText}
+               </button>
+
+               {/* Coming Soon Notice */}
+               <p className="text-xs text-gray-400 text-center mt-3">
+                 Launching soon - stay tuned!
+               </p>
             </motion.div>
           ))}
         </div>

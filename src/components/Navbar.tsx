@@ -340,7 +340,7 @@ const Navbar: React.FC = () => {
         </div>
 
         {/* Mobile: Hamburger Menu and Downbar Button */}
-        <div className="flex lg:hidden items-center justify-end gap-2">
+        <div className="flex lg:hidden items-center justify-center gap-2">
           {/* Downbar Button - Visible on mobile */}
           <button
             onClick={() => setShowDownbar(!showDownbar)}
@@ -454,7 +454,7 @@ const Navbar: React.FC = () => {
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
-              className="rounded-2xl shadow-2xl w-full max-w-4xl h-[500px] mx-4 bg-white/70 backdrop-blur-3xl border border-white/30"
+              className="rounded-2xl shadow-2xl w-full max-w-4xl h-[300px]  bg-white/70 backdrop-blur-3xl border border-white/30"
               onClick={(e) => e.stopPropagation()}
             >
               <Skiper58 />
