@@ -509,6 +509,7 @@ const AnimatedNavbar = ({
 
 const Templates: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('auth');
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const { data: session, isPending } = useSession();
   const [userRole, setUserRole] = useState<string>('user');
 
@@ -531,9 +532,27 @@ const Templates: React.FC = () => {
     fetchUserRole();
   }, [session]);
 
+  // Reset to page 1 when category changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory]);
+
   const filteredTemplates = selectedCategory === 'all' ? templates : templates.filter(template => template.category === selectedCategory);
   const showFilters = selectedCategory !== 'github'; // Show filters for all categories except GitHub search
   const enableGitHubSearch = selectedCategory === 'github';
+
+  // Pagination logic
+  const templatesPerPage = 9;
+  const totalPages = Math.ceil(filteredTemplates.length / templatesPerPage);
+  const startIndex = (currentPage - 1) * templatesPerPage;
+  const endIndex = startIndex + templatesPerPage;
+  const currentTemplates = filteredTemplates.slice(startIndex, endIndex);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    // Scroll to top of templates section
+    window.scrollTo({ top: 200, behavior: 'smooth' });
+  };
 
   if (isPending) {
     return (
@@ -598,9 +617,12 @@ const Templates: React.FC = () => {
         </section>
 
         <TemplatesShowcase
-          data={filteredTemplates}
+          data={currentTemplates}
           showFilters={showFilters}
           enableGitHubSearch={enableGitHubSearch}
+          totalCount={filteredTemplates.length}
+          currentPage={currentPage}
+          totalPages={totalPages}
           title={selectedCategory === 'github' ? 'GitHub Projects Search' : selectedCategory === 'AI projects' ? 'AI Agent Frameworks' : selectedCategory === 'all' ? 'All Templates' : 'Production-ready templates'}
           description={selectedCategory === 'github'
             ? 'Search for GitHub repositories by user, organization, or keyword to discover personal projects and portfolio items.'
@@ -612,6 +634,45 @@ const Templates: React.FC = () => {
           }
           className="pb-32"
         />
+
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center space-x-2 mt-8 mb-16">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Previous
+            </button>
+
+            <div className="flex space-x-1">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <button
+                  key={page}
+                  onClick={() => handlePageChange(page)}
+                  className={`px-3 py-2 text-sm font-medium rounded-md ${
+                    currentPage === page
+                      ? 'text-white bg-black border border-black'
+                      : 'text-gray-500 bg-white border border-gray-300 hover:bg-gray-50'
+                  }`}
+                >
+                  {page}
+                </button>
+              ))}
+            </div>
+
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Next
+            </button>
+          </div>
+        )}
+
+
       </main>
 
       <Footer />

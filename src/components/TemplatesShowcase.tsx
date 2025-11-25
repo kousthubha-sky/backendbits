@@ -14,6 +14,9 @@ interface TemplatesShowcaseProps {
   description?: string;
   showFilters?: boolean;
   enableGitHubSearch?: boolean;
+  totalCount?: number;
+  currentPage?: number;
+  totalPages?: number;
 }
 
 const TemplatesShowcase = ({
@@ -24,7 +27,10 @@ const TemplatesShowcase = ({
   description = "Clone, customize, and ship secure stack-end in minutes—not days.",
   showFilters = true,
   enableGitHubSearch = false,
-}) => {
+  totalCount,
+  currentPage,
+  totalPages,
+}: TemplatesShowcaseProps) => {
   const { scrollYProgress } = useScroll();
   const [copiedSlug, setCopiedSlug] = useState<string | null>(null);
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateDefinition | null>(null);
@@ -570,10 +576,13 @@ const TemplatesShowcase = ({
                 )}
 
                 {/* Results Count */}
-                <div className="text-center text-sm text-gray-600">
-                  Showing {displayData.length} of {enableGitHubSearch && githubRepos.length > 0 ? githubRepos.length : data.length} templates
-                  {hasActiveFilters && ' (filtered)'}
-                </div>
+                {totalCount !== undefined && (
+                  <div className="text-center text-sm text-gray-600">
+                    Showing {displayData.length} of {totalCount} templates
+                    {hasActiveFilters && ' (filtered)'}
+                    {currentPage && totalPages && totalPages > 1 && ` (Page ${currentPage} of ${totalPages})`}
+                  </div>
+                )}
               </div>
             )}
          </motion.div>
