@@ -18,7 +18,7 @@ export default async function DashboardPage() {
                 <div className="w-3 h-3 bg-black rounded-sm" />
                 <div className="w-3 h-3 bg-gray-400 rounded-full" />
               </div>
-              <span className="text-xl font-bold">Stacks®</span>
+              <span className="text-xl font-bold">stack-end®</span>
             </Link>
             <nav className="flex items-center gap-4">
               <Link href="/templates">

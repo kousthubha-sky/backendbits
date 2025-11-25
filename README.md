@@ -8,7 +8,7 @@ A showcase of production-ready backend templates to help you ship faster with pr
 - **Payment Integration**: Templates with payment processing capabilities
 - **Personal Projects**: Demo templates for showcasing your work
 - **GitHub API Integration**: Search and display GitHub repositories dynamically
-- **Production-Ready**: Battle-tested stacks with proper deployment configurations
+- **Production-Ready**: Battle-tested stack-end with proper deployment configurations
 
 ## Getting Started
 

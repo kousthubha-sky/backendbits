@@ -270,7 +270,7 @@ const AnimatedNavbar = ({
               <div className="w-3 h-3 bg-black rounded-sm" />
               <div className="w-3 h-3 bg-gray-400 rounded-full" />
             </div>
-            <span>Stacks®</span>
+            <span>stack-end®</span>
           </a>
 
           {/* Top navbar content - moves UP and fades on scroll */}
@@ -386,7 +386,7 @@ const AnimatedNavbar = ({
 
           {/* Desktop Categories tabs - responsive design */}
           <motion.nav
-            className="hidden sm:block absolute overflow-x-auto scrollbar-hide"
+            className="hidden sm:block absolute overflow-x-auto pl-10 scrollbar-hide"
             animate={{
               top: isScrolled ? 0 : 56,
               left: isScrolled ? 100 : 0,

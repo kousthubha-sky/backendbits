@@ -14,7 +14,7 @@ interface ContentItem {
 
 const contentData: ContentItem[] = [
   {
-    title: "Custom tech stacks.",
+    title: "Custom tech stack-end.",
     description: "Filter and discover portfolios built for React, Vue, Svelte, and more.",
     icon: (
       <div className="relative">

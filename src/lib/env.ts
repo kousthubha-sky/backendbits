@@ -24,6 +24,10 @@ export function validateEnvironment() {
     warnings.push('GitHub OAuth not configured (GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET missing)');
   }
 
+  if (!process.env.GITHUB_TOKEN) {
+    warnings.push('GITHUB_TOKEN not set - GitHub API calls will be rate limited');
+  }
+
   if (!process.env.MONGODB_DB) {
     warnings.push('MONGODB_DB not set, using default database name');
   }
@@ -32,6 +36,18 @@ export function validateEnvironment() {
   const secret = process.env.BETTER_AUTH_SECRET;
   if (secret && secret.length < 32) {
     warnings.push('BETTER_AUTH_SECRET should be at least 32 characters long for security');
+  }
+
+  // Validate MongoDB URI format
+  const mongoUri = process.env.MONGODB_URI;
+  if (mongoUri && !mongoUri.match(/^mongodb(\+srv)?:\/\/.+/)) {
+    warnings.push('MONGODB_URI appears to be malformed');
+  }
+
+  // Validate allowed origins
+  const allowedOrigins = process.env.ALLOWED_ORIGINS;
+  if (process.env.NODE_ENV === 'production' && !allowedOrigins) {
+    warnings.push('ALLOWED_ORIGINS not set in production - CORS may not work correctly');
   }
 
   // Log warnings

@@ -13,7 +13,7 @@ const Footer: React.FC = () => {
                <Square size={12} className="text-black fill-black" />
                <Triangle size={12} className="text-gray-400 fill-gray-400 rotate-180" />
              </div>
-             <span>Stacks</span>
+             <span>stack-end</span>
           </div>
         </div>
 

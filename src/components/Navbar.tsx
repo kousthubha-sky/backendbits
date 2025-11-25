@@ -233,7 +233,7 @@ const Navbar: React.FC = () => {
             <div className="w-3 h-3 bg-black rounded-sm" />
             <div className="w-3 h-3 bg-gray-400 rounded-full" />
           </div>
-          <span>Stacks®</span>
+          <span>Stack-end®</span>
         </Link>
 
         {/* Center: Desktop Navigation */}

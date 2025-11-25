@@ -34,6 +34,53 @@ export interface GitHubUser {
 
 const GITHUB_API_BASE = 'https://api.github.com';
 
+// Rate limiting implementation
+class RateLimiter {
+  private requests: Map<string, number[]> = new Map();
+  private readonly windowMs = 60 * 1000; // 1 minute
+  private readonly maxRequests = 30; // 30 requests per minute
+
+  isAllowed(key: string): boolean {
+    const now = Date.now();
+    const windowStart = now - this.windowMs;
+
+    if (!this.requests.has(key)) {
+      this.requests.set(key, [now]);
+      return true;
+    }
+
+    const timestamps = this.requests.get(key)!;
+    const recentRequests = timestamps.filter(ts => ts > windowStart);
+
+    if (recentRequests.length >= this.maxRequests) {
+      return false;
+    }
+
+    recentRequests.push(now);
+    this.requests.set(key, recentRequests);
+    return true;
+  }
+
+  cleanup(): void {
+    const now = Date.now();
+    const windowStart = now - this.windowMs;
+
+    for (const [key, timestamps] of this.requests.entries()) {
+      const recentRequests = timestamps.filter(ts => ts > windowStart);
+      if (recentRequests.length === 0) {
+        this.requests.delete(key);
+      } else {
+        this.requests.set(key, recentRequests);
+      }
+    }
+  }
+}
+
+const rateLimiter = new RateLimiter();
+
+// Cleanup rate limiter every 5 minutes
+setInterval(() => rateLimiter.cleanup(), 5 * 60 * 1000);
+
 export class GitHubService {
   private token?: string;
 
@@ -54,13 +101,29 @@ export class GitHubService {
   }
 
   async getUser(username: string): Promise<GitHubUser> {
-    const response = await fetch(`${GITHUB_API_BASE}/users/${username}`, {
+    // Rate limiting check
+    if (!rateLimiter.isAllowed(`github_user_${username}`)) {
+      throw new Error('Rate limit exceeded. Please try again later.');
+    }
+
+    // Input validation
+    if (!username || typeof username !== 'string' || username.length === 0 || username.length > 39) {
+      throw new Error('Invalid username format');
+    }
+
+    // Sanitize username - only allow alphanumeric, hyphens, and underscores
+    const sanitizedUsername = username.replace(/[^a-zA-Z0-9-_]/g, '');
+    if (sanitizedUsername !== username) {
+      throw new Error('Username contains invalid characters');
+    }
+
+    const response = await fetch(`${GITHUB_API_BASE}/users/${sanitizedUsername}`, {
       headers: this.getHeaders(),
     });
 
     if (!response.ok) {
       if (response.status === 404) {
-        throw new Error(`GitHub user "${username}" not found`);
+        throw new Error(`GitHub user "${sanitizedUsername}" not found`);
       } else if (response.status === 403) {
         throw new Error('GitHub API rate limit exceeded. Please try again later or authenticate with a GitHub token');
       } else if (response.status === 422) {
@@ -74,8 +137,32 @@ export class GitHubService {
   }
 
   async getUserRepos(username: string, page = 1, perPage = 30): Promise<GitHubRepo[]> {
+    // Rate limiting check
+    if (!rateLimiter.isAllowed(`github_repos_${username}`)) {
+      throw new Error('Rate limit exceeded. Please try again later.');
+    }
+
+    // Input validation
+    if (!username || typeof username !== 'string' || username.length === 0 || username.length > 39) {
+      throw new Error('Invalid username format');
+    }
+
+    // Sanitize username
+    const sanitizedUsername = username.replace(/[^a-zA-Z0-9-_]/g, '');
+    if (sanitizedUsername !== username) {
+      throw new Error('Username contains invalid characters');
+    }
+
+    // Validate pagination parameters
+    if (page < 1 || page > 100) {
+      throw new Error('Page must be between 1 and 100');
+    }
+    if (perPage < 1 || perPage > 100) {
+      throw new Error('Per page must be between 1 and 100');
+    }
+
     const response = await fetch(
-      `${GITHUB_API_BASE}/users/${username}/repos?page=${page}&per_page=${perPage}&sort=updated`,
+      `${GITHUB_API_BASE}/users/${sanitizedUsername}/repos?page=${page}&per_page=${perPage}&sort=updated`,
       {
         headers: this.getHeaders(),
       }
@@ -83,7 +170,7 @@ export class GitHubService {
 
     if (!response.ok) {
       if (response.status === 404) {
-        throw new Error(`GitHub user "${username}" not found or has no public repositories`);
+        throw new Error(`GitHub user "${sanitizedUsername}" not found or has no public repositories`);
       } else if (response.status === 403) {
         throw new Error('GitHub API rate limit exceeded. Please try again later or authenticate with a GitHub token');
       } else if (response.status === 422) {
@@ -135,8 +222,32 @@ export class GitHubService {
   }
 
   async searchRepositories(query: string, page = 1, perPage = 30): Promise<{ items: GitHubRepo[]; total_count: number }> {
+    // Rate limiting check
+    if (!rateLimiter.isAllowed(`github_search_${query.substring(0, 10)}`)) {
+      throw new Error('Rate limit exceeded. Please try again later.');
+    }
+
+    // Input validation
+    if (!query || typeof query !== 'string' || query.length === 0 || query.length > 256) {
+      throw new Error('Invalid search query');
+    }
+
+    // Sanitize query - remove potentially dangerous characters
+    const sanitizedQuery = query.replace(/[<>]/g, '').trim();
+    if (sanitizedQuery !== query.trim()) {
+      throw new Error('Search query contains invalid characters');
+    }
+
+    // Validate pagination parameters
+    if (page < 1 || page > 100) {
+      throw new Error('Page must be between 1 and 100');
+    }
+    if (perPage < 1 || perPage > 100) {
+      throw new Error('Per page must be between 1 and 100');
+    }
+
     const response = await fetch(
-      `${GITHUB_API_BASE}/search/repositories?q=${encodeURIComponent(query)}&page=${page}&per_page=${perPage}&sort=stars`,
+      `${GITHUB_API_BASE}/search/repositories?q=${encodeURIComponent(sanitizedQuery)}&page=${page}&per_page=${perPage}&sort=stars`,
       {
         headers: this.getHeaders(),
       }

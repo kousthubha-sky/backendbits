@@ -22,7 +22,7 @@ export default async function SignupPage() {
                 <div className="w-3 h-3 bg-black rounded-sm" />
                 <div className="w-3 h-3 bg-gray-400 rounded-full" />
               </div>
-              <span className="text-xl font-bold">Stacks®</span>
+              <span className="text-xl font-bold">stack-end®</span>
             </div>
           </Link>
         </div>
