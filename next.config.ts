@@ -27,9 +27,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: 'Access-Control-Allow-Origin',
-            value: process.env.NODE_ENV === 'production'
-              ? (process.env.ALLOWED_ORIGINS || 'https://stack-end.com')
-              : 'http://localhost:3000'
+            value: 'https://stack-end.com'  // Update with your allowed origin
           },
           {
             key: 'Access-Control-Allow-Methods',
