@@ -23,7 +23,7 @@ const App: React.FC = () => {
       {/* Navbar */}
       <Navbar />
 
-      <main className='w-md md:w-full lg:w-full lg:ml-0' >
+      <main className='w-full max-w-full' >
         <Hero />
         <Skiper30 />
         <StickyScroll />

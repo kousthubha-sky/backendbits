@@ -77,10 +77,10 @@ const StickyScroll: React.FC = () => {
   });
 
   return (
-    <div ref={ref} className="relative h-[300vh] bg-transparent">
-      <div className="sticky top-0 h-screen flex items-center max-w-6xl mx-auto px-6">
-        {/* Left Content - Text */}
-        <div className="w-1/2 pr-20">
+    <div ref={ref} className="hidden lg:block relative h-[300vh] bg-transparent">
+      <div className="sticky top-0 min-h-screen flex flex-col lg:flex-row items-center max-w-6xl mx-auto px-6 py-12 lg:py-0">
+        {/* Content Container */}
+        <div className="w-full lg:w-1/2 lg:pr-20 mb-12 lg:mb-0">
           {contentData.map((item, index) => (
             <motion.div
               key={index}
@@ -91,11 +91,12 @@ const StickyScroll: React.FC = () => {
                 display: activeCard === index ? "block" : "none"
               }}
               transition={{ duration: 0.5 }}
+              className="text-center lg:text-left"
             >
-              <h2 className="text-4xl font-bold tracking-tight mb-4 text-black">
+              <h2 className="text-3xl lg:text-4xl font-bold tracking-tight mb-4 text-black">
                 {item.title}
               </h2>
-              <p className="text-xl text-gray-500 leading-relaxed">
+              <p className="text-lg lg:text-xl text-gray-500 leading-relaxed">
                 {item.description}
               </p>
             </motion.div>
@@ -103,11 +104,11 @@ const StickyScroll: React.FC = () => {
         </div>
 
         {/* Right Content - Cards */}
-        <div className="w-1/2 flex items-center justify-center relative h-full">
+        <div className="w-full lg:w-1/2 flex items-center justify-center relative h-96 lg:h-full">
           {contentData.map((item, index) => (
             <motion.div
               key={index}
-              className={`absolute w-full aspect-square max-w-md rounded-3xl flex items-center justify-center ${item.bg}`}
+              className={`absolute w-full aspect-square max-w-sm lg:max-w-md rounded-3xl flex items-center justify-center ${item.bg}`}
               initial={{ opacity: 0, y: 100, scale: 0.9 }}
               animate={{
                 opacity: activeCard === index ? 1 : activeCard > index ? 0 : 0,

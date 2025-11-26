@@ -33,7 +33,7 @@ const contentData: ContentItem[] = [
 
 const MobileScroll: React.FC = () => {
   return (
-    <div className="hidden px-6 space-y-12 pb-20">
+    <div className="block lg:hidden px-4 md:px-6 space-y-12 pb-20">
       {contentData.map((item, index) => (
         <div key={index} className="flex flex-col gap-6">
           <div>

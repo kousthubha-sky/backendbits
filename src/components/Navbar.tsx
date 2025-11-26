@@ -226,7 +226,7 @@ const Navbar: React.FC = () => {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
-      <div className="max-w-7xl mx-auto h-16 px-4 sm:px-6 grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 items-center">
+      <div className="max-w-7xl mx-auto h-16 px-4 sm:px-6 lg:px-8 grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 items-center">
         {/* Left: Logo */}
         <Link href="/" className="flex items-center gap-2 font-bold text-xl tracking-tight">
           <div className="flex items-center -space-x-1">
@@ -340,17 +340,17 @@ const Navbar: React.FC = () => {
         </div>
 
         {/* Mobile: Hamburger Menu and Downbar Button */}
-        <div className="flex lg:hidden items-center justify-center gap-2">
+        <div className="flex lg:hidden items-center justify-center gap-1">
           {/* Downbar Button - Visible on mobile */}
           <button
             onClick={() => setShowDownbar(!showDownbar)}
-            className=" hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
           >
             <MenuToggleIcon open={showDownbar} className="size-6" duration={500} />
           </button>
 
           {/* Mobile Menu Toggle */}
-          <button onClick={() => setIsOpen(!isOpen)} className="p-2">
+          <button onClick={() => setIsOpen(!isOpen)} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
             {isOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
@@ -363,30 +363,30 @@ const Navbar: React.FC = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden bg-white border-b border-gray-100 overflow-hidden"
+            className="lg:hidden bg-white border-b border-gray-100 overflow-hidden shadow-lg"
           >
-            <div className="flex flex-col p-4 space-y-0">
+            <div className="flex flex-col px-4 py-6 space-y-1 max-h-[70vh] overflow-y-auto">
               {/* Main Navigation Links - Full Width */}
               <Link href="/templates" onClick={() => setIsOpen(false)}>
-                <div className="w-full px-4 py-4 text-left text-base font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors border-b border-gray-100 last:border-b-0">
+                <div className="w-full px-3 py-3 text-left text-base font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
                   Templates
                 </div>
               </Link>
-              
+
               <Link href="#pricing" onClick={() => setIsOpen(false)}>
-                <div className="w-full px-4 py-4 text-left text-base font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors border-b border-gray-100 last:border-b-0">
+                <div className="w-full px-3 py-3 text-left text-base font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
                   Pricing
                 </div>
               </Link>
-              
-               <Link href="/contribute" onClick={() => setIsOpen(false)}>
-                 <div className="w-full px-4 py-4 text-left text-base font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors border-b border-gray-100 last:border-b-0">
-                   Contribute
-                 </div>
-               </Link>
+
+                <Link href="/contribute" onClick={() => setIsOpen(false)}>
+                  <div className="w-full px-3 py-3 text-left text-base font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
+                    Contribute
+                  </div>
+                </Link>
 
                 <Link href="/guidelines" onClick={() => setIsOpen(false)}>
-                  <div className="w-full px-4 py-4 text-left text-base font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors border-b border-gray-100 last:border-b-0">
+                  <div className="w-full px-3 py-3 text-left text-base font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
                     Guidelines
                   </div>
                 </Link>
@@ -400,18 +400,18 @@ const Navbar: React.FC = () => {
                  </Link>
                )}
 
-               {/* Auth Section */}
+                {/* Auth Section */}
               {!session ? (
                 <>
-                  <div className="border-t border-gray-200 my-2 pt-2">
+                  <div className="border-t border-gray-200 mt-4 pt-4 space-y-2">
                     <Link href="/auth/login" onClick={() => setIsOpen(false)}>
-                      <div className="w-full px-4 py-4 text-left text-base font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors border-b border-gray-100 last:border-b-0">
+                      <div className="w-full px-3 py-3 text-left text-base font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
                         Sign In
                       </div>
                     </Link>
-                    
+
                     <Link href="/auth/signup" onClick={() => setIsOpen(false)}>
-                      <div className="w-full px-4 py-4 text-left text-base font-medium bg-black text-white hover:bg-gray-800 rounded-lg transition-colors">
+                      <div className="w-full px-3 py-3 text-center text-base font-medium bg-black text-white hover:bg-gray-800 rounded-lg transition-colors">
                         Sign Up
                       </div>
                     </Link>
@@ -419,18 +419,18 @@ const Navbar: React.FC = () => {
                 </>
               ) : (
                 <>
-                  <div className="border-t border-gray-200 my-2 pt-2">
-                    <div className="w-full px-4 py-4">
-                      <div className="flex items-center gap-3 mb-3">
+                  <div className="border-t border-gray-200 mt-4 pt-4">
+                    <div className="w-full px-3 py-3">
+                      <div className="flex items-center gap-3 mb-4">
                         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-black text-white">
                           <UserIcon className="h-5 w-5" />
                         </div>
-                        <div>
-                          <p className="text-sm font-medium text-gray-900">{session.user.name}</p>
-                          <p className="text-sm text-gray-500">{session.user.email}</p>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-medium text-gray-900 truncate">{session.user.name}</p>
+                          <p className="text-sm text-gray-500 truncate">{session.user.email}</p>
                         </div>
                       </div>
-                       <UserProfile />
+                        <UserProfile />
                     </div>
                   </div>
                 </>
