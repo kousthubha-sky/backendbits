@@ -573,7 +573,7 @@ const Templates: React.FC = () => {
         userRole={userRole}
       />
 
-      <main className="pt-32">
+      <main className="pt-10">
         <section className="px-6 pb-12 text-center max-w-4xl mx-auto">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}

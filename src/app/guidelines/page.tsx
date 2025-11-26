@@ -212,7 +212,7 @@ export default function GuidelinesPage() {
                   <h4 className="font-semibold text-blue-900 mb-2">Review Timeline</h4>
                   <p className="text-sm text-blue-800">
                     Most submissions are reviewed within 1-3 business days. Complex templates may take longer.
-                    You'll receive notifications about your submission status.
+                    You will receive notifications about your submission status.
                   </p>
                 </div>
               </CardContent>
@@ -307,7 +307,7 @@ export default function GuidelinesPage() {
                 <div className="mt-6 p-4 bg-green-50 rounded-lg">
                   <h4 className="font-semibold text-green-900 mb-2">Ready to Contribute?</h4>
                   <p className="text-sm text-green-800 mb-3">
-                    Follow these guidelines and submit your template. We're excited to see what you build!
+                    Follow these guidelines and submit your template. We are excited to see what you build!
                   </p>
                   <a
                     href="/contribute"
