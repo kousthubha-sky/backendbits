@@ -264,6 +264,18 @@ const TemplatesShowcase = ({
     }
   }, [githubSearchQuery, searchType, enableGitHubSearch, handleGitHubSearch]);
 
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (selectedTemplate) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [selectedTemplate]);
+
   const getCommand = (template: TemplateDefinition) => {
     return template.codeUrl.includes('backend-bits') ? `npx @kousthubha/stack-end ${template.slug}` : `git clone ${template.codeUrl}`;
   };
@@ -674,24 +686,26 @@ const TemplatesShowcase = ({
               className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
               onClick={closeModal}
             >
-              <motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
-                className="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
-                style={{
-                  scrollbarWidth: 'none',
-                  msOverflowStyle: 'none',
-                }}
-                onClick={(e) => e.stopPropagation()}
-              >
-                <style jsx>{`
-                  div::-webkit-scrollbar {
-                    display: none;
-                  }
-                `}</style>
-                <div className="p-8">
-                  <div className="flex items-start justify-between mb-6">
+               <motion.div
+                 initial={{ scale: 0.9, opacity: 0 }}
+                 animate={{ scale: 1, opacity: 1 }}
+                 exit={{ scale: 0.9, opacity: 0 }}
+                 className="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+                 style={{
+                   scrollbarWidth: 'none',
+                   msOverflowStyle: 'none',
+                 }}
+                 onClick={(e) => e.stopPropagation()}
+                 onWheel={(e) => e.stopPropagation()}
+                 onTouchMove={(e) => e.stopPropagation()}
+               >
+                 <style jsx>{`
+                   div::-webkit-scrollbar {
+                     display: none;
+                   }
+                 `}</style>
+                 <div className="p-8">
+                  <div className="flex items-start justify-between mb-6 ">
                     <div>
                       <h2 className="text-3xl font-bold text-black mb-2">{selectedTemplate.name}</h2>
                       <span className="inline-block px-3 py-1 bg-black text-white text-sm font-medium rounded-full">
