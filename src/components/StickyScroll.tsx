@@ -19,10 +19,17 @@ const contentData: ContentItem[] = [
     icon: (
       <div className="relative">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-400/20 to-purple-500/20 rounded-full blur-xl"></div>
-        <svg className="w-80 h-80 text-blue-500 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
-          <circle cx="12" cy="12" r="8" className="animate-ping" opacity="0.3" />
-          <circle cx="12" cy="12" r="3" className="animate-pulse" />
+        <svg className="w-48 h-48 sm:w-64 sm:h-64 lg:w-80 lg:h-80 text-blue-500 relative z-10" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          {/* Tech Stack Layers */}
+          <rect x="3" y="3" width="18" height="3" rx="1" strokeWidth="1.5" className="animate-pulse" />
+          <rect x="5" y="7" width="14" height="3" rx="1" strokeWidth="1.5" className="animate-pulse" style={{ animationDelay: '0.2s' }} />
+          <rect x="7" y="11" width="10" height="3" rx="1" strokeWidth="1.5" className="animate-pulse" style={{ animationDelay: '0.4s' }} />
+          <rect x="9" y="15" width="6" height="3" rx="1" strokeWidth="1.5" className="animate-pulse" style={{ animationDelay: '0.6s' }} />
+          {/* Tech icons on layers */}
+          <circle cx="6" cy="4.5" r="1" fill="currentColor" opacity="0.6" />
+          <circle cx="9" cy="8.5" r="1" fill="currentColor" opacity="0.6" />
+          <circle cx="12" cy="12.5" r="1" fill="currentColor" opacity="0.6" />
+          <circle cx="15" cy="16.5" r="1" fill="currentColor" opacity="0.6" />
         </svg>
       </div>
     ),
@@ -34,9 +41,15 @@ const contentData: ContentItem[] = [
     icon: (
       <div className="relative">
         <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/20 to-orange-500/20 rounded-full blur-xl"></div>
-        <svg className="w-80 h-80 text-yellow-400 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-          <circle cx="12" cy="12" r="6" className="animate-spin" style={{ animationDuration: '3s' }} opacity="0.2" />
+        <svg className="w-48 h-48 sm:w-64 sm:h-64 lg:w-80 lg:h-80 text-yellow-500 relative z-10" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          {/* Template/Layout Icon */}
+          <rect x="3" y="3" width="18" height="18" rx="2" strokeWidth="1.5" />
+          <rect x="7" y="7" width="10" height="2" rx="1" fill="currentColor" opacity="0.6" className="animate-pulse" />
+          <rect x="7" y="11" width="6" height="2" rx="1" fill="currentColor" opacity="0.6" className="animate-pulse" style={{ animationDelay: '0.3s' }} />
+          <rect x="7" y="15" width="8" height="2" rx="1" fill="currentColor" opacity="0.6" className="animate-pulse" style={{ animationDelay: '0.6s' }} />
+          {/* Design elements */}
+          <circle cx="16" cy="12" r="1.5" fill="currentColor" opacity="0.4" className="animate-bounce" />
+          <rect x="14" y="16" width="4" height="1" rx="0.5" fill="currentColor" opacity="0.4" className="animate-bounce" style={{ animationDelay: '0.5s' }} />
         </svg>
       </div>
     ),
@@ -48,9 +61,18 @@ const contentData: ContentItem[] = [
     icon: (
       <div className="relative">
         <div className="absolute inset-0 bg-gradient-to-br from-green-400/20 to-teal-500/20 rounded-full blur-xl"></div>
-        <svg className="w-80 h-80 text-green-500 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-          <rect x="2" y="8" width="20" height="8" rx="2" className="animate-pulse" opacity="0.1" />
+        <svg className="w-48 h-48 sm:w-64 sm:h-64 lg:w-80 lg:h-80 text-green-500 relative z-10" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          {/* Collaboration/Contribution Icon */}
+          <circle cx="12" cy="8" r="3" strokeWidth="1.5" />
+          <path d="M12 14c-4 0-7 2-7 4v1h14v-1c0-2-3-4-7-4z" strokeWidth="1.5" />
+          {/* Contribution arrows */}
+          <path d="M16 10l3-3m0 0l-3-3m3 3h-6" strokeWidth="1.5" className="animate-pulse" />
+          <path d="M8 10l-3-3m0 0l3-3m-3 3h6" strokeWidth="1.5" className="animate-pulse" style={{ animationDelay: '0.5s' }} />
+          {/* Plus signs for contributions */}
+          <circle cx="18" cy="16" r="1" fill="currentColor" opacity="0.6" className="animate-bounce" />
+          <circle cx="6" cy="16" r="1" fill="currentColor" opacity="0.6" className="animate-bounce" style={{ animationDelay: '0.3s' }} />
+          <path d="M18 16h2m-1-1v2" strokeWidth="1.5" className="animate-bounce" />
+          <path d="M6 16h2m-1-1v2" strokeWidth="1.5" className="animate-bounce" style={{ animationDelay: '0.3s' }} />
         </svg>
       </div>
     ),
@@ -77,10 +99,29 @@ const StickyScroll: React.FC = () => {
   });
 
   return (
-    <div ref={ref} className="hidden lg:block relative h-[300vh] bg-transparent">
-      <div className="sticky top-0 min-h-screen flex flex-col lg:flex-row items-center max-w-6xl mx-auto px-6 py-12 lg:py-0">
-        {/* Content Container */}
-        <div className="w-full lg:w-1/2 lg:pr-20 mb-12 lg:mb-0">
+    <div ref={ref} className="relative h-[250vh] md:h-[200vh] lg:h-[300vh] bg-transparent">
+      <div className="sticky top-0 min-h-screen flex flex-col lg:flex-row items-center justify-center max-w-6xl mx-auto px-4 md:px-6 py-4 md:py-8 lg:py-0">
+        {/* Mobile: Cards First (Centered) */}
+        <div className="w-full lg:w-1/2 flex items-center justify-center relative h-72 sm:h-80 md:h-96 lg:h-full order-1 lg:order-2 mb-8 lg:mb-0">
+          {contentData.map((item, index) => (
+            <motion.div
+              key={index}
+              className={`absolute w-full aspect-square max-w-xs sm:max-w-sm lg:max-w-md rounded-3xl flex items-center justify-center ${item.bg}`}
+              initial={{ opacity: 0, y: 100, scale: 0.9 }}
+              animate={{
+                opacity: activeCard === index ? 1 : activeCard > index ? 0 : 0,
+                y: activeCard === index ? 0 : activeCard > index ? -100 : 100,
+                scale: activeCard === index ? 1 : 0.9,
+              }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
+            >
+              {item.icon}
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Mobile: Text Below Cards */}
+        <div className="w-full lg:w-1/2 lg:pr-20 order-2 lg:order-1">
           {contentData.map((item, index) => (
             <motion.div
               key={index}
@@ -91,34 +132,14 @@ const StickyScroll: React.FC = () => {
                 display: activeCard === index ? "block" : "none"
               }}
               transition={{ duration: 0.5 }}
-              className="text-center lg:text-left"
+              className="text-center lg:text-left px-4 lg:px-0"
             >
-              <h2 className="text-3xl lg:text-4xl font-bold tracking-tight mb-4 text-black">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight mb-4 text-black">
                 {item.title}
               </h2>
-              <p className="text-lg lg:text-xl text-gray-500 leading-relaxed">
+              <p className="text-base sm:text-lg lg:text-xl text-gray-500 leading-relaxed">
                 {item.description}
               </p>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Right Content - Cards */}
-        <div className="w-full lg:w-1/2 flex items-center justify-center relative h-96 lg:h-full">
-          {contentData.map((item, index) => (
-            <motion.div
-              key={index}
-              className={`absolute w-full aspect-square max-w-sm lg:max-w-md rounded-3xl flex items-center justify-center ${item.bg}`}
-              initial={{ opacity: 0, y: 100, scale: 0.9 }}
-              animate={{
-                opacity: activeCard === index ? 1 : activeCard > index ? 0 : 0,
-                y: activeCard === index ? 0 : activeCard > index ? -100 : 100,
-                scale: activeCard === index ? 1 : 0.9,
-              }}
-              transition={{ duration: 0.5, ease: "easeInOut" }}
-            >
-               {item.icon}
-               
             </motion.div>
           ))}
         </div>

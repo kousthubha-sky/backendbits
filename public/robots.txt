@@ -13,4 +13,4 @@ Allow: /templates
 Allow: /docs
 
 # Sitemap
-Sitemap: https://yourdomain.com/sitemap.xml
+Sitemap: https://stack-end.com/sitemap.xml

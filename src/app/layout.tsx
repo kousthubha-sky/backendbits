@@ -17,10 +17,10 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Backend Templates - Production-Ready Code to Ship Faster",
-    template: "%s | Backend Templates"
+    default: "Stack-End - Production-Ready Backend Templates & Boilerplates",
+    template: "%s | Stack-End"
   },
-  description: "Discover production-ready backend templates for authentication, databases, APIs, and more. Clone, customize, and deploy in minutes. Open-source templates for developers.",
+  description: "Discover production-ready backend templates for authentication, databases, APIs, and more. Built with Next.js, Supabase, Better Auth. Deploy in minutes with open-source boilerplates.",
   keywords: [
     "backend templates",
     "production ready",
@@ -28,49 +28,54 @@ export const metadata: Metadata = {
     "database",
     "API",
     "Next.js",
-    "Node.js",
-    "MongoDB",
+    "Supabase",
     "PostgreSQL",
-    "templates",
-    "boilerplate",
-    "starter kit",
+    "Better Auth",
+    "boilerplates",
+    "starter kits",
+    "full-stack",
     "open source",
-    "developer tools"
+    "developer tools",
+    "React",
+    "TypeScript",
+    "deployment"
   ],
-  authors: [{ name: "Backend Templates Team" }],
-  creator: "Backend Templates",
-  publisher: "Backend Templates",
+  authors: [{ name: "Stack-End Team" }],
+  creator: "Stack-End",
+  publisher: "Stack-End",
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
-  metadataBase: new URL(process.env.NEXT_PUBLIC_AUTH_URL || 'http://localhost:3000'),
+  metadataBase: new URL(process.env.NODE_ENV === 'production'
+    ? 'https://stack-end.com'
+    : 'http://localhost:3000'),
   alternates: {
     canonical: "/",
   },
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "/",
-    title: "Backend Templates - Production-Ready Code to Ship Faster",
-    description: "Discover production-ready backend templates for authentication, databases, APIs, and more. Clone, customize, and deploy in minutes.",
-    siteName: "Backend Templates",
+    url: "https://stack-end.com",
+    title: "Stack-End - Production-Ready Backend Templates & Boilerplates",
+    description: "Discover production-ready backend templates for authentication, databases, APIs, and more. Built with Next.js, Supabase, Better Auth. Deploy in minutes.",
+    siteName: "Stack-End",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Backend Templates - Production-Ready Code",
+        alt: "Stack-End - Production-Ready Backend Templates",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Backend Templates - Production-Ready Code to Ship Faster",
-    description: "Discover production-ready backend templates for authentication, databases, APIs, and more.",
+    title: "Stack-End - Production-Ready Backend Templates & Boilerplates",
+    description: "Discover production-ready backend templates for authentication, databases, APIs, and more. Built with Next.js, Supabase, Better Auth.",
     images: ["/og-image.png"],
-    creator: "@backendtemplates",
+    creator: "@stackend",
   },
   robots: {
     index: true,
@@ -84,10 +89,10 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: "your-google-site-verification-code",
-    yandex: "your-yandex-verification-code",
+    google: process.env.GOOGLE_SITE_VERIFICATION || "",
+    yandex: process.env.YANDEX_VERIFICATION || "",
     other: {
-      "msvalidate.01": "your-bing-verification-code",
+      "msvalidate.01": process.env.BING_VERIFICATION || "",
     },
   },
   manifest: "/manifest.json",
@@ -95,8 +100,12 @@ export const metadata: Metadata = {
     icon: "/favicon.ico",
     apple: "/favicon.ico",
   },
+  category: "technology",
+  classification: "web development tools",
   other: {
-    "google-site-verification": "your-google-site-verification-code",
+    "google-site-verification": process.env.GOOGLE_SITE_VERIFICATION || "",
+    "theme-color": "#000000",
+    "color-scheme": "light dark",
   },
 };
 

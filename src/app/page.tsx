@@ -27,7 +27,6 @@ const App: React.FC = () => {
         <Hero />
         <Skiper30 />
         <StickyScroll />
-        <MobileScroll />
         <Newsletter />
         <Pricing />
         <FAQ />

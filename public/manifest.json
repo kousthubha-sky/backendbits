@@ -1,7 +1,7 @@
 {
-  "name": "Backend Templates",
-  "short_name": "BackendTemplates",
-  "description": "Production-ready backend templates to help you ship faster",
+  "name": "Stack-End - Backend Templates & Boilerplates",
+  "short_name": "Stack-End",
+  "description": "Production-ready backend templates with authentication, databases, APIs. Built with Next.js, Supabase, Better Auth. Deploy in minutes.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
