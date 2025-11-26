@@ -510,8 +510,21 @@ const AnimatedNavbar = ({
 const Templates: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('auth');
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
   const { data: session, isPending } = useSession();
   const [userRole, setUserRole] = useState<string>('user');
+
+  // Detect mobile screen size
+  useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkIsMobile();
+    window.addEventListener('resize', checkIsMobile);
+
+    return () => window.removeEventListener('resize', checkIsMobile);
+  }, []);
 
   // Fetch user role
   useEffect(() => {
@@ -541,8 +554,8 @@ const Templates: React.FC = () => {
   const showFilters = selectedCategory !== 'github'; // Show filters for all categories except GitHub search
   const enableGitHubSearch = selectedCategory === 'github';
 
-  // Pagination logic
-  const templatesPerPage = 9;
+  // Pagination logic - responsive
+  const templatesPerPage = isMobile ? 6 : 9;
   const totalPages = Math.ceil(filteredTemplates.length / templatesPerPage);
   const startIndex = (currentPage - 1) * templatesPerPage;
   const endIndex = startIndex + templatesPerPage;
