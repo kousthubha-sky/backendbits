@@ -4,7 +4,7 @@
  */
 
 const requiredEnvVars = [
-  'MONGODB_URI',
+  'DATABASE_URL',
   'BETTER_AUTH_SECRET',
 ] as const;
 
@@ -28,8 +28,12 @@ export function validateEnvironment() {
     warnings.push('GITHUB_TOKEN not set - GitHub API calls will be rate limited');
   }
 
-  if (!process.env.MONGODB_DB) {
-    warnings.push('MONGODB_DB not set, using default database name');
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
+    warnings.push('NEXT_PUBLIC_SUPABASE_URL not set - Supabase client features may not work');
+  }
+
+  if (!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    warnings.push('NEXT_PUBLIC_SUPABASE_ANON_KEY not set - Supabase client features may not work');
   }
 
   // Validate BETTER_AUTH_SECRET strength
@@ -38,10 +42,10 @@ export function validateEnvironment() {
     warnings.push('BETTER_AUTH_SECRET should be at least 32 characters long for security');
   }
 
-  // Validate MongoDB URI format
-  const mongoUri = process.env.MONGODB_URI;
-  if (mongoUri && !mongoUri.match(/^mongodb(\+srv)?:\/\/.+/)) {
-    warnings.push('MONGODB_URI appears to be malformed');
+  // Validate DATABASE_URL format
+  const dbUrl = process.env.DATABASE_URL;
+  if (dbUrl && !dbUrl.match(/^postgresql:\/\/.+/)) {
+    warnings.push('DATABASE_URL appears to be malformed - should be a PostgreSQL connection string');
   }
 
   // Validate allowed origins

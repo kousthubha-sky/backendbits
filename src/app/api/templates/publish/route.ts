@@ -1,7 +1,9 @@
 "use server";
 
 import { auth } from "@/lib/auth";
-import { getAuthDatabase } from "@/lib/mongodb";
+import { db } from "@/lib/db";
+import { user, templates } from "@/lib/schema";
+import { eq, desc, count } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
@@ -14,11 +16,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const db = await getAuthDatabase();
-    const user = await db.collection("user").findOne({ id: session.user.id });
+    const userResult = await db.select().from(user).where(eq(user.id, session.user.id));
+    const currentUser = userResult[0];
 
     // Check if user has admin role
-    if (!user || user.role !== 'admin') {
+    if (!currentUser || currentUser.role !== 'admin') {
       return NextResponse.json({ error: "Admin access required" }, { status: 403 });
     }
 
@@ -33,77 +35,47 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid action. Must be 'publish' or 'reject'" }, { status: 400 });
     }
 
-    // Find the pending template
-    const pendingTemplate = await db.collection("pending_templates").findOne({ slug: templateId });
+    // Find the pending template (for now, we'll assume templates table has a status field)
+    const pendingTemplateResult = await db.select().from(templates).where(eq(templates.id, templateId));
+    const pendingTemplate = pendingTemplateResult[0];
     if (!pendingTemplate) {
       return NextResponse.json({ error: "Pending template not found" }, { status: 404 });
     }
 
     if (action === 'publish') {
-      // Move template to main templates collection
-      const publishedTemplate = {
-        ...pendingTemplate,
-        status: "Production-ready", // Set to production ready when published
-        publishedBy: session.user.id,
+      // Update template status to published
+      await db.update(templates).set({
+        status: "Production-ready",
         publishedAt: new Date(),
         version: (pendingTemplate.version || 1) + 1,
-      };
-
-      // Insert into main templates collection
-      await db.collection("templates").insertOne(publishedTemplate);
-
-      // Remove from pending templates
-      await db.collection("pending_templates").deleteOne({ slug: templateId });
+      }).where(eq(templates.id, templateId));
 
       // Update submitter reputation for successful publication
       if (pendingTemplate.submittedBy) {
-        await db.collection("user").updateOne(
-          { id: pendingTemplate.submittedBy },
-          { $inc: { reputationScore: 50 } } // Bonus for getting published
-        );
+        const submitterResult = await db.select({ reputationScore: user.reputationScore }).from(user).where(eq(user.id, pendingTemplate.submittedBy));
+        const currentScore = submitterResult[0]?.reputationScore || 0;
+        await db.update(user).set({
+          reputationScore: currentScore + 50
+        }).where(eq(user.id, pendingTemplate.submittedBy));
       }
 
-      // Log the publication
-      await db.collection("template_publish_log").insertOne({
-        templateId: templateId,
-        action: 'published',
-        adminId: session.user.id,
-        adminName: user.name || user.email,
-        notes: notes || '',
-        publishedAt: new Date(),
-        templateName: pendingTemplate.name,
-      });
+      // Log the publication (TODO: implement logging table)
+      console.log(`Template ${templateId} published by ${currentUser.name || currentUser.email}`);
 
       return NextResponse.json({
         success: true,
         message: "Template published successfully",
-        template: publishedTemplate
+        template: pendingTemplate
       });
 
     } else if (action === 'reject') {
-      // Update the pending template with rejection notes
-      await db.collection("pending_templates").updateOne(
-        { slug: templateId },
-        {
-          $set: {
-            status: "rejected",
-            rejectedBy: session.user.id,
-            rejectedAt: new Date(),
-            rejectionNotes: notes || ''
-          }
-        }
-      );
+      // Update the template status to rejected
+      await db.update(templates).set({
+        status: "rejected",
+      }).where(eq(templates.id, templateId));
 
-      // Log the rejection
-      await db.collection("template_publish_log").insertOne({
-        templateId: templateId,
-        action: 'rejected',
-        adminId: session.user.id,
-        adminName: user.name || user.email,
-        notes: notes || '',
-        rejectedAt: new Date(),
-        templateName: pendingTemplate.name,
-      });
+      // Log the rejection (TODO: implement logging table)
+      console.log(`Template ${templateId} rejected by ${currentUser.name || currentUser.email}`);
 
       return NextResponse.json({
         success: true,
@@ -127,11 +99,11 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const db = await getAuthDatabase();
-    const user = await db.collection("user").findOne({ id: session.user.id });
+    const userResult = await db.select().from(user).where(eq(user.id, session.user.id));
+    const currentUser = userResult[0];
 
     // Check if user has admin role
-    if (!user || user.role !== 'admin') {
+    if (!currentUser || currentUser.role !== 'admin') {
       return NextResponse.json({ error: "Admin access required" }, { status: 403 });
     }
 
@@ -139,15 +111,14 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '20');
     const offset = parseInt(searchParams.get('offset') || '0');
 
-    // Get pending templates
-    const pendingTemplates = await db.collection("pending_templates")
-      .find({})
-      .sort({ approvedAt: -1 })
-      .skip(offset)
+    // Get templates (for now, get all - in future we might filter by status)
+    const pendingTemplates = await db.select().from(templates)
+      .orderBy(desc(templates.createdAt))
       .limit(limit)
-      .toArray();
+      .offset(offset);
 
-    const total = await db.collection("pending_templates").countDocuments();
+    const totalResult = await db.select({ count: count() }).from(templates);
+    const total = totalResult[0]?.count || 0;
 
     return NextResponse.json({
       templates: pendingTemplates,

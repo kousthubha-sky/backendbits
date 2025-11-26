@@ -1,7 +1,9 @@
 "use server";
 
 import { auth } from "@/lib/auth";
-import { getAuthDatabase } from "@/lib/mongodb";
+import { db } from "@/lib/db";
+import { user, template_submissions } from "@/lib/schema";
+import { eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
@@ -14,11 +16,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const db = await getAuthDatabase();
-    const user = await db.collection("user").findOne({ id: session.user.id });
+    const userResult = await db.select().from(user).where(eq(user.id, session.user.id));
+    const currentUser = userResult[0];
 
     // Check if user has reviewer role or higher
-    if (!user || (user.role !== 'reviewer' && user.role !== 'admin')) {
+    if (!currentUser || (currentUser.role !== 'reviewer' && currentUser.role !== 'admin')) {
       return NextResponse.json({ error: "Insufficient permissions. You need reviewer role or higher." }, { status: 403 });
     }
 
@@ -34,7 +36,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Find the submission
-    const submission = await db.collection("template_submissions").findOne({ id: submissionId });
+    const submissionResult = await db.select().from(template_submissions).where(eq(template_submissions.id, submissionId));
+    const submission = submissionResult[0];
     if (!submission) {
       return NextResponse.json({ error: "Submission not found" }, { status: 404 });
     }
@@ -43,19 +46,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Submission is not in a reviewable state" }, { status: 400 });
     }
 
-    // Create review record
+    // Create review record (for now, we'll store in submission reviewNotes)
     const review = {
-      id: `review_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      submissionId,
+      id: crypto.randomUUID(),
       reviewerId: session.user.id,
-      reviewerName: user.name || user.email,
+      reviewerName: currentUser.name || currentUser.email || 'Unknown',
       action,
       rating: rating || null,
       notes: notes || '',
       reviewedAt: new Date(),
     };
-
-    await db.collection("template_reviews").insertOne(review);
 
     // Update submission status
     let newStatus;
@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
         version: 1,
       };
 
-      await db.collection("pending_templates").insertOne(template);
+      // Note: pending_templates table not implemented yet - template stays in submissions
 
     } else if (action === 'reject') {
       newStatus = 'rejected';
@@ -90,26 +90,25 @@ export async function POST(request: NextRequest) {
       newStatus = 'changes_requested';
     }
 
-    await db.collection("template_submissions").updateOne(
-      { id: submissionId },
-      {
-        $set: { status: newStatus, lastReviewedAt: new Date() },
-        $push: { reviewNotes: review }
-      } as any
-    );
+    const currentReviewNotes = Array.isArray(submission.reviewNotes) ? submission.reviewNotes : [];
+    await db.update(template_submissions).set({
+      status: newStatus,
+      lastReviewedAt: new Date(),
+      reviewNotes: [...currentReviewNotes, review]
+    }).where(eq(template_submissions.id, submissionId));
 
     // Update reviewer reputation
-    await db.collection("user").updateOne(
-      { id: session.user.id },
-      { $inc: { reputationScore: action === 'approve' ? 10 : 5 } }
-    );
+    await db.update(user).set({
+      reputationScore: (currentUser.reputationScore || 0) + (action === 'approve' ? 10 : 5)
+    }).where(eq(user.id, session.user.id));
 
     // Update submitter reputation
-    if (action === 'approve') {
-      await db.collection("user").updateOne(
-        { id: submission.submitterId },
-        { $inc: { reputationScore: 25 } }
-      );
+    if (action === 'approve' && submission.submitterId) {
+      const submitterResult = await db.select({ reputationScore: user.reputationScore }).from(user).where(eq(user.id, submission.submitterId));
+      const currentScore = submitterResult[0]?.reputationScore || 0;
+      await db.update(user).set({
+        reputationScore: currentScore + 25
+      }).where(eq(user.id, submission.submitterId));
     }
 
     return NextResponse.json({

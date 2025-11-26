@@ -1,7 +1,9 @@
 "use server";
 
 import { auth } from "@/lib/auth";
-import { getAuthDatabase } from "@/lib/mongodb";
+import { db } from "@/lib/db";
+import { user } from "@/lib/schema";
+import { eq, desc, count } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
@@ -14,8 +16,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const db = await getAuthDatabase();
-    const currentUser = await db.collection("user").findOne({ id: session.user.id });
+    const currentUserResult = await db.select().from(user).where(eq(user.id, session.user.id));
+    const currentUser = currentUserResult[0];
 
     const body = await request.json();
     const { userId, newRole } = body;
@@ -45,26 +47,18 @@ export async function POST(request: NextRequest) {
     }
 
     // Try to update by user ID first
-    let result = await db.collection("user").updateOne(
-      { id: userId },
-      { $set: { role: newRole } }
-    );
+    const result1 = await db.update(user).set({ role: newRole }).where(eq(user.id, userId));
 
     // If no user found by ID, try by email (fallback for existing users)
-    if (result.matchedCount === 0) {
-      // For self-updates, try to find by session email
-      if (userId === session.user.id && session.user.email) {
-        result = await db.collection("user").updateOne(
-          { email: session.user.email },
-          { $set: { role: newRole } }
-        );
-      }
+    let result2 = null;
+    if (userId === session.user.id && session.user.email) {
+      result2 = await db.update(user).set({ role: newRole }).where(eq(user.email, session.user.email));
     }
 
-    if (result.matchedCount === 0) {
+    if (!result1 && !result2) {
       // Debug: check what users exist
-      const allUsers = await db.collection("user").find({}, { projection: { id: 1, email: 1, name: 1 } }).toArray();
-      console.log("Available users:", allUsers.map(u => ({ id: u.id, email: u.email, name: u.name })));
+      const allUsers = await db.select({ id: user.id, email: user.email, name: user.name }).from(user);
+      console.log("Available users:", allUsers);
       console.log("Looking for userId:", userId);
       console.log("Session user:", { id: session.user.id, email: session.user.email });
 
@@ -97,11 +91,11 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const db = await getAuthDatabase();
-    const user = await db.collection("user").findOne({ id: session.user.id });
+    const userResult = await db.select().from(user).where(eq(user.id, session.user.id));
+    const currentUser = userResult[0];
 
     // Check if user has admin role
-    if (!user || user.role !== 'admin') {
+    if (!currentUser || currentUser.role !== 'admin') {
       return NextResponse.json({ error: "Admin access required" }, { status: 403 });
     }
 
@@ -109,25 +103,19 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '50');
     const offset = parseInt(searchParams.get('offset') || '0');
 
-    const users = await db.collection("user")
-      .find({}, {
-        projection: {
-          id: 1,
-          name: 1,
-          email: 1,
-          role: 1,
-          reputationScore: 1,
-          joinedDate: 1,
-          lastActive: 1,
-          isVerified: 1
-        }
-      })
-      .sort({ joinedDate: -1 })
-      .skip(offset)
-      .limit(limit)
-      .toArray();
+    const users = await db.select({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      reputationScore: user.reputationScore,
+      joinedDate: user.joinedDate,
+      lastActive: user.lastActive,
+      isVerified: user.isVerified
+    }).from(user).orderBy(desc(user.joinedDate)).limit(limit).offset(offset);
 
-    const total = await db.collection("user").countDocuments();
+    const totalResult = await db.select({ count: count() }).from(user);
+    const total = totalResult[0]?.count || 0;
 
     return NextResponse.json({ users, total, limit, offset });
 

@@ -1,5 +1,7 @@
 import { auth } from "@/lib/auth";
-import { getAuthDatabase } from "@/lib/mongodb";
+import { db } from "@/lib/db";
+import { user } from "@/lib/schema";
+import { eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
@@ -18,21 +20,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const db = await getAuthDatabase();
     console.log("Bootstrap: Looking for user with ID:", session.user.id);
     console.log("Bootstrap: User email:", session.user.email);
 
     // Find the user (same logic as submit API)
-    let user = await db.collection("user").findOne({ id: session.user.id });
-    console.log("Bootstrap: Found user by ID:", user ? "yes" : "no");
+    let userResult = await db.select().from(user).where(eq(user.id, session.user.id));
+    console.log("Bootstrap: Found user by ID:", userResult[0] ? "yes" : "no");
 
-    if (!user && session.user.email) {
+    if (!userResult[0] && session.user.email) {
       // Fallback: try to find by email
-      user = await db.collection("user").findOne({ email: session.user.email });
-      console.log("Bootstrap: Found user by email:", user ? "yes" : "no");
+      userResult = await db.select().from(user).where(eq(user.email, session.user.email));
+      console.log("Bootstrap: Found user by email:", userResult[0] ? "yes" : "no");
     }
 
-    if (!user) {
+    if (!userResult[0]) {
       console.log("Bootstrap: User not found");
       return NextResponse.json({
         error: "User not found. Please try logging out and logging back in.",
@@ -40,7 +41,8 @@ export async function POST(request: NextRequest) {
       }, { status: 404 });
     }
 
-    console.log("Bootstrap: Current user role:", user.role);
+    const currentUser = userResult[0];
+    console.log("Bootstrap: Current user role:", currentUser.role);
 
     // Validate role
     if (!['reviewer', 'admin'].includes(role)) {
@@ -48,10 +50,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Promote to requested role
-    await db.collection("user").updateOne(
-      { id: user.id },
-      { $set: { role } }
-    );
+    await db.update(user).set({ role }).where(eq(user.id, currentUser.id));
 
     console.log(`User promoted to ${role}`);
 

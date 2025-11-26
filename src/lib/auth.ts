@@ -1,6 +1,6 @@
 import { betterAuth } from "better-auth";
-import { mongodbAdapter } from "better-auth/adapters/mongodb";
-import { getAuthDatabaseSync } from "./mongodb";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { db } from "./db";
 
 // Validate required environment variables
 if (!process.env.BETTER_AUTH_SECRET) {
@@ -8,7 +8,14 @@ if (!process.env.BETTER_AUTH_SECRET) {
 }
 
 export const auth = betterAuth({
-  database: mongodbAdapter(getAuthDatabaseSync()),
+  database: drizzleAdapter(db, {
+    provider: "pg",
+  }),
+  advanced: {
+    database: {
+      generateId: false,
+    },
+  },
   emailAndPassword: {
     enabled: true,
   },

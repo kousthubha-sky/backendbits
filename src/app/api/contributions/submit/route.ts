@@ -1,7 +1,9 @@
 "use server";
 
 import { auth } from "@/lib/auth";
-import { getAuthDatabase } from "@/lib/mongodb";
+import { db } from "@/lib/db";
+import { user, templates, template_submissions } from "@/lib/schema";
+import { eq, desc, count } from "drizzle-orm";
 import { requireCSRFToken } from "@/lib/csrf";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -20,15 +22,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid CSRF token" }, { status: 403 });
     }
 
-    const db = await getAuthDatabase();
-
     // Try multiple ways to find the user
-    let user = await db.collection("user").findOne({ id: session.user.id });
+    let userResult = await db.select().from(user).where(eq(user.id, session.user.id));
 
-    if (!user && session.user.email) {
+    if (!userResult[0] && session.user.email) {
       // Fallback: try to find by email
-      user = await db.collection("user").findOne({ email: session.user.email });
+      userResult = await db.select().from(user).where(eq(user.email, session.user.email));
     }
+
+    const currentUser = userResult[0];
 
     if (!user) {
       return NextResponse.json({
@@ -123,18 +125,16 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if template already exists
-    const existingTemplate = await db.collection("templates").findOne({ githubUrl });
-    if (existingTemplate) {
+    const existingTemplateResult = await db.select().from(templates).where(eq(templates.githubUrl, githubUrl));
+    if (existingTemplateResult[0]) {
       return NextResponse.json({ error: "Template with this GitHub URL already exists" }, { status: 409 });
     }
 
     // Check if user already has a pending submission
-    const pendingSubmission = await db.collection("template_submissions").findOne({
-      submitterId: session.user.id,
-      status: { $in: ['submitted', 'under_review'] }
-    });
+    const pendingSubmissionResult = await db.select().from(template_submissions)
+      .where(eq(template_submissions.submitterId, session.user.id));
 
-    if (pendingSubmission) {
+    if (pendingSubmissionResult[0]) {
       return NextResponse.json({ error: "You already have a pending submission. Please wait for it to be reviewed." }, { status: 409 });
     }
 
@@ -166,9 +166,9 @@ export async function POST(request: NextRequest) {
 
     // Create submission
     const submission = {
-      id: `submission_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      id: crypto.randomUUID(),
       submitterId: session.user.id,
-      submitterName: user.name || user.email,
+      submitterName: currentUser.name || currentUser.email || 'Unknown',
       status: 'submitted',
       submittedAt: new Date(),
       title: title.trim(),
@@ -183,13 +183,12 @@ export async function POST(request: NextRequest) {
       version: 1,
     };
 
-    const result = await db.collection("template_submissions").insertOne(submission);
+    const result = await db.insert(template_submissions).values(submission);
 
     // Update user reputation (small boost for submission)
-    await db.collection("user").updateOne(
-      { id: session.user.id },
-      { $inc: { reputationScore: 5 } }
-    );
+    await db.update(user).set({
+      reputationScore: (currentUser.reputationScore || 0) + 5
+    }).where(eq(user.id, session.user.id));
 
     return NextResponse.json({
       success: true,
@@ -218,33 +217,25 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '10');
     const offset = parseInt(searchParams.get('offset') || '0');
 
-    const db = await getAuthDatabase();
-
     // Build query based on user role and status
-    const user = await db.collection("user").findOne({ id: session.user.id });
-    const query: any = {};
+    const userResult = await db.select().from(user).where(eq(user.id, session.user.id));
+    const currentUser = userResult[0];
 
-    if (user?.role === 'admin') {
-      // Admins can see all submissions
-      if (status) {
-        query.status = status;
-      }
-    } else {
-      // All users can see their own submissions
-      query.submitterId = session.user.id;
-      if (status) {
-        query.status = status;
-      }
-    }
+    // Get submissions based on user role
+    const submissions = currentUser?.role === 'admin'
+      ? await db.select().from(template_submissions)
+          .orderBy(desc(template_submissions.submittedAt))
+          .limit(limit)
+          .offset(offset)
+      : await db.select().from(template_submissions)
+          .where(eq(template_submissions.submitterId, session.user.id))
+          .orderBy(desc(template_submissions.submittedAt))
+          .limit(limit)
+          .offset(offset);
 
-    const submissions = await db.collection("template_submissions")
-      .find(query)
-      .sort({ submittedAt: -1 })
-      .skip(offset)
-      .limit(limit)
-      .toArray();
-
-    const total = await db.collection("template_submissions").countDocuments(query);
+    // Count total (simplified - would need more complex query for filtered count)
+    const totalResult = await db.select({ count: count() }).from(template_submissions);
+    const total = totalResult[0]?.count || 0;
 
     return NextResponse.json({
       submissions,

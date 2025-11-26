@@ -1,7 +1,9 @@
 "use server";
 
 import { auth } from "@/lib/auth";
-import { getAuthDatabase } from "@/lib/mongodb";
+import { db } from "@/lib/db";
+import { user } from "@/lib/schema";
+import { eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -14,64 +16,53 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const db = await getAuthDatabase();
     // Try to find by user ID first
-    let user = await db.collection("user").findOne(
-      { id: session.user.id },
-      {
-        projection: {
-          id: 1,
-          name: 1,
-          email: 1,
-          image: 1,
-          role: 1,
-          reputationScore: 1,
-          githubUsername: 1,
-          avatarUrl: 1,
-          bio: 1,
-          website: 1,
-          location: 1,
-          skills: 1,
-          isVerified: 1,
-          verificationBadge: 1,
-          joinedDate: 1,
-          lastActive: 1,
-        }
-      }
-    );
+    let userResult = await db.select({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      image: user.image,
+      role: user.role,
+      reputationScore: user.reputationScore,
+      githubUsername: user.githubUsername,
+      avatarUrl: user.avatarUrl,
+      bio: user.bio,
+      website: user.website,
+      location: user.location,
+      skills: user.skills,
+      isVerified: user.isVerified,
+      verificationBadge: user.verificationBadge,
+      joinedDate: user.joinedDate,
+      lastActive: user.lastActive,
+    }).from(user).where(eq(user.id, session.user.id));
 
     // If no user found by ID, try by email (fallback for existing users)
-    if (!user && session.user.email) {
-      user = await db.collection("user").findOne(
-        { email: session.user.email },
-        {
-          projection: {
-            id: 1,
-            name: 1,
-            email: 1,
-            image: 1,
-            role: 1,
-            reputationScore: 1,
-            githubUsername: 1,
-            avatarUrl: 1,
-            bio: 1,
-            website: 1,
-            location: 1,
-            skills: 1,
-            isVerified: 1,
-            verificationBadge: 1,
-            joinedDate: 1,
-            lastActive: 1,
-          }
-        }
-      );
+    if (!userResult[0] && session.user.email) {
+      userResult = await db.select({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        image: user.image,
+        role: user.role,
+        reputationScore: user.reputationScore,
+        githubUsername: user.githubUsername,
+        avatarUrl: user.avatarUrl,
+        bio: user.bio,
+        website: user.website,
+        location: user.location,
+        skills: user.skills,
+        isVerified: user.isVerified,
+        verificationBadge: user.verificationBadge,
+        joinedDate: user.joinedDate,
+        lastActive: user.lastActive,
+      }).from(user).where(eq(user.email, session.user.email));
     }
 
-    if (!user) {
+    if (!userResult[0]) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    return NextResponse.json(user);
+    return NextResponse.json(userResult[0]);
   } catch (error) {
     console.error("Error fetching user profile:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
@@ -120,7 +111,6 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: "Too many skills" }, { status: 400 });
     }
 
-    const db = await getAuthDatabase();
     const updateData: any = {
       lastActive: new Date(),
     };
@@ -134,20 +124,15 @@ export async function PUT(request: NextRequest) {
     if (avatarUrl !== undefined) updateData.avatarUrl = avatarUrl;
 
     // Try to update by user ID first
-    let result = await db.collection("user").updateOne(
-      { id: session.user.id },
-      { $set: updateData }
-    );
+    const result1 = await db.update(user).set(updateData).where(eq(user.id, session.user.id));
 
     // If no user found by ID, try by email (fallback for existing users)
-    if (result.matchedCount === 0 && session.user.email) {
-      result = await db.collection("user").updateOne(
-        { email: session.user.email },
-        { $set: updateData }
-      );
+    let result2 = null;
+    if (session.user.email) {
+      result2 = await db.update(user).set(updateData).where(eq(user.email, session.user.email));
     }
 
-    if (result.matchedCount === 0) {
+    if (!result1 && !result2) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
