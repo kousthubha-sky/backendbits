@@ -609,7 +609,7 @@ const TemplatesShowcase = ({
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className="group bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer"
+               className="group bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer"
               onClick={() => openModal(template)}
             >
               <div className="p-3 md:p-6">
@@ -637,10 +637,10 @@ const TemplatesShowcase = ({
 
                  {/* Name and Status */}
                  <div className="mb-2 md:mb-3">
-                   <h3 className="text-base md:text-lg font-bold text-black group-hover:text-gray-800 transition-colors mb-1">
+                    <h3 className="text-base md:text-lg font-bold text-black dark:text-white group-hover:text-gray-800 dark:group-hover:text-gray-200 transition-colors mb-1">
                      {template.name}
                    </h3>
-                   <span className="inline-block px-2 py-1 bg-black text-white text-xs font-medium rounded-full">
+                    <span className="inline-block px-2 py-1 bg-black dark:bg-white dark:text-black text-xs font-medium rounded-full">
                      {template.status}
                    </span>
                  </div>
@@ -650,17 +650,17 @@ const TemplatesShowcase = ({
                  <div className="mb-2 md:mb-3">
                    <div className="flex flex-wrap gap-1">
                       {Array.from(new Set(template.techStack)).slice(0, 3).map((tech, idx) => (
-                        <span
-                          key={tech}
-                          className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-md font-medium inline-block truncate max-w-[120px]"
-                        >
+                         <span
+                           key={tech}
+                           className="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs rounded-md font-medium inline-block truncate max-w-[120px]"
+                         >
                           {tech}
                         </span>
                       ))}
                       {Array.from(new Set(template.techStack)).length > 3 && (
-                        <span
-                          className="px-2 py-1 bg-gray-100 text-gray-500 text-xs rounded-md inline-block"
-                        >
+                         <span
+                           className="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 text-xs rounded-md inline-block"
+                         >
                           +{Array.from(new Set(template.techStack)).length - 3}
                         </span>
                       )}
@@ -668,7 +668,7 @@ const TemplatesShowcase = ({
                  </div>
 
                 {/* Truncated Description */}
-                <p className="hidden md:block text-gray-600 text-sm leading-relaxed">
+                 <p className="hidden md:block text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
                   {template.summary.length > 60 ? `${template.summary.substring(0, 60)}...` : template.summary}
                 </p>
               </div>
@@ -683,14 +683,14 @@ const TemplatesShowcase = ({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+               className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center z-50 p-4"
               onClick={closeModal}
             >
                <motion.div
                  initial={{ scale: 0.9, opacity: 0 }}
                  animate={{ scale: 1, opacity: 1 }}
                  exit={{ scale: 0.9, opacity: 0 }}
-                 className="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+                 className="bg-white dark:bg-gray-900 rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
                  style={{
                    scrollbarWidth: 'none',
                    msOverflowStyle: 'none',
@@ -707,8 +707,8 @@ const TemplatesShowcase = ({
                  <div className="p-8">
                   <div className="flex items-start justify-between mb-6 ">
                     <div>
-                      <h2 className="text-3xl font-bold text-black mb-2">{selectedTemplate.name}</h2>
-                      <span className="inline-block px-3 py-1 bg-black text-white text-sm font-medium rounded-full">
+                       <h2 className="text-3xl font-bold text-black dark:text-white mb-2">{selectedTemplate.name}</h2>
+                       <span className="inline-block px-3 py-1 bg-black dark:bg-white dark:text-black text-sm font-medium rounded-full">
                         {selectedTemplate.status}
                       </span>
                     </div>
@@ -720,15 +720,15 @@ const TemplatesShowcase = ({
                     </button>
                   </div>
 
-                  <p className="text-gray-600 leading-relaxed mb-6">{selectedTemplate.description}</p>
+                   <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-6">{selectedTemplate.description}</p>
 
                   <div className="mb-6">
-                    <h4 className="text-lg font-semibold text-black uppercase tracking-wider mb-3">Tech Stack</h4>
+                     <h4 className="text-lg font-semibold text-black dark:text-white uppercase tracking-wider mb-3">Tech Stack</h4>
                     <div className="flex flex-wrap gap-2">
                       {selectedTemplate.techStack.map((tech) => (
                         <span
                           key={tech}
-                          className="px-3 py-2 bg-gray-100 text-gray-700 text-sm rounded-lg font-medium"
+                           className="px-3 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-sm rounded-lg font-medium"
                         >
                           {tech}
                         </span>
@@ -737,12 +737,12 @@ const TemplatesShowcase = ({
                   </div>
 
                   <div className="mb-6">
-                    <h4 className="text-lg font-semibold text-black uppercase tracking-wider mb-3">Key Features</h4>
+                      <h4 className="text-lg font-semibold text-black dark:text-white uppercase tracking-wider mb-3">Key Features</h4>
                     <ul className="space-y-2">
                       {selectedTemplate.features.map((feature) => (
                         <li key={feature} className="flex items-start gap-2 text-gray-600">
                           <span className="block w-2 h-2 bg-black rounded-full mt-2 shrink-0" />
-                          <span>{feature}</span>
+                           <span className="text-gray-600 dark:text-gray-300">{feature}</span>
                         </li>
                       ))}
                     </ul>
@@ -751,16 +751,16 @@ const TemplatesShowcase = ({
                    <div className="mb-6">
                      <button
                        onClick={() => handleCopy(selectedTemplate)}
-                       className="w-full flex items-center justify-between bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-xl px-4 py-3 transition-colors"
+                        className="w-full flex items-center justify-between bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 transition-colors"
                      >
-                       <code className="text-sm text-gray-700 font-mono">
+                        <code className="text-sm text-gray-700 dark:text-gray-300 font-mono">
                          {getCommand(selectedTemplate)}
                        </code>
                        <div className="flex shrink-0 ml-2">
                          {copiedSlug === selectedTemplate.slug ? (
                            <Check size={18} className="text-emerald-600" />
                          ) : (
-                           <Copy size={18} className="text-gray-400 hover:text-gray-600 transition-colors" />
+                            <Copy size={18} className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 transition-colors" />
                          )}
                        </div>
                      </button>
@@ -772,7 +772,7 @@ const TemplatesShowcase = ({
                         href={selectedTemplate.demoUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex-1 flex items-center justify-center gap-2 bg-black text-white px-4 py-3 rounded-xl font-medium hover:bg-gray-800 transition-colors"
+                         className="flex-1 flex items-center justify-center gap-2 bg-black dark:bg-white dark:text-black px-4 py-3 rounded-xl font-medium hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
                       >
                         <ExternalLink size={16} />
                         View Demo
@@ -787,7 +787,7 @@ const TemplatesShowcase = ({
                       href={selectedTemplate.codeUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 flex items-center justify-center gap-2 bg-gray-100 text-gray-700 px-4 py-3 rounded-xl font-medium hover:bg-gray-200 transition-colors"
+                       className="flex-1 flex items-center justify-center gap-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-4 py-3 rounded-xl font-medium hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
                     >
                       <Github size={16} />
                       View Code
@@ -796,8 +796,8 @@ const TemplatesShowcase = ({
 
                   <div className="border-t border-gray-200 pt-6 space-y-6">
                     <div>
-                      <h5 className="text-lg font-semibold text-black uppercase tracking-wider mb-3">Deployment</h5>
-                      <p className="text-gray-600 mb-3">{selectedTemplate.deployment.headline}</p>
+                       <h5 className="text-lg font-semibold text-black dark:text-white uppercase tracking-wider mb-3">Deployment</h5>
+                       <p className="text-gray-600 dark:text-gray-300 mb-3">{selectedTemplate.deployment.headline}</p>
                       <div className="space-y-3">
                         <div>
                           <span className="text-sm font-medium text-gray-500 uppercase tracking-wider">Providers</span>
@@ -805,7 +805,7 @@ const TemplatesShowcase = ({
                             {selectedTemplate.deployment.providers.map((provider) => (
                               <span
                                 key={provider}
-                                className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded"
+                                 className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-sm rounded"
                               >
                                 {provider}
                               </span>
@@ -818,7 +818,7 @@ const TemplatesShowcase = ({
                             {selectedTemplate.deployment.env.map((env) => (
                               <code
                                 key={env}
-                                className="px-3 py-1 bg-gray-50 text-gray-700 text-sm font-mono rounded border border-gray-200"
+                                 className="px-3 py-1 bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-sm font-mono rounded border border-gray-200 dark:border-gray-700"
                               >
                                 {env}
                               </code>
@@ -830,7 +830,7 @@ const TemplatesShowcase = ({
                             {selectedTemplate.deployment.notes.map((note) => (
                               <li key={note} className="flex items-start gap-2 text-sm text-gray-600">
                                 <span className="block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 shrink-0" />
-                                <span>{note}</span>
+                                 <span className="text-gray-600 dark:text-gray-300">{note}</span>
                               </li>
                             ))}
                           </ul>
@@ -839,21 +839,21 @@ const TemplatesShowcase = ({
                     </div>
 
                     <div>
-                      <h5 className="text-lg font-semibold text-black uppercase tracking-wider mb-3">Example Use Cases</h5>
+                       <h5 className="text-lg font-semibold text-black dark:text-white uppercase tracking-wider mb-3">Example Use Cases</h5>
                       <div className="space-y-3">
                         {selectedTemplate.useCases.map((useCase) => (
-                          <div key={useCase.name} className="p-4 bg-gray-50 rounded-lg">
+                           <div key={useCase.name} className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
                             <div className="flex items-start justify-between gap-2">
                               <div className="flex-1">
-                                <h6 className="text-lg font-semibold text-black mb-1">{useCase.name}</h6>
-                                <p className="text-gray-600">{useCase.description}</p>
+                                 <h6 className="text-lg font-semibold text-black dark:text-white mb-1">{useCase.name}</h6>
+                                 <p className="text-gray-600 dark:text-gray-300">{useCase.description}</p>
                               </div>
                               {useCase.url && (
                                 <a
                                   href={useCase.url}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="shrink-0 text-gray-400 hover:text-black transition-colors"
+                                   className="shrink-0 text-gray-400 dark:text-gray-500 hover:text-black dark:hover:text-white transition-colors"
                                 >
                                   <ExternalLink size={16} />
                                 </a>

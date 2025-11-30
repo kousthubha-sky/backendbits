@@ -7,6 +7,7 @@ import { Menu, X, User as UserIcon } from "lucide-react";
 import { Skiper58 } from "@/components/ui/downbar";
 import { UserProfile } from "@/components/auth/user-profile";
 import { MenuToggleIcon } from "@/components/ui/menu-toggle-icon";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useSession } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 
@@ -225,10 +226,10 @@ const Navbar: React.FC = () => {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800">
       <div className="max-w-7xl mx-auto h-16 px-4 sm:px-6 lg:px-8 grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 items-center">
         {/* Left: Logo */}
-        <Link href="/" className="flex items-center gap-2 font-bold text-xl tracking-tight">
+        <Link href="/" className="flex items-center gap-2 font-bold text-xl tracking-tight text-black dark:text-white">
           <div className="flex items-center -space-x-1">
             <div className="w-3 h-3 bg-black rounded-sm" />
             <div className="w-3 h-3 bg-gray-400 rounded-full" />
@@ -296,9 +297,12 @@ const Navbar: React.FC = () => {
                  </div>
                </MenuItem>
              )}
-          </NavMenu>
+           </NavMenu>
 
-          {/* Auth Section */}
+           {/* Theme Toggle */}
+           <ThemeToggle />
+
+           {/* Auth Section */}
           {!isPending && (
             <div className="flex items-center gap-2">
               {session ? (
@@ -363,10 +367,15 @@ const Navbar: React.FC = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden bg-white border-b border-gray-100 overflow-hidden shadow-lg"
+            className="lg:hidden bg-white dark:bg-black border-b border-gray-100 dark:border-gray-800 overflow-hidden shadow-lg"
           >
-            <div className="flex flex-col px-4 py-6 space-y-1 max-h-[70vh] overflow-y-auto">
-              {/* Main Navigation Links - Full Width */}
+             <div className="flex flex-col px-4 py-6 space-y-1 max-h-[70vh] overflow-y-auto">
+               {/* Theme Toggle - Mobile */}
+               <div className="flex justify-center mb-4">
+                 <ThemeToggle />
+               </div>
+
+               {/* Main Navigation Links - Full Width */}
               <Link href="/templates" onClick={() => setIsOpen(false)}>
                 <div className="w-full px-3 py-3 text-left text-base font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
                   Templates
@@ -403,9 +412,9 @@ const Navbar: React.FC = () => {
                 {/* Auth Section */}
               {!session ? (
                 <>
-                  <div className="border-t border-gray-200 mt-4 pt-4 space-y-2">
+                   <div className="border-t border-gray-200 dark:border-gray-700 mt-4 pt-4 space-y-2">
                     <Link href="/auth/login" onClick={() => setIsOpen(false)}>
-                      <div className="w-full px-3 py-3 text-left text-base font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
+                <div className="w-full px-3 py-3 text-left text-base font-medium text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors">
                         Sign In
                       </div>
                     </Link>
@@ -419,7 +428,7 @@ const Navbar: React.FC = () => {
                 </>
               ) : (
                 <>
-                  <div className="border-t border-gray-200 mt-4 pt-4">
+                   <div className="border-t border-gray-200 dark:border-gray-700 mt-4 pt-4">
                     <div className="w-full px-3 py-3">
                       <div className="flex items-center gap-3 mb-4">
                         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-black text-white">
@@ -447,14 +456,14 @@ const Navbar: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed top-100 left-0 right-0 bottom-0 bg-white/50 backdrop-blur-3xl z-60 flex items-center justify-center"
+            className="fixed top-100 left-0 right-0 bottom-0 bg-white/50 dark:bg-black/50 backdrop-blur-3xl z-60 flex items-center justify-center"
             onClick={() => setShowDownbar(false)}
           >
             <motion.div
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
-              className="rounded-2xl shadow-2xl w-full max-w-4xl h-[300px]  bg-white/70 backdrop-blur-3xl border border-white/30"
+              className="rounded-2xl shadow-2xl w-full max-w-4xl h-[300px]  bg-white/70 dark:bg-black/70 backdrop-blur-3xl border border-white/30 dark:border-gray-700/30"
               onClick={(e) => e.stopPropagation()}
             >
               <Skiper58 />
