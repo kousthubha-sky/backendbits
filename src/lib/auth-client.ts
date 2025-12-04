@@ -1,4 +1,5 @@
 import { createAuthClient } from "better-auth/react";
+import type { Session } from "better-auth";
 
 export const authClient = createAuthClient({
   baseURL: typeof window !== 'undefined'
@@ -7,3 +8,4 @@ export const authClient = createAuthClient({
 });
 
 export const { useSession, signIn, signOut, signUp } = authClient;
+export type { Session };

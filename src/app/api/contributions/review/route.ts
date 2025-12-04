@@ -62,26 +62,6 @@ export async function POST(request: NextRequest) {
     if (action === 'approve') {
       newStatus = 'approved';
 
-      // Move approved template to main templates collection
-      const template = {
-        slug: submission.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''),
-        name: submission.title,
-        status: "pending", // Will be reviewed by admin before going live
-        category: submission.category,
-        summary: submission.description.substring(0, 150) + (submission.description.length > 150 ? '...' : ''),
-        description: submission.description,
-        techStack: submission.techStack,
-        features: submission.features,
-        demoUrl: null,
-        codeUrl: submission.githubUrl,
-        deployment: submission.deployment,
-        useCases: submission.useCases,
-        submittedBy: submission.submitterId,
-        approvedBy: session.user.id,
-        approvedAt: new Date(),
-        version: 1,
-      };
-
       // Note: pending_templates table not implemented yet - template stays in submissions
 
     } else if (action === 'reject') {

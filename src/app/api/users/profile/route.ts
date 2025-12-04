@@ -111,7 +111,7 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: "Too many skills" }, { status: 400 });
     }
 
-    const updateData: any = {
+    const updateData: Record<string, unknown> = {
       lastActive: new Date(),
     };
 

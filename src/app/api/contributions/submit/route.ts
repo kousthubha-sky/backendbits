@@ -152,15 +152,15 @@ export async function POST(request: NextRequest) {
     }
 
     // Sanitize arrays
-    const sanitizedTechStack = techStack ? techStack.filter((tech: any) =>
+    const sanitizedTechStack = techStack ? techStack.filter((tech: unknown) =>
       typeof tech === 'string' && tech.length > 0 && tech.length <= 50
     ) : [];
 
-    const sanitizedFeatures = features ? features.filter((feature: any) =>
+    const sanitizedFeatures = features ? features.filter((feature: unknown) =>
       typeof feature === 'string' && feature.length > 0 && feature.length <= 200
     ) : [];
 
-    const sanitizedUseCases = useCases ? useCases.filter((useCase: any) =>
+    const sanitizedUseCases = useCases ? useCases.filter((useCase: unknown) =>
       typeof useCase === 'string' && useCase.length > 0 && useCase.length <= 200
     ) : [];
 
@@ -183,7 +183,7 @@ export async function POST(request: NextRequest) {
       version: 1,
     };
 
-    const result = await db.insert(template_submissions).values(submission);
+    await db.insert(template_submissions).values(submission);
 
     // Update user reputation (small boost for submission)
     await db.update(user).set({
@@ -213,7 +213,6 @@ export async function GET(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url);
-    const status = searchParams.get('status');
     const limit = parseInt(searchParams.get('limit') || '10');
     const offset = parseInt(searchParams.get('offset') || '0');
 

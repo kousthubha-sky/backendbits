@@ -1,11 +1,11 @@
 "use client";
 
-import Link from "next/link";
+
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { useSession, authClient } from "@/lib/auth-client";
-import { LogOut, User, Settings } from "lucide-react";
+import { LogOut, User } from "lucide-react";
 
 export function UserProfile() {
   const { data: session, isPending } = useSession();

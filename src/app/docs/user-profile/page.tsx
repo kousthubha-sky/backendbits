@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { User, Settings, Shield, Mail, Github, Edit, Eye, Lock } from 'lucide-react';
+import { User, Settings, Shield, Github, Eye, Lock } from 'lucide-react';
 
 export default function UserProfilePage() {
   return (
@@ -66,7 +66,7 @@ export default function UserProfilePage() {
             </p>
             <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
               <p className="text-sm text-gray-600 dark:text-gray-300">
-                Navigation → Profile Picture → "View Profile" or "Settings"
+                Navigation → Profile Picture → &ldquo;View Profile&rdquo; or &ldquo;Settings&rdquo;
               </p>
             </div>
           </div>
@@ -204,7 +204,7 @@ export default function UserProfilePage() {
             </p>
             <ol className="list-decimal list-inside text-sm text-gray-600 dark:text-gray-300 space-y-2">
               <li>Navigate to your profile page</li>
-              <li>Click the "Edit Profile" button</li>
+              <li>Click the &ldquo;Edit Profile&rdquo; button</li>
               <li>Update your information in the form</li>
               <li>Save your changes</li>
             </ol>
@@ -264,7 +264,7 @@ export default function UserProfilePage() {
           <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
             <h3 className="font-semibold text-gray-900 dark:text-white mb-3">Your Privacy Rights</h3>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
-              You have control over your data and how it's used on our platform.
+              You have control over your data and how it&apos;s used on our platform.
             </p>
             <ul className="text-sm text-gray-600 dark:text-gray-300 space-y-1">
               <li>• Right to access your personal data</li>

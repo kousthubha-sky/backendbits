@@ -281,7 +281,7 @@ export default function ContributingPage() {
           Getting Started
         </h2>
         <p className="text-gray-600 dark:text-gray-300 mb-6">
-          Ready to start contributing? Here's how to get started with your first contribution.
+          Ready to start contributing? Here&apos;s how to get started with your first contribution.
         </p>
 
         <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg border border-blue-200 dark:border-blue-800">

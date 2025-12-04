@@ -1,8 +1,15 @@
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { user, templates, template_submissions } from "@/lib/schema";
-import { eq, gte, desc, count, sql } from "drizzle-orm";
+import { eq, desc, count } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
+
+interface Activity {
+  type: string;
+  title: string;
+  user: string;
+  timestamp: Date | null;
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -67,7 +74,7 @@ export async function GET(request: NextRequest) {
       publishedToday = allTemplates.length;
     }
 
-    let recentActivity: any[] = [];
+    let recentActivity: Activity[] = [];
 
     if (isAdmin) {
       // Get recent activity (last 10 actions) - admin only

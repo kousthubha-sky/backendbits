@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSession } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -35,22 +35,11 @@ export default function AdminTemplatesPage() {
   const [templates, setTemplates] = useState<PendingTemplate[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedTemplate, setSelectedTemplate] = useState<PendingTemplate | null>(null);
-  const [action, setAction] = useState<'publish' | 'reject' | null>(null);
-  const [notes, setNotes] = useState('');
+  const [action, setAction] = useState<string>('');
+  const [notes, setNotes] = useState<string>('');
   const [processing, setProcessing] = useState(false);
 
-  useEffect(() => {
-    if (!isPending && !session) {
-      router.push("/auth/login");
-      return;
-    }
-
-    if (session) {
-      checkAdminAccess();
-    }
-  }, [session, isPending, router]);
-
-  const checkAdminAccess = async () => {
+  const checkAdminAccess = useCallback(async () => {
     try {
       const response = await fetch("/api/users/profile");
       if (response.ok) {
@@ -62,13 +51,24 @@ export default function AdminTemplatesPage() {
         }
         fetchPendingTemplates();
       }
-    } catch (error) {
+    } catch {
       toast.error("Failed to verify admin access");
       router.push("/");
     }
-  };
+   }, [router]);
 
-  const fetchPendingTemplates = async () => {
+   useEffect(() => {
+     if (!isPending && !session) {
+       router.push("/auth/login");
+       return;
+     }
+
+     if (session) {
+       checkAdminAccess();
+     }
+   }, [session, isPending, router, checkAdminAccess]);
+
+   const fetchPendingTemplates = async () => {
     try {
       const response = await fetch("/api/templates/publish");
       if (response.ok) {
@@ -109,7 +109,7 @@ export default function AdminTemplatesPage() {
         // Remove the template from the list
         setTemplates(templates.filter(t => t.slug !== selectedTemplate.slug));
         setSelectedTemplate(null);
-        setAction(null);
+        setAction('');
         setNotes('');
       } else {
         const error = await response.json();
@@ -278,7 +278,7 @@ export default function AdminTemplatesPage() {
                       variant="outline"
                       onClick={() => {
                         setSelectedTemplate(null);
-                        setAction(null);
+        setAction('');
                         setNotes('');
                       }}
                     >

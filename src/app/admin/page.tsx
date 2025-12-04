@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSession } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -30,7 +30,7 @@ interface DashboardStats {
   totalTemplates: number;
   approvedToday: number;
   publishedToday: number;
-  recentActivity?: any[];
+  recentActivity?: unknown[];
 }
 
 export default function AdminDashboard() {
@@ -41,18 +41,7 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
 
-  useEffect(() => {
-    if (!isPending && !session) {
-      router.push("/auth/login");
-      return;
-    }
-
-    if (session) {
-      checkAdminAccess();
-    }
-  }, [session, isPending, router]);
-
-  const checkAdminAccess = async () => {
+  const checkAdminAccess = useCallback(async () => {
     try {
       console.log("Checking admin access...");
       const response = await fetch("/api/users/profile");
@@ -73,14 +62,25 @@ export default function AdminDashboard() {
         setIsAdmin(false);
         fetchDashboardData(false);
       }
-    } catch (error) {
-      console.error("Error checking admin access:", error);
+    } catch (_error) {
+      console.error("Error checking admin access:", _error);
       toast.error("Failed to verify admin access");
       router.push("/");
     }
-  };
+   }, [router]);
 
-  const fetchDashboardData = async (isUserAdmin: boolean) => {
+   useEffect(() => {
+     if (!isPending && !session) {
+       router.push("/auth/login");
+       return;
+     }
+
+     if (session) {
+       checkAdminAccess();
+     }
+   }, [session, isPending, router, checkAdminAccess]);
+
+   const fetchDashboardData = async (isUserAdmin: boolean) => {
     try {
       // Only fetch users if user is admin
       if (isUserAdmin) {

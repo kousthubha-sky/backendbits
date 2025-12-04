@@ -3,6 +3,7 @@
 import { motion, MotionValue, useScroll, useTransform } from "framer-motion";
 import Lenis from "lenis";
 import { useEffect, useRef, useState } from "react";
+import Image from 'next/image';
 
 const images = [
   "https://loremflickr.com/400/600/programming",
@@ -81,9 +82,10 @@ const Column = ({ images, y }: ColumnProps) => {
     >
       {images.map((src, i) => (
         <div key={i} className="relative h-full w-full overflow-hidden">
-          <img
+          <Image
             src={`${src}`}
             alt="image"
+            fill
             className="pointer-events-none object-cover"
           />
         </div>

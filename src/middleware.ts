@@ -42,18 +42,10 @@ export async function middleware(request: NextRequest) {
 
   // Rate limiting for API routes
   if (pathname.startsWith('/api/')) {
-    const clientIP = request.headers.get('x-forwarded-for') ||
-                     request.headers.get('x-real-ip') ||
-                     'unknown';
 
-    // Simple rate limiting (in production, use Redis or similar)
-    const rateLimitKey = `rate_limit_${clientIP}`;
-    const now = Date.now();
-    const windowMs = 60 * 1000; // 1 minute
-    const maxRequests = 100; // 100 requests per minute
 
-    // This is a basic implementation - in production use Redis
-    // For now, we'll skip the complex implementation and rely on API validation
+    // Rate limiting: In production, implement with Redis or similar
+    // For now, rely on API validation
 
     // Add security headers
     const response = NextResponse.next();

@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Plus, Eye, CheckCircle, XCircle, Clock, AlertCircle, Star, MessageSquare } from "lucide-react";
+import { Loader2, Plus, Eye, CheckCircle, XCircle, AlertCircle, Star } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -24,7 +24,7 @@ interface Submission {
   category: string;
   techStack: string[];
   features: string[];
-  reviewNotes: any[];
+  reviewNotes: unknown[];
 }
 
 interface Submission {
@@ -39,7 +39,7 @@ interface Submission {
   category: string;
   techStack: string[];
   features: string[];
-  reviewNotes: any[];
+  reviewNotes: unknown[];
 }
 
 export default function ContributePage() {
@@ -165,7 +165,7 @@ export default function ContributePage() {
       } else {
         toast.error(data.error || "Failed to submit template");
       }
-    } catch (error) {
+    } catch {
       toast.error("Failed to submit template");
     } finally {
       setSubmitting(false);
@@ -204,38 +204,9 @@ export default function ContributePage() {
     }));
   };
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'submitted':
-        return <Clock className="h-4 w-4 text-yellow-500" />;
-      case 'under_review':
-        return <Eye className="h-4 w-4 text-blue-500" />;
-      case 'approved':
-        return <CheckCircle className="h-4 w-4 text-green-500" />;
-      case 'rejected':
-        return <XCircle className="h-4 w-4 text-red-500" />;
-      case 'changes_requested':
-        return <AlertCircle className="h-4 w-4 text-orange-500" />;
-      default:
-        return <Clock className="h-4 w-4 text-gray-500" />;
-    }
-  };
 
-  const getStatusBadge = (status: string) => {
-    const colors: { [key: string]: string } = {
-      submitted: "bg-yellow-100 text-yellow-800",
-      under_review: "bg-blue-100 text-blue-800",
-      approved: "bg-green-100 text-green-800",
-      rejected: "bg-red-100 text-red-800",
-      changes_requested: "bg-orange-100 text-orange-800"
-    };
 
-    return (
-      <span className={`px-2 py-1 text-xs font-medium rounded-full ${colors[status] || "bg-gray-100 text-gray-800"}`}>
-        {status.replace('_', ' ').toUpperCase()}
-      </span>
-    );
-  };
+
 
   if (isPending || loading) {
     return (
@@ -253,7 +224,7 @@ export default function ContributePage() {
     return null;
   }
 
-  const canSubmit = true; // All authenticated users can submit
+
   const canReview = userRole === 'admin' || userRole === 'reviewer'; // Admins and reviewers can review
 
   return (
@@ -525,7 +496,7 @@ function ReviewQueue() {
       } else {
         toast.error(data.error || 'Failed to submit review');
       }
-    } catch (error) {
+    } catch {
       toast.error('Failed to submit review');
     } finally {
       setSubmittingReview(false);
@@ -614,7 +585,7 @@ function ReviewQueue() {
             <CardHeader>
               <CardTitle>Review Submission</CardTitle>
               <CardDescription>
-                Review "{selectedSubmission.title}" by {selectedSubmission.submitterName}
+                Review &ldquo;{selectedSubmission.title}&rdquo; by {selectedSubmission.submitterName}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -681,7 +652,7 @@ function ReviewQueue() {
                           name="reviewAction"
                           value="approve"
                           checked={reviewAction === 'approve'}
-                          onChange={(e) => setReviewAction(e.target.value as any)}
+                          onChange={(e) => setReviewAction(e.target.value as 'approve' | 'reject' | 'request_changes')}
                         />
                         <CheckCircle className="h-4 w-4 text-green-500" />
                         Approve
@@ -692,7 +663,7 @@ function ReviewQueue() {
                           name="reviewAction"
                           value="reject"
                           checked={reviewAction === 'reject'}
-                          onChange={(e) => setReviewAction(e.target.value as any)}
+                          onChange={(e) => setReviewAction(e.target.value as 'approve' | 'reject' | 'request_changes')}
                         />
                         <XCircle className="h-4 w-4 text-red-500" />
                         Reject
@@ -703,7 +674,7 @@ function ReviewQueue() {
                           name="reviewAction"
                           value="request_changes"
                           checked={reviewAction === 'request_changes'}
-                          onChange={(e) => setReviewAction(e.target.value as any)}
+                          onChange={(e) => setReviewAction(e.target.value as 'approve' | 'reject' | 'request_changes')}
                         />
                         <AlertCircle className="h-4 w-4 text-yellow-500" />
                         Request Changes

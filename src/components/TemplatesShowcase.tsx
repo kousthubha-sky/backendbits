@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ExternalLink, Github, Copy, Check, X, Search } from 'lucide-react';
 import { templates as defaultTemplates, TemplateDefinition } from '../data/templates';
 import { githubService } from '../lib/github';
@@ -31,7 +31,7 @@ const TemplatesShowcase = ({
   currentPage,
   totalPages,
 }: TemplatesShowcaseProps) => {
-  const { scrollYProgress } = useScroll();
+
   const [copiedSlug, setCopiedSlug] = useState<string | null>(null);
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateDefinition | null>(null);
   const [selectedFilters, setSelectedFilters] = useState<{
@@ -73,12 +73,7 @@ const TemplatesShowcase = ({
 
   const filterOptions = getFilterOptions();
 
-  const techYTransforms = [
-    useTransform(scrollYProgress, [0, 1], [0, -10]),
-    useTransform(scrollYProgress, [0, 1], [0, -20]),
-    useTransform(scrollYProgress, [0, 1], [0, -30])
-  ];
-  const extraY = useTransform(scrollYProgress, [0, 1], [0, -40]);
+
 
 
 
@@ -649,7 +644,7 @@ const TemplatesShowcase = ({
                  {/* Tech Stack */}
                  <div className="mb-2 md:mb-3">
                    <div className="flex flex-wrap gap-1">
-                      {Array.from(new Set(template.techStack)).slice(0, 3).map((tech, idx) => (
+                      {Array.from(new Set(template.techStack)).slice(0, 3).map((tech) => (
                          <span
                            key={tech}
                            className="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs rounded-md font-medium inline-block truncate max-w-[120px]"

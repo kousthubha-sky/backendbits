@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Shield, Key, User, Lock, Eye, EyeOff } from 'lucide-react';
+import { Shield, Key, User, Lock, Eye } from 'lucide-react';
 
 export default function AuthenticationPage() {
   return (
@@ -199,7 +199,7 @@ Response:
             <div>
               <code className="text-sm bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded">NEXTAUTH_URL</code>
               <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
-                Your application's base URL for authentication callbacks.
+                Your application&apos;s base URL for authentication callbacks.
               </p>
             </div>
             <div>

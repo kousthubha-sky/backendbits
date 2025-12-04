@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
-import { getRandomContentIcon } from './CodingIcons';
+
 
 
 interface ContentItem {

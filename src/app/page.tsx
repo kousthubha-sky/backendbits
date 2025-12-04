@@ -1,12 +1,10 @@
 "use client";
 
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import Link from "next/link";
+import React from 'react';
 import dynamic from 'next/dynamic';
 import Hero from '../components/Hero';
 import StickyScroll from '../components/StickyScroll';
-import MobileScroll from '../components/MobileScroll';
+
 import Newsletter from '../components/Newsletter';
 import Pricing from '../components/Pricing';
 import FAQ from '../components/FAQ';

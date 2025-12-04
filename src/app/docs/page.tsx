@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link';
-import { ArrowRight, Code, Github, Users, Star, Zap, Shield, BookOpen } from 'lucide-react';
+import { ArrowRight, Code, Github, Users, Zap, Shield, BookOpen } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: "Documentation - Getting Started",

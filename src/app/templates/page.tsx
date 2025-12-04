@@ -2,6 +2,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, User } from 'lucide-react';
 import TemplatesShowcase from '../../components/TemplatesShowcase';
@@ -9,6 +10,25 @@ import Footer from '../../components/Footer';
 import { templates } from '../../data/templates';
 import { useSession } from '@/lib/auth-client';
 import { UserProfile } from '@/components/auth/user-profile';
+
+type SessionData = {
+  user?: {
+    id: string;
+    name?: string;
+    email?: string;
+    image?: string | null;
+  };
+  session?: {
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    userId: string;
+    expiresAt: Date;
+    token: string;
+    ipAddress?: string | null;
+    userAgent?: string | null;
+  };
+};
 
 // Utility function
 const cn = (...classes: (string | undefined | null | false)[]) => {
@@ -95,7 +115,7 @@ const NavMenu = ({
   );
 };
 
-const HoveredLink = ({ children, href, ...rest }: any) => {
+const HoveredLink = ({ children, href, ...rest }: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
   return (
     <a
       href={href}
@@ -172,7 +192,7 @@ const Button = ({
   variant?: "default" | "ghost";
   size?: "default" | "sm";
   className?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }) => {
   const baseStyles = "rounded-lg font-medium transition-colors inline-flex items-center justify-center";
   const variants = {
@@ -202,7 +222,7 @@ const AnimatedNavbar = ({
 }: {
   activeCategory: string;
   setActiveCategory: (cat: string) => void;
-  session: any;
+  session: SessionData | null;
   userRole: string;
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -262,7 +282,7 @@ const AnimatedNavbar = ({
           transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
         >
           {/* Logo - Always stays in place */}
-          <a
+          <Link
             href="/"
             className="absolute top-0 left-0 h-14 flex items-center gap-2 font-bold text-xl tracking-tight z-20"
           >
@@ -271,7 +291,7 @@ const AnimatedNavbar = ({
               <div className="w-3 h-3 bg-gray-400 rounded-full" />
             </div>
             <span>stack-end®</span>
-          </a>
+          </Link>
 
           {/* Top navbar content - moves UP and fades on scroll */}
           <AnimatePresence>
@@ -346,7 +366,7 @@ const AnimatedNavbar = ({
                         <div className="flex h-8 w-8 items-center justify-center rounded-full bg-black text-white">
                           <User className="h-4 w-4" />
                         </div>
-                        <span className="text-sm font-medium">{session.user?.name || "Account"}</span>
+                        <span className="text-sm font-medium">{session?.user?.name || "Account"}</span>
                       </button>
                       <AnimatePresence>
                         {showAccount && (
@@ -430,21 +450,21 @@ const AnimatedNavbar = ({
             className="lg:hidden bg-white border-b border-gray-100 overflow-hidden"
           >
             <div className="flex flex-col p-4 space-y-0">
-              <a href="/templates" onClick={() => setIsMobileMenuOpen(false)}>
+              <Link href="/templates" onClick={() => setIsMobileMenuOpen(false)}>
                 <div className="w-full px-4 py-4 text-left text-base font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors border-b border-gray-100">
                   Templates
                 </div>
-              </a>
-              <a href="/#pricing" onClick={() => setIsMobileMenuOpen(false)}>
+              </Link>
+              <Link href="/#pricing" onClick={() => setIsMobileMenuOpen(false)}>
                 <div className="w-full px-4 py-4 text-left text-base font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors border-b border-gray-100">
                   Pricing
                 </div>
-              </a>
-              <a href="/contribute" onClick={() => setIsMobileMenuOpen(false)}>
+              </Link>
+              <Link href="/contribute" onClick={() => setIsMobileMenuOpen(false)}>
                 <div className="w-full px-4 py-4 text-left text-base font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors border-b border-gray-100">
                   Contribute
                 </div>
-              </a>
+              </Link>
               <a href="/guidelines" onClick={() => setIsMobileMenuOpen(false)}>
                 <div className="w-full px-4 py-4 text-left text-base font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors border-b border-gray-100">
                   Guidelines
@@ -468,8 +488,8 @@ const AnimatedNavbar = ({
                         <User className="h-5 w-5" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium">{session.user?.name}</p>
-                        <p className="text-xs text-gray-500">{session.user?.email}</p>
+                        <p className="text-sm font-medium">{session?.user?.name}</p>
+                        <p className="text-xs text-gray-500">{session?.user?.email}</p>
                       </div>
                     </div>
                     <UserProfile />
@@ -545,10 +565,7 @@ const Templates: React.FC = () => {
     fetchUserRole();
   }, [session]);
 
-  // Reset to page 1 when category changes
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [selectedCategory]);
+
 
   const filteredTemplates = selectedCategory === 'all' ? templates : templates.filter(template => template.category === selectedCategory);
   const showFilters = selectedCategory !== 'github'; // Show filters for all categories except GitHub search
@@ -616,7 +633,7 @@ const Templates: React.FC = () => {
              {categories.map((category) => (
                <button
                  key={category.key}
-                 onClick={() => setSelectedCategory(category.key)}
+                  onClick={() => { setSelectedCategory(category.key); setCurrentPage(1); }}
                  className={`px-4 py-2 rounded-full font-medium text-sm transition-colors ${
                    selectedCategory === category.key
                      ? 'bg-black text-white'

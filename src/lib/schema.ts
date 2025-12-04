@@ -1,5 +1,5 @@
 import { pgTable, text, timestamp, uuid, boolean, integer, jsonb } from "drizzle-orm/pg-core";
-import { userAgent } from "next/server";
+
 
 export const user = pgTable("user", {
   id: uuid("id").primaryKey().$defaultFn(() => crypto.randomUUID()),

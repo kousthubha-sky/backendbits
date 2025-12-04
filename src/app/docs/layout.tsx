@@ -7,19 +7,14 @@ import { cn } from '@/lib/utils';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import {
-  BookOpen,
   ChevronRight,
   Home,
   User,
-  Code,
-  Settings,
   Shield,
   Zap,
   Github,
   FileText,
-  Users,
-  Star,
-  HelpCircle
+  Users
 } from 'lucide-react';
 
 const docsNavigation = [

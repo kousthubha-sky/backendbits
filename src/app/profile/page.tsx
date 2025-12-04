@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Save, User, Settings, Award, Github } from "lucide-react";
+import { Loader2, Save } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -76,7 +76,7 @@ export default function ProfilePage() {
 
 
       }
-    } catch (error) {
+    } catch {
       toast.error("Failed to load profile");
     } finally {
       setLoading(false);
@@ -101,7 +101,7 @@ export default function ProfilePage() {
         const error = await response.json();
         toast.error(error.error || "Failed to update profile");
       }
-    } catch (error) {
+    } catch {
       toast.error("Failed to update profile");
     } finally {
       setSaving(false);

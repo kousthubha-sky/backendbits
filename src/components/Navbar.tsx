@@ -7,13 +7,11 @@ import { Menu, X, User as UserIcon } from "lucide-react";
 import { Skiper58 } from "@/components/ui/downbar";
 import { UserProfile } from "@/components/auth/user-profile";
 import { MenuToggleIcon } from "@/components/ui/menu-toggle-icon";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
+
 import { useSession } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 
-const cn = (...classes: (string | undefined | null | false)[]) => {
-  return classes.filter(Boolean).join(" ");
-};
+
 
 const transition = {
   type: "spring" as const,
@@ -299,8 +297,7 @@ const Navbar: React.FC = () => {
              )}
            </NavMenu>
 
-           {/* Theme Toggle */}
-           <ThemeToggle />
+
 
            {/* Auth Section */}
           {!isPending && (
@@ -370,10 +367,7 @@ const Navbar: React.FC = () => {
             className="lg:hidden bg-white dark:bg-black border-b border-gray-100 dark:border-gray-800 overflow-hidden shadow-lg"
           >
              <div className="flex flex-col px-4 py-6 space-y-1 max-h-[70vh] overflow-y-auto">
-               {/* Theme Toggle - Mobile */}
-               <div className="flex justify-center mb-4">
-                 <ThemeToggle />
-               </div>
+
 
                {/* Main Navigation Links - Full Width */}
               <Link href="/templates" onClick={() => setIsOpen(false)}>

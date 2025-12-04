@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { templateId, action, notes } = body;
+    const { templateId, action } = body;
 
     if (!templateId || !action) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
